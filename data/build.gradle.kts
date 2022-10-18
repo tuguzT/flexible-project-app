@@ -1,6 +1,15 @@
+import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.AndroidX.androidXDataImplementation
+import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Kotlin
+import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.loggingImplementation
+import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.retrofitImplementation
+import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.roomImplementation
+import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.unitTestingImplementation
+
 plugins {
     id("com.android.library")
     kotlin("android")
+    kotlin("plugin.serialization")
+    kotlin("kapt")
 }
 
 android {
@@ -8,7 +17,7 @@ android {
     compileSdk = 33
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
         targetSdk = 33
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -33,13 +42,21 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
     implementation(project(":domain"))
 
-    implementation("androidx.core:core-ktx:1.9.0")
+    androidXDataImplementation()
+    implementation(Kotlin.X.serializationJson)
+    roomImplementation()
+    retrofitImplementation()
 
-    testImplementation(kotlin("test"))
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation(Kotlin.X.Test.coroutine) {
+        exclude(group = Kotlin.X.group, module = Kotlin.X.Test.excludedModule)
+    }
+    loggingImplementation()
+    unitTestingImplementation()
 }

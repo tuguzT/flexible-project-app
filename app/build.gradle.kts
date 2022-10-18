@@ -1,9 +1,14 @@
+import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.AndroidX.androidXAppImplementation
+import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Hilt.hiltImplementation
+import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Kotlin
+import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.*
+
 plugins {
     id("com.android.application")
     kotlin("android")
+    kotlin("kapt")
+    id("dagger.hilt.android.plugin")
 }
-
-val composeVersion = "1.2.1"
 
 android {
     namespace = "io.github.tuguzt.flexibleproject"
@@ -11,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "io.github.tuguzt.flexibleproject"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -26,7 +31,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = Kotlin.CompilerExtension.version
     }
 
     buildTypes {
@@ -52,23 +57,28 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation("androidx.activity:activity-compose:1.6.0")
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.ui:ui-tooling-preview:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-rc01")
+    implementation(Kotlin.X.coroutine)
+    implementation(Kotlin.X.playServices)
+    androidXAppImplementation()
+    composeCoreImplementation()
+    materialDesignImplementation()
+    navigationImplementation()
+    composeThirdPartyImplementation()
+    accompanistFeatureImplementation()
+    hiltImplementation()
 
-    testImplementation(kotlin("test"))
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.3")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeVersion")
-
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$composeVersion")
+    androidTestImplementation(Kotlin.X.Test.coroutine) {
+        exclude(group = Kotlin.X.group, module = Kotlin.X.Test.excludedModule)
+    }
+    loggingImplementation()
+    unitTestingImplementation()
+    instrumentTestingImplementation()
 }
