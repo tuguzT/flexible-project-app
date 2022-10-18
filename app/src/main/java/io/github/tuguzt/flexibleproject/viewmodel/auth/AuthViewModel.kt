@@ -5,12 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.tuguzt.flexibleproject.domain.model.UserCredentials
+import io.github.tuguzt.flexibleproject.domain.usecase.UserCredentialsVerifier
 import io.github.tuguzt.flexibleproject.viewmodel.MessageId
 import mu.KotlinLogging
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor() : ViewModel() {
+class AuthViewModel @Inject constructor(
+    private val credentialsVerifier: UserCredentialsVerifier,
+) : ViewModel() {
+
     companion object {
         private val logger = KotlinLogging.logger {}
     }
@@ -39,7 +44,10 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         _uiState = uiState.copy(messages = messages)
     }
 
-    fun isValidCredentials(): Boolean = false
+    fun isValidCredentials(): Boolean {
+        val credentials = UserCredentials(name = uiState.username, password = uiState.password)
+        return credentialsVerifier.verify(credentials)
+    }
 
     fun auth() {
         TODO()

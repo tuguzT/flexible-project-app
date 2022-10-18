@@ -25,8 +25,8 @@ import io.github.tuguzt.flexibleproject.viewmodel.main.account.isSignedIn
 @Composable
 fun RootScreen(
     startDestination: RootNavigationDestinations,
-    accountViewModel: AccountViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
+    accountViewModel: AccountViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController(),
 ) {
     Scaffold { padding ->
