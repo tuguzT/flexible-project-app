@@ -1,19 +1,17 @@
 package io.github.tuguzt.flexibleproject.view.theme
 
-import android.app.Activity
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.ViewCompat
+import com.google.android.material.color.ColorRoles
+import com.google.android.material.color.MaterialColors
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -38,30 +36,102 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun FlexibleProjectTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            (view.context as Activity).window.statusBarColor = colorScheme.primary.toArgb()
-            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = darkTheme
-        }
-    }
+    val colors = if (useDarkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = colors,
+        shapes = Shapes,
         typography = Typography,
         content = content,
     )
+}
+
+data class CustomColor(
+    val name: String,
+    val color: Color,
+    val harmonized: Boolean,
+    var roles: ColorRoles,
+)
+
+data class ExtendedColors(val colors: Array<CustomColor>) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as ExtendedColors
+
+        return colors.contentEquals(other.colors)
+    }
+
+    override fun hashCode(): Int {
+        return colors.contentHashCode()
+    }
+}
+
+fun setupErrorColors(colorScheme: ColorScheme, isLight: Boolean): ColorScheme {
+    val harmonizedError = MaterialColors.harmonize(Error.toArgb(), colorScheme.primary.toArgb())
+    val roles = MaterialColors.getColorRoles(harmonizedError, isLight)
+
+    return colorScheme.copy(
+        error = Color(roles.accent),
+        onError = Color(roles.onAccent),
+        errorContainer = Color(roles.accentContainer),
+        onErrorContainer = Color(roles.onAccentContainer),
+    )
+}
+
+private val initializeExtended = ExtendedColors(arrayOf())
+
+fun setupCustomColors(colorScheme: ColorScheme, isLight: Boolean): ExtendedColors {
+    initializeExtended.colors.forEach { customColor ->
+        // Retrieve record
+        val shouldHarmonize = customColor.harmonized
+        // Blend or not
+        if (shouldHarmonize) {
+            val colorToHarmonize = customColor.color.toArgb()
+            val colorToHarmonizeWith = colorScheme.primary.toArgb()
+            val blendedColor = MaterialColors.harmonize(colorToHarmonize, colorToHarmonizeWith)
+            customColor.roles = MaterialColors.getColorRoles(blendedColor, isLight)
+        } else {
+            customColor.roles = MaterialColors.getColorRoles(customColor.color.toArgb(), isLight)
+        }
+    }
+    return initializeExtended
+}
+
+val LocalExtendedColors = staticCompositionLocalOf {
+    initializeExtended
+}
+
+@RequiresApi(Build.VERSION_CODES.S)
+@Composable
+fun HarmonizedTheme(
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
+    isDynamic: Boolean = true,
+    errorHarmonize: Boolean = true,
+    content: @Composable () -> Unit,
+) {
+    val colors = when {
+        isDynamic -> {
+            val context = LocalContext.current
+            if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+        else -> if (useDarkTheme) DarkColorScheme else LightColorScheme
+    }
+    val colorsWithHarmonizedError = when {
+        errorHarmonize -> setupErrorColors(colors, !useDarkTheme)
+        else -> colors
+    }
+    val extendedColors = setupCustomColors(colors, !useDarkTheme)
+
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+        MaterialTheme(
+            colorScheme = colorsWithHarmonizedError,
+            shapes = Shapes,
+            typography = Typography,
+            content = content,
+        )
+    }
 }
