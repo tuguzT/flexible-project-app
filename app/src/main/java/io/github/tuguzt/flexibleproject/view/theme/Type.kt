@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.ui.theme
+package io.github.tuguzt.flexibleproject.view.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

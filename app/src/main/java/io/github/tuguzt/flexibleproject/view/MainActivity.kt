@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject
+package io.github.tuguzt.flexibleproject.view
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,10 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.tuguzt.flexibleproject.ui.theme.FlexibleProjectTheme
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import io.github.tuguzt.flexibleproject.view.theme.FlexibleProjectTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
         setContent {
             FlexibleProjectTheme {

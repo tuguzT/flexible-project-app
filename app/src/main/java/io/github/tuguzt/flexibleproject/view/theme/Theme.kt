@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.ui.theme
+package io.github.tuguzt.flexibleproject.view.theme
 
 import android.app.Activity
 import android.os.Build
