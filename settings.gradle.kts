@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Flexible Project"
-include(":app", ":domain")
+include(":domain", ":data", ":app")
