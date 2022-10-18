@@ -10,5 +10,5 @@ data class AccountViewModelState(
     override val messages: List<Message<AccountMessageKind>> = listOf(),
 ) : MessageState<AccountMessageKind>
 
-inline val AccountViewModelState.signedIn: Boolean
+inline val AccountViewModelState.isSignedIn: Boolean
     get() = currentUser != null

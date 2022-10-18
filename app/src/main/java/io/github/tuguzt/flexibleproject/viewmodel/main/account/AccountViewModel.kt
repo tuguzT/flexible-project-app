@@ -15,11 +15,15 @@ class AccountViewModel @Inject constructor() : ViewModel() {
         private val logger = KotlinLogging.logger {}
     }
 
-    private var _uiState by mutableStateOf(AccountViewModelState())
+    private var _uiState by mutableStateOf(AccountViewModelState(isLoading = false))
     val uiState get() = _uiState
 
     fun userMessageShown(id: MessageId) {
         val messages = uiState.messages.filterNot { it.id == id }
         _uiState = uiState.copy(messages = messages)
+    }
+
+    fun updateUser() {
+        TODO()
     }
 }

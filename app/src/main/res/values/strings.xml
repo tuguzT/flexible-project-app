@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Flexible Project</string>
+
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="dismiss">Dismiss</string>
+
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+
+    <string name="server_error">Error on the server side: try later</string>
+    <string name="network_error">Can\'t connect to the server: check Internet connection</string>
+    <string name="unknown_error">Unexpected application error</string>
+
+    <string name="sign_in_google">Continue with Google</string>
+    <string name="no_account">No account?</string>
+    <string name="have_account">Already have account?</string>
 </resources>

@@ -38,4 +38,14 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         val messages = uiState.messages.filterNot { it.id == id }
         _uiState = uiState.copy(messages = messages)
     }
+
+    fun isValidCredentials(): Boolean = false
+
+    fun auth() {
+        TODO()
+    }
+
+    fun register() {
+        TODO()
+    }
 }
