@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.root.main
+package io.github.tuguzt.flexibleproject.view.screen.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,8 +18,8 @@ import io.github.tuguzt.flexibleproject.view.navigation.MainScreenDestination.*
 import io.github.tuguzt.flexibleproject.viewmodel.main.MainViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.main.account.AccountViewModel
 import io.github.tuguzt.flexibleproject.R
-import io.github.tuguzt.flexibleproject.view.root.main.home.HomeScreen
-import io.github.tuguzt.flexibleproject.view.root.main.settings.SettingsScreen
+import io.github.tuguzt.flexibleproject.view.screen.main.home.HomeScreen
+import io.github.tuguzt.flexibleproject.view.screen.main.settings.SettingsScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

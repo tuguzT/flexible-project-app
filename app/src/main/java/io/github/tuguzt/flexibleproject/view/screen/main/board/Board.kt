@@ -1,44 +1,42 @@
-package io.github.tuguzt.flexibleproject.view.root.main.task
+package io.github.tuguzt.flexibleproject.view.screen.main.board
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.tuguzt.flexibleproject.domain.model.Id
-import io.github.tuguzt.flexibleproject.domain.model.Label
-import io.github.tuguzt.flexibleproject.domain.model.LabelColor
-import io.github.tuguzt.flexibleproject.domain.model.Task
+import io.github.tuguzt.flexibleproject.R
+import io.github.tuguzt.flexibleproject.domain.model.*
 import io.github.tuguzt.flexibleproject.view.theme.FlexibleProjectTheme
 import kotlinx.datetime.LocalDateTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskList(
-    tasks: List<Task>,
+fun Board(
+    board: Board,
     modifier: Modifier = Modifier,
-    lazyListState: LazyListState = rememberLazyListState(),
-    onTaskClick: (Task) -> Unit,
-    onTaskDeadlineClick: (Task) -> Unit,
+    onClick: () -> Unit,
 ) {
-    LazyColumn(
-        modifier = modifier,
-        state = lazyListState,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        items(tasks, key = { task -> task.id.toString() }) { task ->
-            Task(
-                task = task,
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onTaskClick(task) },
-                onDeadlineClick = { onTaskDeadlineClick(task) },
+    Card(modifier = modifier, onClick = onClick) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = board.name,
+                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.headlineSmall,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(
+                    id = R.string.completed_tasks,
+                    board.tasks.filter(Task::isCompleted).size,
+                    board.tasks.size,
+                ),
             )
         }
     }
@@ -46,7 +44,7 @@ fun TaskList(
 
 @Preview
 @Composable
-private fun TaskListPreview() {
+private fun BoardPreview() {
     FlexibleProjectTheme {
         val tasks = List(3) {
             Task(
@@ -76,11 +74,22 @@ private fun TaskListPreview() {
                 isCompleted = false,
             )
         }
-        TaskList(
+        val board = Board(
+            id = Id("Hello World"),
+            name = "My fresh new board",
+            description = "Some loooong description",
             tasks = tasks,
-            modifier = Modifier.fillMaxSize(),
-            onTaskDeadlineClick = {},
-            onTaskClick = {},
+            owner = User(
+                id = Id("Hello World"),
+                name = "tuguzT",
+                email = null,
+                role = UserRole.Administrator,
+            ),
+        )
+        Board(
+            board = board,
+            modifier = Modifier.fillMaxWidth(),
+            onClick = {},
         )
     }
 }

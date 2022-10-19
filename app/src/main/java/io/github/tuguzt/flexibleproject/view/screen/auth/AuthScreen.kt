@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.root.auth
+package io.github.tuguzt.flexibleproject.view.screen.auth
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

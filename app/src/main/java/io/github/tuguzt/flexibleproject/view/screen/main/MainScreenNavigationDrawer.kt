@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.root.main
+package io.github.tuguzt.flexibleproject.view.screen.main
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height

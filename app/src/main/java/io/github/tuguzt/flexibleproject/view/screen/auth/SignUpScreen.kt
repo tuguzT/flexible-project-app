@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.root.auth
+package io.github.tuguzt.flexibleproject.view.screen.auth
 
 import android.content.res.Configuration
 import androidx.compose.material3.SnackbarHostState
@@ -12,19 +12,19 @@ import io.github.tuguzt.flexibleproject.view.theme.FlexibleProjectTheme
 import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
 
 @Composable
-fun SignInScreen(
-    onSignIn: (AuthVariant) -> Unit,
-    onSignUpNavigate: () -> Unit,
+fun SignUpScreen(
+    onSignUp: (AuthVariant) -> Unit,
+    onSignInNavigate: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) = AuthScreen(snackbarHostState) {
     AuthScreenContent(
-        title = stringResource(R.string.sign_in),
+        title = stringResource(R.string.sign_up),
         viewModel = viewModel,
-        onAuth = onSignIn,
-        alternativeDestinationDescription = stringResource(R.string.no_account),
-        alternativeDestinationText = stringResource(R.string.sign_up),
-        onAlternativeNavigate = onSignUpNavigate,
+        onAuth = onSignUp,
+        alternativeDestinationDescription = stringResource(R.string.have_account),
+        alternativeDestinationText = stringResource(R.string.sign_in),
+        onAlternativeNavigate = onSignInNavigate,
     )
 }
 
@@ -34,8 +34,8 @@ fun SignInScreen(
     uiMode = Configuration.UI_MODE_NIGHT_YES,
 )
 @Composable
-private fun SignInScreenPreview() {
+private fun SignUpScreenPreview() {
     FlexibleProjectTheme {
-        SignInScreen(onSignIn = {}, onSignUpNavigate = {})
+        SignUpScreen(onSignUp = {}, onSignInNavigate = {})
     }
 }

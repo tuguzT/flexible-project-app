@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.root.auth
+package io.github.tuguzt.flexibleproject.view.screen.auth
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState

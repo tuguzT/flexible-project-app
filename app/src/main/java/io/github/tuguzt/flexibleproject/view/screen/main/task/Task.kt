@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.root.main.task
+package io.github.tuguzt.flexibleproject.view.screen.main.task
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.layout.*
