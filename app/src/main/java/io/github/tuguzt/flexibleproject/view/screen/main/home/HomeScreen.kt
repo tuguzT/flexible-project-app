@@ -1,5 +1,7 @@
 package io.github.tuguzt.flexibleproject.view.screen.main.home
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -18,6 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.view.navigation.MainScreenDestination.Home
 import io.github.tuguzt.flexibleproject.view.screen.main.board.BoardList
@@ -25,6 +29,7 @@ import io.github.tuguzt.flexibleproject.view.theme.FlexibleProjectTheme
 import io.github.tuguzt.flexibleproject.viewmodel.main.MainViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.main.home.HomeViewModel
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     @Suppress("UNUSED_PARAMETER") destination: Home = Home(LocalContext.current),
@@ -38,16 +43,26 @@ fun HomeScreen(
         mainViewModel.updateTitle(appName)
     }
 
-    if (homeViewModel.uiState.boards.isNotEmpty()) {
-        val boardListState = rememberLazyListState()
-        BoardList(
-            boards = homeViewModel.uiState.boards,
-            modifier = Modifier.fillMaxSize(),
-            lazyListState = boardListState,
-            onBoardClick = { TODO() },
-        )
-    } else {
-        NoBoardsBanner()
+    val swipeRefreshState = rememberSwipeRefreshState(homeViewModel.uiState.isRefreshing)
+    SwipeRefresh(
+        state = swipeRefreshState,
+        onRefresh = homeViewModel::refreshBoards,
+    ) {
+        AnimatedContent(
+            targetState = homeViewModel.uiState.boards.isNotEmpty(),
+        ) { hasBoards ->
+            if (hasBoards) {
+                val boardListState = rememberLazyListState()
+                BoardList(
+                    boards = homeViewModel.uiState.boards,
+                    modifier = Modifier.fillMaxSize(),
+                    lazyListState = boardListState,
+                    onBoardClick = { /* todo */ },
+                )
+            } else {
+                NoBoardsBanner()
+            }
+        }
     }
 }
 
