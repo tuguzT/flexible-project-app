@@ -18,16 +18,18 @@ class MainActivity : ComponentActivity() {
     private val accountViewModel: AccountViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().setKeepOnScreenCondition {
-            accountViewModel.uiState.isLoading
-        }
+//        installSplashScreen().setKeepOnScreenCondition { todo
+//            accountViewModel.uiState.isLoading
+//        }
+        installSplashScreen()
 
         super.onCreate(savedInstanceState)
         setContent {
             FlexibleProjectTheme {
-                val startDestination = if (accountViewModel.uiState.isSignedIn) Main else Auth
+//                val startDestination = if (accountViewModel.uiState.isSignedIn) Main else Auth todo
                 RootScreen(
-                    startDestination = startDestination,
+//                    startDestination = startDestination,
+                    startDestination = Main,
                     accountViewModel = accountViewModel,
                 )
             }

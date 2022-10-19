@@ -38,16 +38,16 @@ fun RootScreen(
             startDestination = startDestination.route,
         ) {
             composable(route = Main.route) {
-                LaunchedEffect(accountViewModel.uiState) {
-                    if (accountViewModel.uiState.isLoading || authViewModel.uiState.isLoading)
-                        return@LaunchedEffect
-
-                    if (!accountViewModel.uiState.isSignedIn) {
-                        authViewModel.updateIsLoggedIn(isLoggedIn = false)
-                        navController.navigateAuth()
-                    }
-                }
-                MainScreen()
+//                LaunchedEffect(accountViewModel.uiState) { todo
+//                    if (accountViewModel.uiState.isLoading || authViewModel.uiState.isLoading)
+//                        return@LaunchedEffect
+//
+//                    if (!accountViewModel.uiState.isSignedIn) {
+//                        authViewModel.updateIsLoggedIn(isLoggedIn = false)
+//                        navController.navigateAuth()
+//                    }
+//                }
+                MainScreen(accountViewModel = accountViewModel)
             }
             authGraph(navController, authViewModel, accountViewModel)
         }
