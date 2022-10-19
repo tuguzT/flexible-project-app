@@ -1,3 +1,5 @@
+import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Kotlin
+
 plugins {
     `java-library`
     kotlin("jvm")
@@ -13,6 +15,8 @@ kotlin {
 }
 
 dependencies {
+    implementation(Kotlin.X.datetime)
+
     testImplementation(kotlin("test"))
 }
 

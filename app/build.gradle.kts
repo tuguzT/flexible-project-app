@@ -67,6 +67,7 @@ dependencies {
 
     implementation(Kotlin.X.coroutine)
     implementation(Kotlin.X.playServices)
+    implementation(Kotlin.X.datetime)
     androidXAppImplementation()
     composeCoreImplementation()
     materialDesignImplementation()

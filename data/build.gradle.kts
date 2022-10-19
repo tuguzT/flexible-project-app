@@ -51,6 +51,7 @@ dependencies {
 
     androidXDataImplementation()
     implementation(Kotlin.X.serializationJson)
+    implementation(Kotlin.X.datetime)
     roomImplementation()
     retrofitImplementation()
 

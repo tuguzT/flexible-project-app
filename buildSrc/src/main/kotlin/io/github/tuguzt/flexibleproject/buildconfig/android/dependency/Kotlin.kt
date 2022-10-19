@@ -8,7 +8,9 @@ object Kotlin {
         const val coroutine = "$group:kotlinx-coroutines-android:$version"
         const val playServices = "$group:kotlinx-coroutines-play-services:$version"
 
-        const val serializationJson = "$group:kotlinx-serialization-json:1.3.2"
+        const val serializationJson = "$group:kotlinx-serialization-json:1.4.1"
+
+        const val datetime = "$group:kotlinx-datetime:0.4.0"
 
         object Test {
             const val coroutine = "$group:kotlinx-coroutines-test:$version"
