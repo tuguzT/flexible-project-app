@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.tuguzt.flexibleproject.domain.model.Task
@@ -23,24 +24,23 @@ import io.github.tuguzt.flexibleproject.domain.model.LabelColor
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.UtcOffset
 import kotlinx.datetime.toInstant
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Task(
     task: Task,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
     onDeadlineClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val dateFormat = DateFormat.getMediumDateFormat(context)
 
-    Card(modifier = modifier) {
-        Column(
-            modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp),
-        ) {
+    Card(modifier = modifier, onClick = onClick) {
+        Column(modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp)) {
             Text(
                 text = task.name,
+                overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.headlineSmall,
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -80,7 +80,7 @@ fun Task(
 private fun TaskPreview() {
     FlexibleProjectTheme {
         val task = Task(
-            id = Id(UUID.randomUUID().toString()),
+            id = Id("Hello World"),
             name = "Lorem Ipsum",
             description = """
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
@@ -109,6 +109,7 @@ private fun TaskPreview() {
             task = task,
             modifier = Modifier.fillMaxWidth(),
             onDeadlineClick = {},
+            onClick = {},
         )
     }
 }

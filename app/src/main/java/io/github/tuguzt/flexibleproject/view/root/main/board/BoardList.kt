@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.root.main.task
+package io.github.tuguzt.flexibleproject.view.root.main.board
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,20 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.tuguzt.flexibleproject.domain.model.Id
-import io.github.tuguzt.flexibleproject.domain.model.Label
-import io.github.tuguzt.flexibleproject.domain.model.LabelColor
-import io.github.tuguzt.flexibleproject.domain.model.Task
+import io.github.tuguzt.flexibleproject.domain.model.*
 import io.github.tuguzt.flexibleproject.view.theme.FlexibleProjectTheme
 import kotlinx.datetime.LocalDateTime
 
 @Composable
-fun TaskList(
-    tasks: List<Task>,
+fun BoardList(
+    boards: List<Board>,
     modifier: Modifier = Modifier,
     lazyListState: LazyListState = rememberLazyListState(),
-    onTaskClick: (Task) -> Unit,
-    onTaskDeadlineClick: (Task) -> Unit,
+    onBoardClick: (Board) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -33,12 +29,11 @@ fun TaskList(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(tasks, key = { task -> task.id.toString() }) { task ->
-            Task(
-                task = task,
+        items(boards, key = { board -> board.id.toString() }) { board ->
+            Board(
+                board = board,
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { onTaskClick(task) },
-                onDeadlineClick = { onTaskDeadlineClick(task) },
+                onClick = { onBoardClick(board) },
             )
         }
     }
@@ -46,8 +41,14 @@ fun TaskList(
 
 @Preview
 @Composable
-private fun TaskListPreview() {
+private fun BoardListPreview() {
     FlexibleProjectTheme {
+        val user = User(
+            id = Id("Hello World"),
+            name = "tuguzT",
+            email = null,
+            role = UserRole.Administrator,
+        )
         val tasks = List(3) {
             Task(
                 id = Id(it.toString()),
@@ -76,11 +77,19 @@ private fun TaskListPreview() {
                 isCompleted = false,
             )
         }
-        TaskList(
-            tasks = tasks,
+        val boards = List(3) {
+            Board(
+                id = Id(it.toString()),
+                name = "My fresh new board",
+                description = "Some loooong description",
+                tasks = tasks,
+                owner = user,
+            )
+        }
+        BoardList(
+            boards = boards,
             modifier = Modifier.fillMaxSize(),
-            onTaskDeadlineClick = {},
-            onTaskClick = {},
+            onBoardClick = {},
         )
     }
 }
