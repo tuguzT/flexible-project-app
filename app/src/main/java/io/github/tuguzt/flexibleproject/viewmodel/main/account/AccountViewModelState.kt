@@ -7,8 +7,8 @@ import io.github.tuguzt.flexibleproject.viewmodel.MessageState
 data class AccountViewModelState(
     val currentUser: User? = null,
     val isLoading: Boolean = true,
-    override val messages: List<Message<AccountMessageKind>> = listOf(),
-) : MessageState<AccountMessageKind>
+    override val messages: List<Message<AccountViewModelMessageKind>> = listOf(),
+) : MessageState<AccountViewModelMessageKind>
 
 inline val AccountViewModelState.isSignedIn: Boolean
     get() = currentUser != null
