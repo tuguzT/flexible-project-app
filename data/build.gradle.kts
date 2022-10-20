@@ -7,6 +7,7 @@ plugins {
     kotlin("kapt")
     kotlin("plugin.serialization")
     id("io.objectbox")
+    id("com.apollographql.apollo3")
 }
 
 android {
@@ -41,6 +42,10 @@ android {
 
 kapt {
     correctErrorTypes = true
+}
+
+apollo {
+    packageName.set("io.github.tuguzt.flexibleproject.data.datasource.remote.model")
 }
 
 dependencies {

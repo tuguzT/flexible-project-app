@@ -1,0 +1,8 @@
+mutation SignIn($credentials: UserCredentials!) {
+    signIn(credentials: $credentials) {
+        id
+        name
+        role
+        email
+    }
+}

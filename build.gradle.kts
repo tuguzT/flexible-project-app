@@ -4,6 +4,7 @@ plugins {
     kotlin("jvm") version "1.7.20" apply false
     kotlin("android") version "1.7.20" apply false
     kotlin("plugin.serialization") version "1.7.20" apply false
+    id("com.apollographql.apollo3") version("3.6.2") apply false
 }
 
 buildscript {
