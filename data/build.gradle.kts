@@ -1,15 +1,12 @@
-import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.AndroidX.androidXDataImplementation
 import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Kotlin
-import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.loggingImplementation
-import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.retrofitImplementation
-import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.roomImplementation
-import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.unitTestingImplementation
+import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.*
 
 plugins {
     id("com.android.library")
     kotlin("android")
-    kotlin("plugin.serialization")
     kotlin("kapt")
+    kotlin("plugin.serialization")
+    id("io.objectbox")
 }
 
 android {
@@ -49,14 +46,16 @@ kapt {
 dependencies {
     implementation(project(":domain"))
 
-    androidXDataImplementation()
+    dataImplementation()
     implementation(Kotlin.X.serializationJson)
     implementation(Kotlin.X.datetime)
-    roomImplementation()
-    retrofitImplementation()
+    graphQLImplementation()
 
-    androidTestImplementation(Kotlin.X.Test.coroutine) {
-        exclude(group = Kotlin.X.group, module = Kotlin.X.Test.excludedModule)
+    androidTestImplementation(Kotlin.X.Coroutine.Test.dependency) {
+        exclude(
+            group = Kotlin.X.group,
+            module = Kotlin.X.Coroutine.Test.excludedModule,
+        )
     }
     loggingImplementation()
     unitTestingImplementation()

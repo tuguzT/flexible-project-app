@@ -1,5 +1,3 @@
-import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.AndroidX.androidXAppImplementation
-import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Hilt.hiltImplementation
 import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Kotlin
 import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.*
 
@@ -65,10 +63,10 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
 
-    implementation(Kotlin.X.coroutine)
-    implementation(Kotlin.X.playServices)
+    implementation(Kotlin.X.Coroutine.android)
+    implementation(Kotlin.X.Coroutine.playServices)
     implementation(Kotlin.X.datetime)
-    androidXAppImplementation()
+    appImplementation()
     composeCoreImplementation()
     materialDesignImplementation()
     navigationImplementation()
@@ -76,8 +74,11 @@ dependencies {
     accompanistFeatureImplementation()
     hiltImplementation()
 
-    androidTestImplementation(Kotlin.X.Test.coroutine) {
-        exclude(group = Kotlin.X.group, module = Kotlin.X.Test.excludedModule)
+    androidTestImplementation(Kotlin.X.Coroutine.Test.dependency) {
+        exclude(
+            group = Kotlin.X.group,
+            module = Kotlin.X.Coroutine.Test.excludedModule,
+        )
     }
     loggingImplementation()
     unitTestingImplementation()

@@ -8,7 +8,12 @@ plugins {
 
 buildscript {
     dependencies {
-        classpath(io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Hilt.plugin)
+        classpath(
+            io.github.tuguzt.flexibleproject.buildconfig.android.dependency.architecture.Hilt.plugin
+        )
+        classpath(
+            io.github.tuguzt.flexibleproject.buildconfig.android.dependency.local.ObjectBox.plugin
+        )
     }
 }
 

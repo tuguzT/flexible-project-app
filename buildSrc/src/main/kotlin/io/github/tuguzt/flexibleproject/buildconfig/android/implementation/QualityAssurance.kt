@@ -1,6 +1,6 @@
 package io.github.tuguzt.flexibleproject.buildconfig.android.implementation
 
-import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.AndroidX
+import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.architecture.AndroidX
 import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.JetpackCompose
 import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Kotlin
 import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.QualityAssurance
