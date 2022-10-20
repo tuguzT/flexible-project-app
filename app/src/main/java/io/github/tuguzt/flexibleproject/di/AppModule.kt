@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 import io.github.tuguzt.flexibleproject.domain.usecase.UsernameVerifier as DomainUsernameVerifier
 import io.github.tuguzt.flexibleproject.data.interactor.UsernameVerifier
 import io.github.tuguzt.flexibleproject.domain.usecase.PasswordVerifier as DomainPasswordVerifier
@@ -16,15 +15,12 @@ import io.github.tuguzt.flexibleproject.data.interactor.UserCredentialsVerifier
 @InstallIn(SingletonComponent::class)
 object AppModule {
     @Provides
-    @Singleton
     fun provideUsernameVerifier(): DomainUsernameVerifier = UsernameVerifier()
 
     @Provides
-    @Singleton
     fun providePasswordVerifier(): DomainPasswordVerifier = PasswordVerifier()
 
     @Provides
-    @Singleton
     fun provideUserCredentialsVerifier(
         usernameVerifier: DomainUsernameVerifier,
         passwordVerifier: DomainPasswordVerifier,

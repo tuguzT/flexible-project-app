@@ -10,7 +10,7 @@ type Mutation {
     """
     Login existing user in the Flexible Project system.
     """
-    signIn("User credentials of the existing user." credentials: UserCredentials!): User!
+    signIn("User credentials of the existing user." credentials: UserCredentials!): UserToken!
 
     """
     Updates existing user from provided user data in the Flexible Project system.
@@ -46,6 +46,11 @@ type Query {
     Data of user by its identifier of the Flexible Project system.
     """
     user("Unique identifier of the user." id: ID!): User
+
+    """
+    Data of the current user of the Flexible project system.
+    """
+    currentUser: User!
 
     """
     Returns data of the node by provided ID.
