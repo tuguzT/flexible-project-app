@@ -33,7 +33,14 @@ android {
     }
 
     buildTypes {
+        fun String.withQuotes() = "\"${this}\""
+
+        debug {
+            buildConfigField("String", "backendUrl", "http://localhost:8080/graphql".withQuotes())
+        }
         release {
+            buildConfigField("String", "backendUrl", "http://localhost:8080/graphql".withQuotes())
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
