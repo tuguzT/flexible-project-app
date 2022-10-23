@@ -36,10 +36,10 @@ android {
         fun String.withQuotes() = "\"${this}\""
 
         debug {
-            buildConfigField("String", "backendUrl", "http://localhost:8080/graphql".withQuotes())
+            buildConfigField("String", "backendUrl", "http://10.0.2.2:8080/graphql".withQuotes())
         }
         release {
-            buildConfigField("String", "backendUrl", "http://localhost:8080/graphql".withQuotes())
+            buildConfigField("String", "backendUrl", "http://10.0.2.2:8080/graphql".withQuotes())
 
             isMinifyEnabled = false
             proguardFiles(

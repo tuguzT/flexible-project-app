@@ -1,5 +1,7 @@
 package io.github.tuguzt.flexibleproject.domain.usecase
 
+import io.github.tuguzt.flexibleproject.domain.Result
+
 public interface UsernameVerifier {
     /**
      * Checks if the provided [username] meets all requirements of the module.
@@ -11,5 +13,7 @@ public interface UsernameVerifier {
      * - `-`, `_`, `.` characters can't be next to each other
      * - `-`, `_`, `.` characters can't be used multiple times in a row
      */
-    public fun verify(username: String): Boolean
+    public fun verify(username: String): Result<Boolean, Error>
+
+    public class Error(override val message: String? = null) : Exception(message)
 }

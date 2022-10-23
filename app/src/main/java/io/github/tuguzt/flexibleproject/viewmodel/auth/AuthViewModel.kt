@@ -5,7 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.tuguzt.flexibleproject.domain.Result
 import io.github.tuguzt.flexibleproject.domain.model.UserCredentials
+import io.github.tuguzt.flexibleproject.domain.usecase.UserCredentialsState
 import io.github.tuguzt.flexibleproject.domain.usecase.UserCredentialsVerifier
 import io.github.tuguzt.flexibleproject.viewmodel.MessageId
 import mu.KotlinLogging
@@ -46,7 +48,10 @@ class AuthViewModel @Inject constructor(
 
     fun isValidCredentials(): Boolean {
         val credentials = UserCredentials(name = uiState.username, password = uiState.password)
-        return credentialsVerifier.verify(credentials)
+        return when (val result = credentialsVerifier.verify(credentials)) {
+            is Result.Error -> false
+            is Result.Success -> result.data == UserCredentialsState.Valid
+        }
     }
 
     fun auth() {
