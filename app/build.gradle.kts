@@ -64,12 +64,13 @@ dependencies {
 
     // Jetpack Compose dependencies
     val composeBomVersion = "2023.05.00"
-    val composeBom = platform("androidx.compose:compose-bom:${composeBomVersion}")
+    val composeBom = platform("androidx.compose:compose-bom:$composeBomVersion")
 
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.compose.material3:material3")
 
     debugImplementation("androidx.compose.ui:ui-tooling")
