@@ -3,6 +3,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -39,11 +40,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
+    kotlin {
+        jvmToolchain(17)
     }
     packaging {
         resources {
@@ -78,4 +79,10 @@ dependencies {
 
     androidTestImplementation(composeBom)
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+
+    // Compose Destinations dependencies
+    val destinationsVersion = "1.8.41-beta"
+
+    implementation("io.github.raamcosta.compose-destinations:core:$destinationsVersion")
+    ksp("io.github.raamcosta.compose-destinations:ksp:$destinationsVersion")
 }

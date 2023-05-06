@@ -1,5 +1,6 @@
 package io.github.tuguzt.flexibleproject.view
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,18 +42,22 @@ import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.model.user.Role
 import io.github.tuguzt.flexibleproject.model.user.User
 import io.github.tuguzt.flexibleproject.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.view.screens.destinations.HomeScreenDestination
+import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
+import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 
-data class AppNavigationDrawerData(
-    val userData: UserData,
-    val workspacesData: List<WorkspaceData>,
+data class AppNavigationDrawerState(
+    val currentRoute: String,
+    val userState: UserState,
+    val workspacesData: List<WorkspaceState>,
 ) {
-    data class UserData(
+    data class UserState(
         val user: User,
         val avatar: @Composable () -> Unit,
     )
 
-    data class WorkspaceData(
+    data class WorkspaceState(
         val workspace: Workspace,
         val icon: @Composable () -> Unit,
     )
@@ -61,7 +66,7 @@ data class AppNavigationDrawerData(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigationDrawer(
-    data: AppNavigationDrawerData,
+    state: AppNavigationDrawerState,
     onHomeDestinationClick: () -> Unit,
     onSettingsDestinationClick: () -> Unit,
     onWorkspaceDestinationClick: (Workspace) -> Unit,
@@ -69,20 +74,21 @@ fun AppNavigationDrawer(
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     content: @Composable () -> Unit,
 ) {
+    val (currentRoute, userState, workspacesState) = state
     ModalNavigationDrawer(
         modifier = modifier,
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                UserData(data = data.userData)
+                UserData(state = userState)
 
                 Spacer(modifier = Modifier.height(8.dp))
                 HomeDrawerItem(
-                    selected = false, // TODO find a way to get current destination
+                    selected = currentRoute == HomeScreenDestination.route,
                     onClick = onHomeDestinationClick,
                 )
                 SettingsDrawerItem(
-                    selected = false, // TODO find a way to get current destination
+                    selected = currentRoute == SettingsScreenDestination.route,
                     onClick = onSettingsDestinationClick,
                 )
                 // TODO misc (idk what)
@@ -90,7 +96,8 @@ fun AppNavigationDrawer(
                 Divider(modifier = Modifier.padding(horizontal = 28.dp))
 
                 Workspaces(
-                    workspaces = data.workspacesData,
+                    currentRoute = currentRoute,
+                    states = workspacesState,
                     onWorkspaceItemClick = onWorkspaceDestinationClick,
                 )
             }
@@ -100,8 +107,8 @@ fun AppNavigationDrawer(
 }
 
 @Composable
-private fun UserData(data: AppNavigationDrawerData.UserData) {
-    val (user, avatar) = data
+private fun UserData(state: AppNavigationDrawerState.UserState) {
+    val (user, avatar) = state
 
     Surface(tonalElevation = 12.dp, modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp)) {
@@ -145,9 +152,11 @@ private fun SettingsDrawerItem(selected: Boolean, onClick: () -> Unit) {
     )
 }
 
+@SuppressLint("RestrictedApi")
 @Composable
 private fun Workspaces(
-    workspaces: List<AppNavigationDrawerData.WorkspaceData>,
+    currentRoute: String,
+    states: List<AppNavigationDrawerState.WorkspaceState>,
     onWorkspaceItemClick: (Workspace) -> Unit,
 ) {
     Column {
@@ -156,11 +165,14 @@ private fun Workspaces(
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
         )
         LazyColumn {
-            items(workspaces) { data ->
+            items(states) { state ->
+                val workspace = state.workspace
+                val selected = currentRoute.contains(WorkspaceScreenDestination.baseRoute)
+                        && currentRoute.contains(workspace.id) // FIXME selected all or none (no id in "currentRoute")
                 WorkspaceDrawerItem(
-                    data = data,
-                    selected = false, // TODO find a way to get current destination
-                    onClick = { onWorkspaceItemClick(data.workspace) },
+                    state = state,
+                    selected = selected,
+                    onClick = { onWorkspaceItemClick(workspace) },
                 )
             }
         }
@@ -170,11 +182,11 @@ private fun Workspaces(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WorkspaceDrawerItem(
-    data: AppNavigationDrawerData.WorkspaceData,
+    state: AppNavigationDrawerState.WorkspaceState,
     selected: Boolean,
     onClick: () -> Unit,
 ) {
-    val (workspace, image) = data
+    val (workspace, image) = state
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
         label = { Text(text = workspace.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
@@ -188,7 +200,7 @@ private fun WorkspaceDrawerItem(
 @Preview
 @Composable
 private fun AppNavigationDrawerPreview() {
-    val userData = AppNavigationDrawerData.UserData(
+    val userState = AppNavigationDrawerState.UserState(
         user = User(
             name = "tuguzT",
             displayName = "Timur Tugushev",
@@ -206,23 +218,22 @@ private fun AppNavigationDrawerPreview() {
             )
         },
     )
-    val workspaceData = AppNavigationDrawerData.WorkspaceData(
+    val workspaceState = AppNavigationDrawerState.WorkspaceState(
         workspace = Workspace(
             id = "1",
             name = "Empty workspace",
         ),
         icon = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
     )
-    val data = AppNavigationDrawerData(
-        userData = userData,
-        workspacesData = listOf(
-            workspaceData
-        ),
+    val data = AppNavigationDrawerState(
+        currentRoute = WorkspaceScreenDestination("1").route,
+        userState = userState,
+        workspacesData = listOf(workspaceState),
     )
 
     AppTheme {
         AppNavigationDrawer(
-            data = data,
+            state = data,
             onHomeDestinationClick = {},
             onSettingsDestinationClick = {},
             onWorkspaceDestinationClick = {},
