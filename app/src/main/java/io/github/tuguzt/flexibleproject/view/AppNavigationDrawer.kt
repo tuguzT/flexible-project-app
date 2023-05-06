@@ -1,6 +1,7 @@
 package io.github.tuguzt.flexibleproject.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +30,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -44,19 +44,19 @@ import io.github.tuguzt.flexibleproject.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 
 data class AppNavigationDrawerData(
-    val user: AppNavigationDrawerUser,
-    val workspaces: List<AppNavigationDrawerWorkspace>,
-)
+    val userData: UserData,
+    val workspacesData: List<WorkspaceData>,
+) {
+    data class UserData(
+        val user: User,
+        val avatar: @Composable () -> Unit,
+    )
 
-data class AppNavigationDrawerUser(
-    val user: User,
-    val avatarPainter: Painter,
-)
-
-data class AppNavigationDrawerWorkspace(
-    val workspace: Workspace,
-    val imagePainter: Painter,
-)
+    data class WorkspaceData(
+        val workspace: Workspace,
+        val icon: @Composable () -> Unit,
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,8 +74,7 @@ fun AppNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                val (user, userAvatarPainter) = data.user
-                UserData(user = user, avatarPainter = userAvatarPainter)
+                UserData(data = data.userData)
 
                 Spacer(modifier = Modifier.height(8.dp))
                 HomeDrawerItem(
@@ -91,7 +90,7 @@ fun AppNavigationDrawer(
                 Divider(modifier = Modifier.padding(horizontal = 28.dp))
 
                 Workspaces(
-                    workspaces = data.workspaces,
+                    workspaces = data.workspacesData,
                     onWorkspaceItemClick = onWorkspaceDestinationClick,
                 )
             }
@@ -101,17 +100,12 @@ fun AppNavigationDrawer(
 }
 
 @Composable
-private fun UserData(user: User, avatarPainter: Painter) {
+private fun UserData(data: AppNavigationDrawerData.UserData) {
+    val (user, avatar) = data
+
     Surface(tonalElevation = 12.dp, modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp)) {
-            Image(
-                painter = avatarPainter,
-                contentDescription = stringResource(R.string.user_avatar),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(72.dp)
-                    .clip(CircleShape),
-            )
+            Box(content = { avatar() }, modifier = Modifier.size(72.dp))
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -153,7 +147,7 @@ private fun SettingsDrawerItem(selected: Boolean, onClick: () -> Unit) {
 
 @Composable
 private fun Workspaces(
-    workspaces: List<AppNavigationDrawerWorkspace>,
+    workspaces: List<AppNavigationDrawerData.WorkspaceData>,
     onWorkspaceItemClick: (Workspace) -> Unit,
 ) {
     Column {
@@ -163,12 +157,10 @@ private fun Workspaces(
         )
         LazyColumn {
             items(workspaces) { data ->
-                val (workspace, imagePainter) = data
                 WorkspaceDrawerItem(
-                    workspace = workspace,
-                    imagePainter = imagePainter,
+                    data = data,
                     selected = false, // TODO find a way to get current destination
-                    onClick = { onWorkspaceItemClick(workspace) },
+                    onClick = { onWorkspaceItemClick(data.workspace) },
                 )
             }
         }
@@ -178,15 +170,15 @@ private fun Workspaces(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WorkspaceDrawerItem(
-    workspace: Workspace,
-    imagePainter: Painter,
+    data: AppNavigationDrawerData.WorkspaceData,
     selected: Boolean,
     onClick: () -> Unit,
 ) {
+    val (workspace, image) = data
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
         label = { Text(text = workspace.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
-        icon = { Icon(painter = imagePainter, contentDescription = null) },
+        icon = image,
         selected = selected,
         onClick = onClick,
     )
@@ -196,26 +188,38 @@ private fun WorkspaceDrawerItem(
 @Preview
 @Composable
 private fun AppNavigationDrawerPreview() {
-    val data = AppNavigationDrawerData(
-        user = AppNavigationDrawerUser(
-            user = User(
-                name = "tuguzT",
-                displayName = "Timur Tugushev",
-                role = Role.User,
-                email = null,
-            ),
-            avatarPainter = rememberVectorPainter(Icons.Rounded.Person),
+    val userData = AppNavigationDrawerData.UserData(
+        user = User(
+            name = "tuguzT",
+            displayName = "Timur Tugushev",
+            role = Role.User,
+            email = null,
         ),
-        workspaces = listOf(
-            AppNavigationDrawerWorkspace(
-                workspace = Workspace(
-                    id = "1",
-                    name = "Empty workspace",
-                ),
-                imagePainter = rememberVectorPainter(Icons.Rounded.Groups3)
+        avatar = {
+            Image(
+                painter = rememberVectorPainter(Icons.Rounded.Person),
+                contentDescription = stringResource(R.string.user_avatar),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(CircleShape),
             )
+        },
+    )
+    val workspaceData = AppNavigationDrawerData.WorkspaceData(
+        workspace = Workspace(
+            id = "1",
+            name = "Empty workspace",
+        ),
+        icon = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
+    )
+    val data = AppNavigationDrawerData(
+        userData = userData,
+        workspacesData = listOf(
+            workspaceData
         ),
     )
+
     AppTheme {
         AppNavigationDrawer(
             data = data,
