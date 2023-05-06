@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 
@@ -12,10 +12,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven(url = "https://jitpack.io")
-        maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots")
     }
 }
 
 rootProject.name = "Flexible Project"
-include(":domain", ":data", ":app")
+include(":app")

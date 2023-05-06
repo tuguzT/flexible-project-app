@@ -1,11 +1,8 @@
-import io.github.tuguzt.flexibleproject.buildconfig.android.dependency.Kotlin
-import io.github.tuguzt.flexibleproject.buildconfig.android.implementation.*
+@file:Suppress("UnstableApiUsage")
 
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
-    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -14,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "io.github.tuguzt.flexibleproject"
-        minSdk = 23
+        minSdk = 21
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -29,18 +26,11 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Kotlin.CompilerExtension.version
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
 
     buildTypes {
-        fun String.withQuotes() = "\"${this}\""
-
-        debug {
-            buildConfigField("String", "backendUrl", "http://10.0.2.2:8080/graphql".withQuotes())
-        }
         release {
-            buildConfigField("String", "backendUrl", "http://10.0.2.2:8080/graphql".withQuotes())
-
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -55,39 +45,36 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
-    implementation(project(":domain"))
-    implementation(project(":data"))
+    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.activity:activity-compose:1.7.1")
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
-    implementation(Kotlin.X.Coroutine.android)
-    implementation(Kotlin.X.Coroutine.playServices)
-    implementation(Kotlin.X.datetime)
-    appImplementation()
-    composeCoreImplementation()
-    materialDesignImplementation()
-    navigationImplementation()
-    composeThirdPartyImplementation()
-    accompanistFeatureImplementation()
-    hiltImplementation()
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
-    androidTestImplementation(Kotlin.X.Coroutine.Test.dependency) {
-        exclude(
-            group = Kotlin.X.group,
-            module = Kotlin.X.Coroutine.Test.excludedModule,
-        )
-    }
-    loggingImplementation()
-    unitTestingImplementation()
-    instrumentTestingImplementation()
+    // Jetpack Compose dependencies
+    val composeBomVersion = "2023.05.00"
+    val composeBom = platform("androidx.compose:compose-bom:${composeBomVersion}")
+
+    implementation(composeBom)
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    androidTestImplementation(composeBom)
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 }

@@ -1,5 +1,0 @@
-mutation SignIn($credentials: UserCredentials!) {
-    signIn(credentials: $credentials) {
-        token
-    }
-}
