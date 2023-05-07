@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view
+package io.github.tuguzt.flexibleproject.view.screens.root
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -47,7 +47,7 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreen
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 
-data class AppNavigationDrawerState(
+data class RootNavigationDrawerState(
     val currentRoute: String,
     val userState: UserState,
     val workspacesData: List<WorkspaceState>,
@@ -65,8 +65,8 @@ data class AppNavigationDrawerState(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppNavigationDrawer(
-    state: AppNavigationDrawerState,
+fun RootNavigationDrawer(
+    state: RootNavigationDrawerState,
     onHomeDestinationClick: () -> Unit,
     onSettingsDestinationClick: () -> Unit,
     onWorkspaceDestinationClick: (Workspace) -> Unit,
@@ -107,7 +107,7 @@ fun AppNavigationDrawer(
 }
 
 @Composable
-private fun UserData(state: AppNavigationDrawerState.UserState) {
+private fun UserData(state: RootNavigationDrawerState.UserState) {
     val (user, avatar) = state
 
     Surface(tonalElevation = 12.dp, modifier = Modifier.fillMaxWidth()) {
@@ -156,7 +156,7 @@ private fun SettingsDrawerItem(selected: Boolean, onClick: () -> Unit) {
 @Composable
 private fun Workspaces(
     currentRoute: String,
-    states: List<AppNavigationDrawerState.WorkspaceState>,
+    states: List<RootNavigationDrawerState.WorkspaceState>,
     onWorkspaceItemClick: (Workspace) -> Unit,
 ) {
     Column {
@@ -182,7 +182,7 @@ private fun Workspaces(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WorkspaceDrawerItem(
-    state: AppNavigationDrawerState.WorkspaceState,
+    state: RootNavigationDrawerState.WorkspaceState,
     selected: Boolean,
     onClick: () -> Unit,
 ) {
@@ -199,8 +199,8 @@ private fun WorkspaceDrawerItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun AppNavigationDrawerPreview() {
-    val userState = AppNavigationDrawerState.UserState(
+private fun RootNavigationDrawerPreview() {
+    val userState = RootNavigationDrawerState.UserState(
         user = User(
             name = "tuguzT",
             displayName = "Timur Tugushev",
@@ -218,21 +218,21 @@ private fun AppNavigationDrawerPreview() {
             )
         },
     )
-    val workspaceState = AppNavigationDrawerState.WorkspaceState(
+    val workspaceState = RootNavigationDrawerState.WorkspaceState(
         workspace = Workspace(
             id = "1",
             name = "Empty workspace",
         ),
         icon = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
     )
-    val data = AppNavigationDrawerState(
+    val data = RootNavigationDrawerState(
         currentRoute = WorkspaceScreenDestination("1").route,
         userState = userState,
         workspacesData = listOf(workspaceState),
     )
 
     AppTheme {
-        AppNavigationDrawer(
+        RootNavigationDrawer(
             state = data,
             onHomeDestinationClick = {},
             onSettingsDestinationClick = {},

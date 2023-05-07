@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens
+package io.github.tuguzt.flexibleproject.view.screens.settings
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

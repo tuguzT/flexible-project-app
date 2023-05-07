@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view
+package io.github.tuguzt.flexibleproject.view.screens.root
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
@@ -6,15 +6,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Groups3
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,18 +38,17 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppRoot() {
+fun Root() {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: HomeScreenDestination.route
-    println(currentRoute)
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    val userState = AppNavigationDrawerState.UserState(
+    val userState = RootNavigationDrawerState.UserState(
         user = User(
             name = "tuguzT",
             displayName = "Timur Tugushev",
@@ -71,7 +66,7 @@ fun AppRoot() {
             )
         },
     )
-    val workspaceState = AppNavigationDrawerState.WorkspaceState(
+    val workspaceState = RootNavigationDrawerState.WorkspaceState(
         workspace = Workspace(
             id = "1",
             name = "Empty workspace",
@@ -79,8 +74,8 @@ fun AppRoot() {
         icon = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
     )
 
-    AppNavigationDrawer(
-        state = AppNavigationDrawerState(
+    RootNavigationDrawer(
+        state = RootNavigationDrawerState(
             currentRoute = currentRoute,
             userState = userState,
             workspacesData = listOf(workspaceState),
@@ -122,18 +117,12 @@ fun AppRoot() {
     ) {
         Scaffold(
             topBar = {
-                CenterAlignedTopAppBar(
-                    title = { Text(text = "Flexible Project") },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                coroutineScope.launch { drawerState.open() }
-                            },
-                        ) {
-                            Icon(Icons.Rounded.Menu, contentDescription = null)
-                        }
+                val onNavigationClick: () -> Unit = {
+                    coroutineScope.launch {
+                        drawerState.open()
                     }
-                )
+                }
+                RootTopBar(onNavigationClick = onNavigationClick)
             },
         ) {
             DestinationsNavHost(
