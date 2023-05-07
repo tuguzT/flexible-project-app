@@ -26,7 +26,6 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,7 +33,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.tuguzt.flexibleproject.R
@@ -46,6 +44,7 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
+import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
 data class BasicDrawerContent(
     val user: UserContent,
@@ -118,15 +117,13 @@ private fun UserContent(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-            Text(
+            OneLineTitle(
                 text = user.data.displayName,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "@${user.data.name}", maxLines = 1, overflow = TextOverflow.Ellipsis)
+            OneLineTitle(text = "@${user.data.name}")
         }
     }
 }
@@ -136,7 +133,7 @@ private fun UserContent(
 private fun SettingsDrawerItem(onClick: () -> Unit) {
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
-        label = { Text(text = stringResource(R.string.settings)) },
+        label = { OneLineTitle(text = stringResource(R.string.settings)) },
         icon = { Icon(Icons.Rounded.Settings, contentDescription = null) },
         selected = false,
         onClick = onClick,
@@ -148,7 +145,7 @@ private fun SettingsDrawerItem(onClick: () -> Unit) {
 private fun AboutDrawerItem(onClick: () -> Unit) {
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
-        label = { Text(text = stringResource(R.string.about)) },
+        label = { OneLineTitle(text = stringResource(R.string.about)) },
         icon = { Icon(Icons.Rounded.Info, contentDescription = null) },
         selected = false,
         onClick = onClick,
@@ -163,7 +160,7 @@ private fun WorkspacesContent(
     val (workspaces, icon) = content
 
     Column {
-        Text(
+        OneLineTitle(
             text = stringResource(R.string.workspaces),
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
         )
@@ -191,13 +188,7 @@ private fun WorkspaceDrawerItem(
 ) {
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
-        label = {
-            Text(
-                text = workspace.data.name,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-        },
+        label = { OneLineTitle(text = workspace.data.name) },
         icon = icon,
         selected = false,
         onClick = onClick,
