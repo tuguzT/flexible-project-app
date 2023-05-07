@@ -10,7 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.tuguzt.flexibleproject.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.Id
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.NavigateUpIconButton
 
@@ -23,7 +26,13 @@ fun WorkspaceTopBar(
 ) {
     TopAppBar(
         modifier = modifier,
-        title = { Text(text = workspace.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        title = {
+            Text(
+                text = workspace.data.name,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
         navigationIcon = { NavigateUpIconButton(onClick = onNavigationClick) },
     )
     // TODO workspace image, scroll behaviour
@@ -34,8 +43,13 @@ fun WorkspaceTopBar(
 @Composable
 private fun WorkspaceTopBar() {
     val workspace = Workspace(
-        id = "1",
-        name = "First workspace",
+        id = Id("1"),
+        data = WorkspaceData(
+            name = "First workspace",
+            description = "",
+            visibility = Visibility.Public,
+            imageUrl = null,
+        ),
     )
 
     AppTheme {

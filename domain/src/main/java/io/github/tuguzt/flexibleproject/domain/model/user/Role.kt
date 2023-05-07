@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.model.user
+package io.github.tuguzt.flexibleproject.domain.model.user
 
 enum class Role {
     User,

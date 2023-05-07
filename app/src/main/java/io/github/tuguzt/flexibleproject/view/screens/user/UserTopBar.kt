@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.tuguzt.flexibleproject.model.user.Role
-import io.github.tuguzt.flexibleproject.model.user.User
+import io.github.tuguzt.flexibleproject.domain.model.Id
+import io.github.tuguzt.flexibleproject.domain.model.user.Role
+import io.github.tuguzt.flexibleproject.domain.model.user.User
+import io.github.tuguzt.flexibleproject.domain.model.user.UserData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.NavigateUpIconButton
 
@@ -24,7 +26,13 @@ fun UserTopBar(
 ) {
     TopAppBar(
         modifier = modifier,
-        title = { Text(text = user.displayName, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        title = {
+            Text(
+                text = user.data.displayName,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
         navigationIcon = { NavigateUpIconButton(onClick = onNavigationClick) },
     )
     // TODO user avatar, scroll behaviour
@@ -35,10 +43,14 @@ fun UserTopBar(
 @Composable
 private fun UserTopBar() {
     val user = User(
-        name = "tuguzT",
-        displayName = "Timur Tugushev",
-        role = Role.User,
-        email = "timurka.tugushev@gmail.com",
+        id = Id("1"),
+        data = UserData(
+            name = "tuguzT",
+            displayName = "Timur Tugushev",
+            role = Role.User,
+            email = "timurka.tugushev@gmail.com",
+            avatarUrl = null,
+        ),
     )
 
     AppTheme {

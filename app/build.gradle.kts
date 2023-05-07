@@ -56,6 +56,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+
     implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")

@@ -38,9 +38,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.github.tuguzt.flexibleproject.R
-import io.github.tuguzt.flexibleproject.model.user.Role
-import io.github.tuguzt.flexibleproject.model.user.User
-import io.github.tuguzt.flexibleproject.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.Id
+import io.github.tuguzt.flexibleproject.domain.model.user.Role
+import io.github.tuguzt.flexibleproject.domain.model.user.User
+import io.github.tuguzt.flexibleproject.domain.model.user.UserData
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 
 data class BasicDrawerContent(
@@ -115,14 +119,14 @@ private fun UserContent(
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = user.displayName,
+                text = user.data.displayName,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold,
             )
 
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "@${user.name}", maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(text = "@${user.data.name}", maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
     }
 }
@@ -164,7 +168,10 @@ private fun WorkspacesContent(
             modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
         )
         LazyColumn {
-            items(workspaces) { workspace ->
+            items(
+                items = workspaces,
+                key = { workspace -> workspace.id.toString() },
+            ) { workspace ->
                 WorkspaceDrawerItem(
                     workspace = workspace,
                     icon = { icon(workspace) },
@@ -184,7 +191,13 @@ private fun WorkspaceDrawerItem(
 ) {
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
-        label = { Text(text = workspace.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        label = {
+            Text(
+                text = workspace.data.name,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        },
         icon = icon,
         selected = false,
         onClick = onClick,
@@ -197,10 +210,14 @@ private fun WorkspaceDrawerItem(
 private fun BasicDrawer() {
     val userContent = BasicDrawerContent.UserContent(
         user = User(
-            name = "tuguzT",
-            displayName = "Timur Tugushev",
-            role = Role.User,
-            email = "timurka.tugushev@gmail.com",
+            id = Id("1"),
+            data = UserData(
+                name = "tuguzT",
+                displayName = "Timur Tugushev",
+                role = Role.User,
+                email = "timurka.tugushev@gmail.com",
+                avatarUrl = null,
+            ),
         ),
         avatar = {
             Image(
@@ -216,12 +233,22 @@ private fun BasicDrawer() {
     val workspacesContent = BasicDrawerContent.WorkspacesContent(
         workspaces = listOf(
             Workspace(
-                id = "1",
-                name = "First workspace",
+                id = Id("1"),
+                data = WorkspaceData(
+                    name = "First workspace",
+                    description = "",
+                    visibility = Visibility.Public,
+                    imageUrl = null,
+                ),
             ),
             Workspace(
-                id = "2",
-                name = "Second workspace",
+                id = Id("2"),
+                data = WorkspaceData(
+                    name = "Second workspace",
+                    description = "",
+                    visibility = Visibility.Public,
+                    imageUrl = null,
+                ),
             ),
         ),
         icon = { Icon(Icons.Rounded.Groups3, contentDescription = null) },

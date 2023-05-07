@@ -25,9 +25,13 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import io.github.tuguzt.flexibleproject.R
-import io.github.tuguzt.flexibleproject.model.user.Role
-import io.github.tuguzt.flexibleproject.model.user.User
-import io.github.tuguzt.flexibleproject.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.Id
+import io.github.tuguzt.flexibleproject.domain.model.user.Role
+import io.github.tuguzt.flexibleproject.domain.model.user.User
+import io.github.tuguzt.flexibleproject.domain.model.user.UserData
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AboutScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
@@ -50,10 +54,14 @@ fun BasicScreen(
 
     val userContent = BasicDrawerContent.UserContent(
         user = User(
-            name = "tuguzT",
-            displayName = "Timur Tugushev",
-            role = Role.User,
-            email = null,
+            id = Id("1"),
+            data = UserData(
+                name = "tuguzT",
+                displayName = "Timur Tugushev",
+                role = Role.User,
+                email = "timurka.tugushev@gmail.com",
+                avatarUrl = null,
+            ),
         ),
         avatar = { // TODO get from avatar url
             Image(
@@ -69,12 +77,22 @@ fun BasicScreen(
     val workspacesContent = BasicDrawerContent.WorkspacesContent(
         workspaces = listOf(
             Workspace(
-                id = "1",
-                name = "First workspace",
+                id = Id("1"),
+                data = WorkspaceData(
+                    name = "First workspace",
+                    description = "",
+                    visibility = Visibility.Public,
+                    imageUrl = null,
+                ),
             ),
             Workspace(
-                id = "2",
-                name = "Second workspace",
+                id = Id("2"),
+                data = WorkspaceData(
+                    name = "Second workspace",
+                    description = "",
+                    visibility = Visibility.Public,
+                    imageUrl = null,
+                ),
             ),
         ),
         icon = { // TODO get from workspace icon url
@@ -105,7 +123,7 @@ fun BasicScreen(
             coroutineScope.launch { drawerState.close() }
         },
         onWorkspaceClick = { workspace ->
-            val direction = WorkspaceScreenDestination(workspace.id)
+            val direction = WorkspaceScreenDestination(workspace.id.toString())
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
