@@ -27,6 +27,6 @@ fun BasicTopBar(
             IconButton(onClick = onMenuClick) {
                 Icon(Icons.Rounded.Menu, contentDescription = null)
             }
-        }
+        },
     )
 }

@@ -75,7 +75,7 @@ fun BasicScreen(
             Workspace(
                 id = "2",
                 name = "Second workspace",
-            )
+            ),
         ),
         icon = { // TODO get from workspace icon url
             Icon(Icons.Rounded.Groups3, contentDescription = null)
@@ -116,7 +116,7 @@ fun BasicScreen(
                     coroutineScope.launch { drawerState.open() }
                 }
                 BasicTopBar(onMenuClick = onMenuClick)
-            }
+            },
         ) { padding ->
             DestinationsNavHost(
                 engine = engine,

@@ -222,7 +222,7 @@ private fun BasicDrawer() {
             Workspace(
                 id = "2",
                 name = "Second workspace",
-            )
+            ),
         ),
         icon = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
     )

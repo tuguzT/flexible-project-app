@@ -37,7 +37,7 @@ private fun AboutTopBar() {
         Scaffold(
             topBar = {
                 AboutTopBar(onNavigationClick = {})
-            }
+            },
         ) { padding ->
             Box(modifier = Modifier.padding(padding))
         }
