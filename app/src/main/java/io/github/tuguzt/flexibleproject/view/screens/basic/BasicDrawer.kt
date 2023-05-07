@@ -1,6 +1,7 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Groups3
-import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Divider
@@ -40,12 +41,9 @@ import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.model.user.Role
 import io.github.tuguzt.flexibleproject.model.user.User
 import io.github.tuguzt.flexibleproject.model.workspace.Workspace
-import io.github.tuguzt.flexibleproject.view.screens.destinations.HomeScreenDestination
-import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 
 data class BasicDrawerContent(
-    val currentRoute: String,
     val user: UserContent,
     val workspaces: WorkspacesContent,
 ) {
@@ -64,37 +62,33 @@ data class BasicDrawerContent(
 @Composable
 fun BasicDrawer(
     drawerContent: BasicDrawerContent,
-    onHomeClick: () -> Unit,
+    onUserClick: () -> Unit,
     onSettingsClick: () -> Unit,
+    onAboutClick: () -> Unit,
     onWorkspaceClick: (Workspace) -> Unit,
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     content: @Composable () -> Unit,
 ) {
-    val (currentRoute, user, workspaces) = drawerContent
+    val (user, workspaces) = drawerContent
 
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet {
-                UserContent(content = user)
-                Spacer(modifier = Modifier.height(8.dp))
-
-                HomeDrawerItem(
-                    selected = currentRoute == HomeScreenDestination.route,
-                    onClick = onHomeClick,
+                UserContent(
+                    content = user,
+                    onClick = onUserClick,
                 )
-                SettingsDrawerItem(
-                    selected = currentRoute == SettingsScreenDestination.route,
-                    onClick = onSettingsClick,
-                )
-                // TODO misc (idk what)
                 Spacer(modifier = Modifier.height(8.dp))
-                Divider(modifier = Modifier.padding(horizontal = 28.dp))
 
                 WorkspacesContent(
                     content = workspaces,
                     onWorkspaceClick = onWorkspaceClick,
                 )
+                Divider(modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp))
+
+                SettingsDrawerItem(onClick = onSettingsClick)
+                AboutDrawerItem(onClick = onAboutClick)
             }
         },
         modifier = modifier,
@@ -104,12 +98,20 @@ fun BasicDrawer(
 }
 
 @Composable
-private fun UserContent(content: BasicDrawerContent.UserContent) {
+private fun UserContent(
+    content: BasicDrawerContent.UserContent,
+    onClick: () -> Unit,
+) {
     val (user, avatar) = content
 
     Surface(tonalElevation = 12.dp, modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp)) {
-            Box(content = { avatar() }, modifier = Modifier.height(72.dp))
+            Box(
+                content = { avatar() },
+                modifier = Modifier
+                    .height(72.dp)
+                    .clickable(onClick = onClick),
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
@@ -127,24 +129,24 @@ private fun UserContent(content: BasicDrawerContent.UserContent) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun HomeDrawerItem(selected: Boolean, onClick: () -> Unit) {
+private fun SettingsDrawerItem(onClick: () -> Unit) {
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
-        label = { Text(text = stringResource(R.string.home)) },
-        icon = { Icon(Icons.Rounded.Home, contentDescription = null) },
-        selected = selected,
+        label = { Text(text = stringResource(R.string.settings)) },
+        icon = { Icon(Icons.Rounded.Settings, contentDescription = null) },
+        selected = false,
         onClick = onClick,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsDrawerItem(selected: Boolean, onClick: () -> Unit) {
+private fun AboutDrawerItem(onClick: () -> Unit) {
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
-        label = { Text(text = stringResource(R.string.settings)) },
-        icon = { Icon(Icons.Rounded.Settings, contentDescription = null) },
-        selected = selected,
+        label = { Text(text = stringResource(R.string.about)) },
+        icon = { Icon(Icons.Rounded.Info, contentDescription = null) },
+        selected = false,
         onClick = onClick,
     )
 }
@@ -225,7 +227,6 @@ private fun BasicDrawer() {
         icon = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
     )
     val drawerContent = BasicDrawerContent(
-        currentRoute = HomeScreenDestination.route,
         user = userContent,
         workspaces = workspacesContent,
     )
@@ -234,8 +235,9 @@ private fun BasicDrawer() {
         BasicDrawer(
             drawerContent = drawerContent,
             drawerState = rememberDrawerState(DrawerValue.Open),
-            onHomeClick = {},
+            onUserClick = {},
             onSettingsClick = {},
+            onAboutClick = {},
             onWorkspaceClick = {},
             content = {},
         )

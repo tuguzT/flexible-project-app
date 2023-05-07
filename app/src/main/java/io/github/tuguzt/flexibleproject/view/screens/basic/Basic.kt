@@ -13,28 +13,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.model.user.Role
 import io.github.tuguzt.flexibleproject.model.user.User
 import io.github.tuguzt.flexibleproject.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
-import io.github.tuguzt.flexibleproject.view.screens.destinations.HomeScreenDestination
+import io.github.tuguzt.flexibleproject.view.screens.destinations.AboutScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
+import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
 import kotlinx.coroutines.launch
 
@@ -47,9 +44,6 @@ fun BasicScreen(
 ) {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route ?: HomeScreenDestination.route
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
@@ -88,7 +82,6 @@ fun BasicScreen(
         },
     )
     val drawerContent = BasicDrawerContent(
-        currentRoute = currentRoute,
         user = userContent,
         workspaces = workspacesContent,
     )
@@ -96,26 +89,19 @@ fun BasicScreen(
     BasicDrawer(
         drawerContent = drawerContent,
         drawerState = drawerState,
-        onHomeClick = {
-            val direction = HomeScreenDestination()
-            navController.navigate(direction) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+        onUserClick = {
+            val direction = UserScreenDestination()
+            navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
         onSettingsClick = {
             val direction = SettingsScreenDestination()
-            navController.navigate(direction) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+            navigator.navigate(direction)
+            coroutineScope.launch { drawerState.close() }
+        },
+        onAboutClick = {
+            val direction = AboutScreenDestination()
+            navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
         onWorkspaceClick = { workspace ->

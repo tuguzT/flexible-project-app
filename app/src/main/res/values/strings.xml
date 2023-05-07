@@ -4,4 +4,6 @@
     <string name="settings">Settings</string>
     <string name="workspaces">Workspaces</string>
     <string name="user_avatar">User avatar</string>
+    <string name="about">About</string>
+    <string name="user">User</string>
 </resources>
