@@ -200,7 +200,7 @@ private fun BasicDrawer() {
             name = "tuguzT",
             displayName = "Timur Tugushev",
             role = Role.User,
-            email = null,
+            email = "timurka.tugushev@gmail.com",
         ),
         avatar = {
             Image(
