@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.root
+package io.github.tuguzt.flexibleproject.view.screens.basic
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
@@ -17,13 +17,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import io.github.tuguzt.flexibleproject.R
@@ -37,8 +39,12 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScree
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
+@RootNavGraph(start = true)
+@Destination
 @Composable
-fun Root() {
+fun BasicScreen(
+    navigator: DestinationsNavigator,
+) {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
 
@@ -48,16 +54,16 @@ fun Root() {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    val userState = RootNavigationDrawerState.UserState(
+    val userContent = BasicDrawerContent.UserContent(
         user = User(
             name = "tuguzT",
             displayName = "Timur Tugushev",
             role = Role.User,
             email = null,
         ),
-        avatar = {
+        avatar = { // TODO get from avatar url
             Image(
-                painter = rememberVectorPainter(Icons.Rounded.Person),
+                imageVector = Icons.Rounded.Person,
                 contentDescription = stringResource(R.string.user_avatar),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -66,70 +72,71 @@ fun Root() {
             )
         },
     )
-    val workspaceState = RootNavigationDrawerState.WorkspaceState(
-        workspace = Workspace(
-            id = "1",
-            name = "Empty workspace",
+    val workspacesContent = BasicDrawerContent.WorkspacesContent(
+        workspaces = listOf(
+            Workspace(
+                id = "1",
+                name = "First workspace",
+            ),
+            Workspace(
+                id = "2",
+                name = "Second workspace",
+            )
         ),
-        icon = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
+        icon = { // TODO get from workspace icon url
+            Icon(Icons.Rounded.Groups3, contentDescription = null)
+        },
+    )
+    val drawerContent = BasicDrawerContent(
+        currentRoute = currentRoute,
+        user = userContent,
+        workspaces = workspacesContent,
     )
 
-    RootNavigationDrawer(
-        state = RootNavigationDrawerState(
-            currentRoute = currentRoute,
-            userState = userState,
-            workspacesData = listOf(workspaceState),
-        ),
-        onHomeDestinationClick = {
-            val destination = HomeScreenDestination()
-            navController.navigate(destination) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            coroutineScope.launch { drawerState.close() }
-        },
-        onSettingsDestinationClick = {
-            val destination = SettingsScreenDestination()
-            navController.navigate(destination) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            coroutineScope.launch { drawerState.close() }
-        },
-        onWorkspaceDestinationClick = { workspace ->
-            val destination = WorkspaceScreenDestination(workspace.id)
-            navController.navigate(destination) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
-            coroutineScope.launch { drawerState.close() }
-        },
+    BasicDrawer(
+        drawerContent = drawerContent,
         drawerState = drawerState,
+        onHomeClick = {
+            val direction = HomeScreenDestination()
+            navController.navigate(direction) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            coroutineScope.launch { drawerState.close() }
+        },
+        onSettingsClick = {
+            val direction = SettingsScreenDestination()
+            navController.navigate(direction) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+            coroutineScope.launch { drawerState.close() }
+        },
+        onWorkspaceClick = { workspace ->
+            val direction = WorkspaceScreenDestination(workspace.id)
+            navigator.navigate(direction)
+            coroutineScope.launch { drawerState.close() }
+        },
     ) {
         Scaffold(
             topBar = {
-                val onNavigationClick: () -> Unit = {
-                    coroutineScope.launch {
-                        drawerState.open()
-                    }
+                val onMenuClick: () -> Unit = {
+                    coroutineScope.launch { drawerState.open() }
                 }
-                RootTopBar(onNavigationClick = onNavigationClick)
-            },
-        ) {
+                BasicTopBar(onMenuClick = onMenuClick)
+            }
+        ) { padding ->
             DestinationsNavHost(
                 engine = engine,
                 navController = navController,
-                navGraph = NavGraphs.root,
-                modifier = Modifier.padding(it),
+                navGraph = NavGraphs.basic,
+                modifier = Modifier.padding(padding),
             )
         }
     }

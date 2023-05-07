@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.root
+package io.github.tuguzt.flexibleproject.view.screens.basic
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
@@ -15,8 +15,8 @@ import io.github.tuguzt.flexibleproject.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RootTopBar(
-    onNavigationClick: () -> Unit,
+fun BasicTopBar(
+    onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
     title: String = stringResource(R.string.app_name),
 ) {
@@ -24,7 +24,7 @@ fun RootTopBar(
         modifier = modifier,
         title = { Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         navigationIcon = {
-            IconButton(onClick = onNavigationClick) {
+            IconButton(onClick = onMenuClick) {
                 Icon(Icons.Rounded.Menu, contentDescription = null)
             }
         }
