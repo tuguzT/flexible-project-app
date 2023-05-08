@@ -24,22 +24,24 @@ import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 fun UserAvatar(
     user: User?,
     modifier: Modifier = Modifier,
+    contentDescription: String? = stringResource(R.string.user_avatar),
 ) {
     Image(
         imageVector = Icons.Rounded.Person,
-        contentDescription = stringResource(R.string.user_avatar),
+        contentDescription = contentDescription,
         contentScale = ContentScale.Crop,
         modifier = modifier
             .clip(CircleShape)
             .placeholder(visible = user == null),
     )
+    // TODO load image from user avatar url
 }
 
 @Preview
 @Composable
 private fun UserAvatarWithUser() {
     val user = User(
-        id = Id("1"),
+        id = Id("user"),
         data = UserData(
             name = "tuguzT",
             displayName = "Timur Tugushev",

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Groups3
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Divider
@@ -40,6 +39,7 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
+import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
 import io.github.tuguzt.flexibleproject.view.utils.clickableWithoutRipple
 
 data class BasicDrawerContent(
@@ -235,7 +235,12 @@ private fun BasicDrawer() {
                 ),
             ),
         ),
-        icon = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
+        icon = { workspace ->
+            WorkspaceImage(
+                workspace = workspace,
+                modifier = Modifier.size(24.dp),
+            )
+        },
     )
     val drawerContent = BasicDrawerContent(
         user = userContent,

@@ -2,11 +2,8 @@ package io.github.tuguzt.flexibleproject.view.screens.basic
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Groups3
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -30,6 +27,7 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreen
 import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
+import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
 import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -79,8 +77,11 @@ fun BasicScreen(
                 ),
             ),
         ),
-        icon = { // TODO get from workspace icon url
-            Icon(Icons.Rounded.Groups3, contentDescription = null)
+        icon = { workspace ->
+            WorkspaceImage(
+                workspace = workspace,
+                modifier = Modifier.size(24.dp),
+            )
         },
     )
     val drawerContent = BasicDrawerContent(
