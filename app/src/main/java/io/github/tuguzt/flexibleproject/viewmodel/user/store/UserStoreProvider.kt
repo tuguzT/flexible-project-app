@@ -4,19 +4,17 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import io.github.tuguzt.flexibleproject.domain.model.Id
-import io.github.tuguzt.flexibleproject.domain.model.user.Role
 import io.github.tuguzt.flexibleproject.domain.model.user.User
-import io.github.tuguzt.flexibleproject.domain.model.user.UserData
+import io.github.tuguzt.flexibleproject.domain.model.user.UserId
+import io.github.tuguzt.flexibleproject.domain.usecase.user.ReadUser
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.State
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
-import kotlin.time.Duration.Companion.seconds
 
 class UserStoreProvider(
+    private val readUser: ReadUser,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
 ) {
@@ -31,20 +29,25 @@ class UserStoreProvider(
             ) {}
 
     private sealed interface Message {
-        object Loaded : Message
+        object Loading : Message
+        data class Loaded(val user: User) : Message
+        data class NoUser(val id: UserId) : Message
     }
 
     private inner class ExecutorImpl :
         CoroutineExecutor<Intent, Unit, State, Message, Label>(mainContext = coroutineContext) {
         override fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
-                is Intent.Load -> load()
+                is Intent.Load -> load(intent.id)
             }
 
-        private fun load() {
+        private fun load(id: UserId) {
+            dispatch(Message.Loading)
             scope.launch {
-                delay(3.seconds)
-                dispatch(Message.Loaded)
+                when (val user = readUser.readUser(id)) {
+                    null -> dispatch(Message.NoUser(id))
+                    else -> dispatch(Message.Loaded(user))
+                }
             }
         }
     }
@@ -52,19 +55,9 @@ class UserStoreProvider(
     private object ReducerImpl : Reducer<State, Message> {
         override fun State.reduce(msg: Message): State =
             when (msg) {
-                Message.Loaded -> copy(
-                    user = User(
-                        id = Id("user"),
-                        data = UserData(
-                            name = "tuguzT",
-                            displayName = "Timur Tugushev",
-                            role = Role.User,
-                            email = "timurka.tugushev@gmail.com",
-                            avatarUrl = null,
-                        ),
-                    ),
-                    isLoading = false,
-                )
+                Message.Loading -> copy(isLoading = true)
+                is Message.Loaded -> copy(user = msg.user, isLoading = false)
+                is Message.NoUser -> copy(user = null, isLoading = false)
             }
     }
 }

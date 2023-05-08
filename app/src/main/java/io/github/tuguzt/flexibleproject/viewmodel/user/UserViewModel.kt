@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
+import io.github.tuguzt.flexibleproject.domain.usecase.user.ReadUser
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Label
@@ -18,9 +19,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
+    readUser: ReadUser,
     storeFactory: StoreFactory,
 ) : ViewModel() {
     private val provider = UserStoreProvider(
+        readUser = readUser,
         storeFactory = storeFactory,
         coroutineContext = viewModelScope.coroutineContext,
     )
