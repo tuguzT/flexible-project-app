@@ -93,7 +93,7 @@ fun BasicScreen(
         drawerContent = drawerContent,
         drawerState = drawerState,
         onUserClick = {
-            val direction = UserScreenDestination()
+            val direction = UserScreenDestination("") // FIXME pass current user id
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },

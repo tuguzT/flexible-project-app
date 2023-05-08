@@ -1,31 +1,31 @@
-package io.github.tuguzt.flexibleproject.viewmodel.user.store
+package io.github.tuguzt.flexibleproject.viewmodel.workspace.store
 
 import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.github.tuguzt.flexibleproject.domain.model.Id
-import io.github.tuguzt.flexibleproject.domain.model.user.Role
-import io.github.tuguzt.flexibleproject.domain.model.user.User
-import io.github.tuguzt.flexibleproject.domain.model.user.UserData
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Label
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.State
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
+import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Intent
+import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Label
+import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.State
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.seconds
 
-class UserStoreProvider(
+class WorkspaceStoreProvider(
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
 ) {
-    fun provide(): UserStore =
+    fun provide(): WorkspaceStore =
         object :
-            UserStore,
+            WorkspaceStore,
             Store<Intent, State, Label> by storeFactory.create(
-                name = UserStore::class.simpleName,
-                initialState = State(user = null, isLoading = true),
+                name = WorkspaceStore::class.simpleName,
+                initialState = State(workspace = null, isLoading = true),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}
@@ -53,14 +53,13 @@ class UserStoreProvider(
         override fun State.reduce(msg: Message): State =
             when (msg) {
                 Message.Loaded -> copy(
-                    user = User(
-                        id = Id("user"),
-                        data = UserData(
-                            name = "tuguzT",
-                            displayName = "Timur Tugushev",
-                            role = Role.User,
-                            email = "timurka.tugushev@gmail.com",
-                            avatarUrl = null,
+                    workspace = Workspace(
+                        id = Id("workspace"),
+                        data = WorkspaceData(
+                            name = "Workspace",
+                            description = "Sample workspace",
+                            visibility = Visibility.Public,
+                            imageUrl = null,
                         ),
                     ),
                     isLoading = false,

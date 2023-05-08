@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Label
@@ -25,8 +26,10 @@ class UserViewModel @Inject constructor(
     )
     private val store: UserStore = provider.provide()
 
+    // FIXME remove this when current user view model will be created
     init {
-        accept(Intent.Load)
+        val intent = Intent.Load(id = UserId("user"))
+        accept(intent)
     }
 
     fun accept(intent: Intent): Unit = store.accept(intent)

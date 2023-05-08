@@ -8,6 +8,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.accompanist.placeholder.material.placeholder
 import io.github.tuguzt.flexibleproject.domain.model.Id
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
@@ -19,22 +20,30 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WorkspaceTopBar(
-    workspace: Workspace,
+    workspace: Workspace?,
     onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
         modifier = modifier,
-        title = { OneLineTitle(text = workspace.data.name) },
+        title = { WorkspaceTitle(workspace = workspace) },
         navigationIcon = { NavigateUpIconButton(onClick = onNavigationClick) },
     )
     // TODO workspace image, scroll behaviour
 }
 
+@Composable
+private fun WorkspaceTitle(workspace: Workspace?) {
+    OneLineTitle(
+        text = workspace?.data?.name ?: "Placeholder",
+        modifier = Modifier.placeholder(visible = workspace == null),
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun WorkspaceTopBar() {
+private fun WorkspaceTopBarWithWorkspace() {
     val workspace = Workspace(
         id = Id("1"),
         data = WorkspaceData(
@@ -49,6 +58,21 @@ private fun WorkspaceTopBar() {
         Scaffold(
             topBar = {
                 WorkspaceTopBar(workspace = workspace, onNavigationClick = {})
+            },
+        ) { padding ->
+            Box(modifier = Modifier.padding(padding))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun WorkspaceTopBarWithoutWorkspace() {
+    AppTheme {
+        Scaffold(
+            topBar = {
+                WorkspaceTopBar(workspace = null, onNavigationClick = {})
             },
         ) { padding ->
             Box(modifier = Modifier.padding(padding))
