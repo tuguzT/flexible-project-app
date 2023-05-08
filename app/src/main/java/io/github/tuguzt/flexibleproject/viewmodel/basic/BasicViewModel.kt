@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.viewmodel.user
+package io.github.tuguzt.flexibleproject.viewmodel.basic
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -6,27 +6,27 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Label
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.State
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStoreProvider
+import io.github.tuguzt.flexibleproject.domain.usecase.workspace.ReadAllWorkspaces
+import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore
+import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.Intent
+import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.Label
+import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.State
+import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStoreProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
-class UserViewModel @Inject constructor(
-    findById: FindUserById,
+class BasicViewModel @Inject constructor(
+    readAll: ReadAllWorkspaces,
     storeFactory: StoreFactory,
 ) : ViewModel() {
-    private val provider = UserStoreProvider(
-        findById = findById,
+    private val provider = BasicStoreProvider(
+        readAll = readAll,
         storeFactory = storeFactory,
         coroutineContext = viewModelScope.coroutineContext,
     )
-    private val store: UserStore = provider.provide()
+    private val store: BasicStore = provider.provide()
 
     fun accept(intent: Intent): Unit = store.accept(intent)
 

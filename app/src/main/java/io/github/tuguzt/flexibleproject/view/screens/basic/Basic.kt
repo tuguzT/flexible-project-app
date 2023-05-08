@@ -19,10 +19,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.rememberNavHostEngine
-import io.github.tuguzt.flexibleproject.domain.model.Id
-import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
-import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
-import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AboutScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
@@ -31,8 +27,10 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScree
 import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
 import io.github.tuguzt.flexibleproject.viewmodel.auth.CurrentUserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.BasicViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
+import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +41,7 @@ fun BasicScreen(
     navigator: DestinationsNavigator,
     currentUserViewModel: CurrentUserViewModel,
     userViewModel: UserViewModel = hiltViewModel(),
+    basicViewModel: BasicViewModel = hiltViewModel(),
 ) {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
@@ -53,8 +52,14 @@ fun BasicScreen(
     val userState by userViewModel.stateFlow.collectAsState()
     val userId = currentUserViewModel.currentUserId
     LaunchedEffect(userId) {
-        val intent = Intent.Load(userId)
+        val intent = UserStore.Intent.Load(userId)
         userViewModel.accept(intent)
+    }
+
+    val basicState by basicViewModel.stateFlow.collectAsState()
+    LaunchedEffect(Unit) {
+        val intent = BasicStore.Intent.Load
+        basicViewModel.accept(intent)
     }
 
     val userContent = BasicDrawerContent.UserContent(
@@ -67,26 +72,7 @@ fun BasicScreen(
         },
     )
     val workspacesContent = BasicDrawerContent.WorkspacesContent(
-        workspaces = listOf(
-            Workspace(
-                id = Id("1"),
-                data = WorkspaceData(
-                    name = "First workspace",
-                    description = "",
-                    visibility = Visibility.Public,
-                    imageUrl = null,
-                ),
-            ),
-            Workspace(
-                id = Id("2"),
-                data = WorkspaceData(
-                    name = "Second workspace",
-                    description = "",
-                    visibility = Visibility.Public,
-                    imageUrl = null,
-                ),
-            ),
-        ),
+        workspaces = basicState.workspaces,
         icon = { workspace ->
             WorkspaceImage(
                 workspace = workspace,

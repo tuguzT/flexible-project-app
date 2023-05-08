@@ -6,7 +6,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
-import io.github.tuguzt.flexibleproject.domain.usecase.user.ReadUser
+import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.State
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class UserStoreProvider(
-    private val readUser: ReadUser,
+    private val findById: FindUserById,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
 ) {
@@ -31,7 +31,7 @@ class UserStoreProvider(
     private sealed interface Message {
         object Loading : Message
         data class Loaded(val user: User) : Message
-        data class NoUser(val id: UserId) : Message
+        data class NotFound(val id: UserId) : Message
     }
 
     private inner class ExecutorImpl :
@@ -44,8 +44,8 @@ class UserStoreProvider(
         private fun load(id: UserId) {
             dispatch(Message.Loading)
             scope.launch {
-                when (val user = readUser.readUser(id)) {
-                    null -> dispatch(Message.NoUser(id))
+                when (val user = findById.findById(id)) {
+                    null -> dispatch(Message.NotFound(id))
                     else -> dispatch(Message.Loaded(user))
                 }
             }
@@ -57,7 +57,7 @@ class UserStoreProvider(
             when (msg) {
                 Message.Loading -> copy(isLoading = true)
                 is Message.Loaded -> copy(user = msg.user, isLoading = false)
-                is Message.NoUser -> copy(user = null, isLoading = false)
+                is Message.NotFound -> copy(user = null, isLoading = false)
             }
     }
 }

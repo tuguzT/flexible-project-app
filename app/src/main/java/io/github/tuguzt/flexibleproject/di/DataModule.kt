@@ -5,11 +5,16 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.github.tuguzt.flexibleproject.data.repository.user.MockUserRepository
+import io.github.tuguzt.flexibleproject.data.repository.workspace.MockWorkspaceRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
+import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
 
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
     @Provides
     fun provideUserRepository(): UserRepository = MockUserRepository()
+
+    @Provides
+    fun provideWorkspaceRepository(): WorkspaceRepository = MockWorkspaceRepository()
 }

@@ -4,8 +4,6 @@ import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 
-class ReadUser(private val repository: UserRepository) {
-    suspend fun readUser(id: UserId): User? {
-        return repository.read(id)
-    }
+class FindUserById(private val repository: UserRepository) {
+    suspend fun findById(id: UserId): User? = repository.findById(id)
 }

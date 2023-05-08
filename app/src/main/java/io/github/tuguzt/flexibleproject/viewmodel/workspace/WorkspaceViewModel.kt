@@ -6,6 +6,7 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.labels
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Label
@@ -17,9 +18,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WorkspaceViewModel @Inject constructor(
+    findById: FindWorkspaceById,
     storeFactory: StoreFactory,
 ) : ViewModel() {
     private val provider = WorkspaceStoreProvider(
+        findById = findById,
         storeFactory = storeFactory,
         coroutineContext = viewModelScope.coroutineContext,
     )

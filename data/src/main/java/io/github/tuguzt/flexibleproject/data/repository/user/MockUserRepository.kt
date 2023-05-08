@@ -17,8 +17,8 @@ class MockUserRepository : UserRepository {
         ),
     )
 
-    override suspend fun read(id: UserId): User? {
+    override suspend fun findById(id: UserId): User? {
         val data = users[id] ?: return null
-        return User(id = id, data = data)
+        return User(id, data)
     }
 }
