@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.placeholder.material.placeholder
 import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.domain.model.Id
 import io.github.tuguzt.flexibleproject.domain.model.user.Role
@@ -47,7 +48,7 @@ data class BasicDrawerContent(
     val workspaces: WorkspacesContent,
 ) {
     data class UserContent(
-        val user: User,
+        val user: User?,
         val avatar: @Composable () -> Unit,
     )
 
@@ -109,17 +110,24 @@ private fun UserContent(
                 content = { avatar() },
                 modifier = Modifier
                     .height(72.dp)
-                    .clickableWithoutRipple(onClick = onClick),
+                    .clickableWithoutRipple(
+                        onClick = onClick,
+                        enabled = user != null,
+                    ),
             )
 
             Spacer(modifier = Modifier.height(8.dp))
             OneLineTitle(
-                text = user.data.displayName,
+                text = user?.data?.displayName ?: "Display name",
                 fontWeight = FontWeight.Bold,
+                modifier = Modifier.placeholder(visible = user == null),
             )
 
             Spacer(modifier = Modifier.height(4.dp))
-            OneLineTitle(text = "@${user.data.name}")
+            OneLineTitle(
+                text = user?.data?.name?.let { "@$it" } ?: "Name",
+                modifier = Modifier.placeholder(visible = user == null),
+            )
         }
     }
 }

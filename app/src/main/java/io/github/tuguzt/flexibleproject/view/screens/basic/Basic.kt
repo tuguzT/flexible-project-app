@@ -58,7 +58,7 @@ fun BasicScreen(
     }
 
     val userContent = BasicDrawerContent.UserContent(
-        user = userState.user ?: return, // TODO proper loading handling
+        user = userState.user,
         avatar = {
             UserAvatar(
                 user = userState.user,
@@ -102,8 +102,9 @@ fun BasicScreen(
     BasicDrawer(
         drawerContent = drawerContent,
         drawerState = drawerState,
-        onUserClick = {
-            val direction = UserScreenDestination(userId.toString())
+        onUserClick = click@{
+            val id = userState.user?.id
+            val direction = UserScreenDestination(id.toString())
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
@@ -118,7 +119,8 @@ fun BasicScreen(
             coroutineScope.launch { drawerState.close() }
         },
         onWorkspaceClick = { workspace ->
-            val direction = WorkspaceScreenDestination(workspace.id.toString())
+            val id = workspace.id
+            val direction = WorkspaceScreenDestination(id.toString())
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
