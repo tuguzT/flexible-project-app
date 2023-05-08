@@ -7,11 +7,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -28,7 +30,9 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDest
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
+import io.github.tuguzt.flexibleproject.viewmodel.auth.CurrentUserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +41,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun BasicScreen(
     navigator: DestinationsNavigator,
-    userViewModel: UserViewModel,
+    currentUserViewModel: CurrentUserViewModel,
+    userViewModel: UserViewModel = hiltViewModel(),
 ) {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
@@ -46,6 +51,11 @@ fun BasicScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val userState by userViewModel.stateFlow.collectAsState()
+    val userId = currentUserViewModel.currentUserId
+    LaunchedEffect(userId) {
+        val intent = Intent.Load(userId)
+        userViewModel.accept(intent)
+    }
 
     val userContent = BasicDrawerContent.UserContent(
         user = userState.user ?: return, // TODO proper loading handling
@@ -93,7 +103,7 @@ fun BasicScreen(
         drawerContent = drawerContent,
         drawerState = drawerState,
         onUserClick = {
-            val direction = UserScreenDestination("") // FIXME pass current user id
+            val direction = UserScreenDestination(userId.toString())
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },

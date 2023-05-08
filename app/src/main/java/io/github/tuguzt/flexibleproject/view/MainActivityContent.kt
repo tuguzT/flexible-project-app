@@ -9,18 +9,18 @@ import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.dependency
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
-import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.auth.CurrentUserViewModel
 
 @Composable
 fun MainActivityContent(
-    userViewModel: UserViewModel = hiltViewModel(),
+    currentUserViewModel: CurrentUserViewModel = hiltViewModel(),
 ) {
     AppTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
                 dependenciesContainerBuilder = {
-                    dependency(userViewModel)
+                    dependency(currentUserViewModel)
                 },
             )
         }

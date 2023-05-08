@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -23,7 +24,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 fun UserScreen(
     id: String,
     navigator: DestinationsNavigator,
-    viewModel: UserViewModel,
+    viewModel: UserViewModel = hiltViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsState()
     LaunchedEffect(id) {

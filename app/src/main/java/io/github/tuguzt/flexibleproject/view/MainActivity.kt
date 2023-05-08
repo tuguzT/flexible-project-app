@@ -6,18 +6,18 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.auth.CurrentUserViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val userViewModel: UserViewModel by viewModels()
+    private val currentUserViewModel: CurrentUserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
         super.onCreate(savedInstanceState)
         setContent {
-            MainActivityContent(userViewModel)
+            MainActivityContent(currentUserViewModel)
         }
     }
 }
