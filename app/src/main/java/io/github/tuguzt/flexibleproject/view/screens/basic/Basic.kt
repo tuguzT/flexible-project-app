@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -46,7 +45,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BasicScreen(
     navigator: DestinationsNavigator,
-    userViewModel: UserViewModel = hiltViewModel(),
+    userViewModel: UserViewModel,
 ) {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()

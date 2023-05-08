@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -20,7 +19,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
 @Composable
 fun UserScreen(
     navigator: DestinationsNavigator,
-    viewModel: UserViewModel = hiltViewModel(),
+    viewModel: UserViewModel,
 ) {
     val state by viewModel.stateFlow.collectAsState()
 

@@ -11,7 +11,10 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserData
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.State
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.Duration.Companion.seconds
 
 class UserStoreProvider(
     private val storeFactory: StoreFactory,
@@ -39,11 +42,10 @@ class UserStoreProvider(
             }
 
         private fun load() {
-            dispatch(Message.Loaded)
-//            scope.launch {
-//                delay(3.seconds)
-//                dispatch(Message.Loaded)
-//            }
+            scope.launch {
+                delay(3.seconds)
+                dispatch(Message.Loaded)
+            }
         }
     }
 
