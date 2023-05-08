@@ -44,10 +44,13 @@ class WorkspaceStoreProvider(
         private fun load(id: WorkspaceId) {
             dispatch(Message.Loading)
             scope.launch {
-                when (val workspace = findById.findById(id)) {
-                    null -> dispatch(Message.NotFound(id))
-                    else -> dispatch(Message.Loaded(workspace))
+                val workspace = findById.findById(id)
+                if (workspace == null) {
+                    dispatch(Message.NotFound(id))
+                    publish(Label.NotFound(id))
+                    return@launch
                 }
+                dispatch(Message.Loaded(workspace))
             }
         }
     }

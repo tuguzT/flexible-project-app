@@ -16,7 +16,5 @@ interface BasicStore : Store<Intent, State, Label> {
         val isLoading: Boolean,
     )
 
-    sealed interface Label {
-        object LoadError : Label
-    }
+    sealed interface Label
 }

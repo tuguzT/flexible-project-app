@@ -44,10 +44,13 @@ class UserStoreProvider(
         private fun load(id: UserId) {
             dispatch(Message.Loading)
             scope.launch {
-                when (val user = findById.findById(id)) {
-                    null -> dispatch(Message.NotFound(id))
-                    else -> dispatch(Message.Loaded(user))
+                val user = findById.findById(id)
+                if (user == null) {
+                    dispatch(Message.NotFound(id))
+                    publish(Label.NotFound(id))
+                    return@launch
                 }
+                dispatch(Message.Loaded(user))
             }
         }
     }
