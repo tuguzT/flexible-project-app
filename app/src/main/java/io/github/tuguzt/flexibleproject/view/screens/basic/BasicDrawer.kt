@@ -1,7 +1,5 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,11 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Groups3
 import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
@@ -29,8 +25,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,6 +39,8 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
+import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
+import io.github.tuguzt.flexibleproject.view.utils.clickableWithoutRipple
 
 data class BasicDrawerContent(
     val user: UserContent,
@@ -113,7 +109,7 @@ private fun UserContent(
                 content = { avatar() },
                 modifier = Modifier
                     .height(72.dp)
-                    .clickable(onClick = onClick),
+                    .clickableWithoutRipple(onClick = onClick),
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -199,25 +195,22 @@ private fun WorkspaceDrawerItem(
 @Preview
 @Composable
 private fun BasicDrawer() {
-    val userContent = BasicDrawerContent.UserContent(
-        user = User(
-            id = Id("1"),
-            data = UserData(
-                name = "tuguzT",
-                displayName = "Timur Tugushev",
-                role = Role.User,
-                email = "timurka.tugushev@gmail.com",
-                avatarUrl = null,
-            ),
+    val user = User(
+        id = Id("1"),
+        data = UserData(
+            name = "tuguzT",
+            displayName = "Timur Tugushev",
+            role = Role.User,
+            email = "timurka.tugushev@gmail.com",
+            avatarUrl = null,
         ),
+    )
+    val userContent = BasicDrawerContent.UserContent(
+        user = user,
         avatar = {
-            Image(
-                imageVector = Icons.Rounded.Person,
-                contentDescription = stringResource(R.string.user_avatar),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(72.dp)
-                    .clip(CircleShape),
+            UserAvatar(
+                user = user,
+                modifier = Modifier.size(72.dp),
             )
         },
     )

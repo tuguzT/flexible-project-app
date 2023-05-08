@@ -26,7 +26,7 @@ fun UserScreen(
     Scaffold(
         topBar = {
             UserTopBar(
-                user = state.user ?: return@Scaffold,
+                user = state.user,
                 onNavigationClick = navigator::navigateUp,
             )
         },

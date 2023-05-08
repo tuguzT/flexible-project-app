@@ -85,6 +85,11 @@ dependencies {
     androidTestImplementation(composeBom)
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
+    // Accompanist dependencies
+    val accompanistVersion = "0.30.1"
+
+    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
+
     // Compose Destinations dependencies
     val destinationsVersion = "1.8.41-beta"
 
