@@ -12,7 +12,7 @@ class MockWorkspaceRepository : WorkspaceRepository {
             name = "First workspace",
             description = "Empty workspace",
             visibility = Visibility.Public,
-            imageUrl = null,
+            imageUrl = "https://avatars.githubusercontent.com/u/56771526",
         ),
         WorkspaceId("2") to WorkspaceData(
             name = "Second workspace",

@@ -97,6 +97,11 @@ dependencies {
     implementation("io.github.raamcosta.compose-destinations:core:$destinationsVersion")
     ksp("io.github.raamcosta.compose-destinations:ksp:$destinationsVersion")
 
+    // Coil dependencies
+    val coilVersion = "2.3.0"
+
+    implementation("io.coil-kt:coil-compose:$coilVersion")
+
     // Hilt dependencies
     val hiltVersion = "2.44"
 

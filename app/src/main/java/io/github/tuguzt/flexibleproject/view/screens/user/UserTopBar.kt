@@ -51,7 +51,7 @@ private fun UserTopBarWithUser() {
             displayName = "Timur Tugushev",
             role = Role.User,
             email = "timurka.tugushev@gmail.com",
-            avatarUrl = null,
+            avatarUrl = "https://avatars.githubusercontent.com/u/56771526",
         ),
     )
 
