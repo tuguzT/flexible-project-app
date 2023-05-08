@@ -98,6 +98,14 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
 
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    // MVIKotlin dependencies
+    val mviKotlinVersion = "3.2.0"
+
+    implementation("com.arkivanov.mvikotlin:mvikotlin:$mviKotlinVersion")
+    implementation("com.arkivanov.mvikotlin:mvikotlin-main:$mviKotlinVersion")
+    implementation("com.arkivanov.mvikotlin:mvikotlin-logging:$mviKotlinVersion")
+    implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:$mviKotlinVersion")
 }
 
 kapt {

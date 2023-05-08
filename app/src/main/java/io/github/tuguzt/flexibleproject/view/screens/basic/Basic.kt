@@ -13,12 +13,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -26,9 +29,6 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.domain.model.Id
-import io.github.tuguzt.flexibleproject.domain.model.user.Role
-import io.github.tuguzt.flexibleproject.domain.model.user.User
-import io.github.tuguzt.flexibleproject.domain.model.user.UserData
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
@@ -37,6 +37,7 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.AboutScreenDes
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
+import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +46,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BasicScreen(
     navigator: DestinationsNavigator,
+    userViewModel: UserViewModel = hiltViewModel(),
 ) {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
@@ -52,17 +54,10 @@ fun BasicScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
+    val userState by userViewModel.stateFlow.collectAsState()
+
     val userContent = BasicDrawerContent.UserContent(
-        user = User(
-            id = Id("1"),
-            data = UserData(
-                name = "tuguzT",
-                displayName = "Timur Tugushev",
-                role = Role.User,
-                email = "timurka.tugushev@gmail.com",
-                avatarUrl = null,
-            ),
-        ),
+        user = userState.user ?: return, // TODO proper loading handling
         avatar = { // TODO get from avatar url
             Image(
                 imageVector = Icons.Rounded.Person,
