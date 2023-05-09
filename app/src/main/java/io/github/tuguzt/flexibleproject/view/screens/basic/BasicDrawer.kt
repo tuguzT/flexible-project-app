@@ -11,6 +11,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Divider
@@ -67,7 +70,10 @@ fun BasicDrawer(
     onUserClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
+    workspacesExpanded: Boolean,
+    onWorkspacesExpandedChange: (Boolean) -> Unit,
     onWorkspaceClick: (Workspace) -> Unit,
+    onAddNewWorkspaceClick: () -> Unit,
     modifier: Modifier = Modifier,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     content: @Composable () -> Unit,
@@ -85,7 +91,10 @@ fun BasicDrawer(
 
                 WorkspacesContent(
                     content = workspaces,
+                    workspacesExpanded = workspacesExpanded,
+                    onWorkspacesExpandedChange = onWorkspacesExpandedChange,
                     onWorkspaceClick = onWorkspaceClick,
+                    onAddNewWorkspaceClick = onAddNewWorkspaceClick,
                 )
                 Divider(modifier = Modifier.padding(horizontal = 28.dp, vertical = 8.dp))
 
@@ -161,28 +170,61 @@ private fun AboutDrawerItem(onClick: () -> Unit) {
 @Composable
 private fun WorkspacesContent(
     content: BasicDrawerContent.WorkspacesContent,
+    workspacesExpanded: Boolean,
+    onWorkspacesExpandedChange: (Boolean) -> Unit,
     onWorkspaceClick: (Workspace) -> Unit,
+    onAddNewWorkspaceClick: () -> Unit,
 ) {
     val (workspaces, icon) = content
 
     Column {
-        OneLineTitle(
-            text = stringResource(R.string.workspaces),
-            modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
+        WorkspacesHeader(
+            expanded = workspacesExpanded,
+            onExpandedChange = onWorkspacesExpandedChange,
         )
-        LazyColumn {
-            items(
-                items = workspaces,
-                key = { workspace -> workspace.id.toString() },
-            ) { workspace ->
-                WorkspaceDrawerItem(
-                    workspace = workspace,
-                    icon = { icon(workspace) },
-                    onClick = { onWorkspaceClick(workspace) },
-                )
+        // TODO animation
+        if (workspacesExpanded) {
+            LazyColumn {
+                items(
+                    items = workspaces,
+                    key = { workspace -> workspace.id.toString() },
+                ) { workspace ->
+                    WorkspaceDrawerItem(
+                        workspace = workspace,
+                        icon = { icon(workspace) },
+                        onClick = { onWorkspaceClick(workspace) },
+                    )
+                }
+                item {
+                    AddNewWorkspaceDrawerItem(
+                        onClick = onAddNewWorkspaceClick,
+                    )
+                }
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun WorkspacesHeader(
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+) {
+    NavigationDrawerItem(
+        modifier = Modifier.padding(horizontal = 12.dp),
+        label = { OneLineTitle(text = stringResource(R.string.workspaces)) },
+        badge = {
+            // TODO animation
+            if (expanded) {
+                Icon(Icons.Rounded.ArrowDropUp, contentDescription = null)
+            } else {
+                Icon(Icons.Rounded.ArrowDropDown, contentDescription = null)
+            }
+        },
+        selected = false,
+        onClick = { onExpandedChange(!expanded) },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -196,6 +238,18 @@ private fun WorkspaceDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
         label = { OneLineTitle(text = workspace.data.name) },
         icon = icon,
+        selected = false,
+        onClick = onClick,
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddNewWorkspaceDrawerItem(onClick: () -> Unit) {
+    NavigationDrawerItem(
+        modifier = Modifier.padding(horizontal = 12.dp),
+        label = { OneLineTitle(text = stringResource(R.string.add_new_workspace)) },
+        icon = { Icon(Icons.Rounded.Add, contentDescription = null) },
         selected = false,
         onClick = onClick,
     )
@@ -264,7 +318,10 @@ private fun BasicDrawer() {
             onUserClick = {},
             onSettingsClick = {},
             onAboutClick = {},
+            workspacesExpanded = true,
+            onWorkspacesExpandedChange = {},
             onWorkspaceClick = {},
+            onAddNewWorkspaceClick = {},
             content = {},
         )
     }

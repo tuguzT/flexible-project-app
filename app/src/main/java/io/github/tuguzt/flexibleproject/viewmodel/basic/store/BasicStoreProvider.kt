@@ -22,7 +22,11 @@ class BasicStoreProvider(
             BasicStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = BasicStore::class.simpleName,
-                initialState = State(workspaces = listOf(), isLoading = true),
+                initialState = State(
+                    workspaces = listOf(),
+                    workspacesExpanded = true,
+                    loading = true,
+                ),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}
@@ -30,6 +34,7 @@ class BasicStoreProvider(
     private sealed interface Message {
         object Loading : Message
         data class Loaded(val workspaces: List<Workspace>) : Message
+        data class WorkspacesExpand(val expanded: Boolean) : Message
     }
 
     private inner class ExecutorImpl :
@@ -37,6 +42,7 @@ class BasicStoreProvider(
         override fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
                 is Intent.Load -> load()
+                is Intent.WorkspacesExpand -> expandWorkspaces(intent.expanded)
             }
 
         private fun load() {
@@ -46,13 +52,18 @@ class BasicStoreProvider(
                 dispatch(Message.Loaded(workspace))
             }
         }
+
+        private fun expandWorkspaces(expanded: Boolean) {
+            dispatch(Message.WorkspacesExpand(expanded))
+        }
     }
 
     private object ReducerImpl : Reducer<State, Message> {
         override fun State.reduce(msg: Message): State =
             when (msg) {
-                Message.Loading -> copy(isLoading = true)
-                is Message.Loaded -> copy(workspaces = msg.workspaces, isLoading = false)
+                Message.Loading -> copy(loading = true)
+                is Message.Loaded -> copy(workspaces = msg.workspaces, loading = false)
+                is Message.WorkspacesExpand -> copy(workspacesExpanded = msg.expanded)
             }
     }
 }

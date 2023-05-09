@@ -10,4 +10,5 @@
     <string name="workspace_image">Workspace image</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
+    <string name="add_new_workspace">Add new workspace</string>
 </resources>

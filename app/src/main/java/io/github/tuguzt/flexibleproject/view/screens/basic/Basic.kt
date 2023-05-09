@@ -113,11 +113,19 @@ fun BasicScreen(
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
+        workspacesExpanded = basicState.workspacesExpanded,
+        onWorkspacesExpandedChange = {
+            val intent = BasicStore.Intent.WorkspacesExpand(it)
+            basicViewModel.accept(intent)
+        },
         onWorkspaceClick = { workspace ->
             val id = workspace.id
             val direction = WorkspaceScreenDestination(id.toString())
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
+        },
+        onAddNewWorkspaceClick = {
+            TODO("add new workspace")
         },
     ) {
         Scaffold(

@@ -9,11 +9,13 @@ import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.State
 interface BasicStore : Store<Intent, State, Label> {
     sealed interface Intent {
         object Load : Intent
+        data class WorkspacesExpand(val expanded: Boolean) : Intent
     }
 
     data class State(
         val workspaces: List<Workspace>,
-        val isLoading: Boolean,
+        val workspacesExpanded: Boolean,
+        val loading: Boolean,
     )
 
     sealed interface Label
