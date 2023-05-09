@@ -32,7 +32,7 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDest
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
-import io.github.tuguzt.flexibleproject.viewmodel.auth.CurrentUserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.basic.BasicViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BasicScreen(
     navigator: DestinationsNavigator,
-    currentUserViewModel: CurrentUserViewModel,
+    authViewModel: AuthViewModel,
     userViewModel: UserViewModel = hiltViewModel(),
     basicViewModel: BasicViewModel = hiltViewModel(),
 ) {
@@ -55,14 +55,15 @@ fun BasicScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
+    val authState by authViewModel.stateFlow.collectAsState()
     val userState by userViewModel.stateFlow.collectAsState()
-    val userId = currentUserViewModel.currentUserId
+    val basicState by basicViewModel.stateFlow.collectAsState()
+
+    val userId = authState.currentUser ?: return // TODO navigate to the auth flow
     LaunchedEffect(userId) {
         val intent = UserStore.Intent.Load(userId)
         userViewModel.accept(intent)
     }
-
-    val basicState by basicViewModel.stateFlow.collectAsState()
     LaunchedEffect(Unit) {
         val intent = BasicStore.Intent.Load
         basicViewModel.accept(intent)
