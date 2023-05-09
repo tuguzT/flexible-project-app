@@ -2,6 +2,7 @@ package io.github.tuguzt.flexibleproject.view.screens.basic
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -12,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -67,7 +69,7 @@ fun BasicScreen(
         avatar = {
             UserAvatar(
                 user = userState.user,
-                modifier = Modifier.size(72.dp),
+                modifier = Modifier.size(72.dp).clip(CircleShape),
             )
         },
     )
