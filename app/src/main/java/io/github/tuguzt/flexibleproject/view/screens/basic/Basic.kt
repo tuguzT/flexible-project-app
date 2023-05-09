@@ -3,8 +3,12 @@ package io.github.tuguzt.flexibleproject.view.screens.basic
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Groups3
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -70,6 +74,7 @@ fun BasicScreen(
             UserAvatar(
                 user = userState.user,
                 modifier = Modifier.size(72.dp).clip(CircleShape),
+                error = { Icon(Icons.Rounded.Person, contentDescription = null) },
             )
         },
     )
@@ -79,6 +84,7 @@ fun BasicScreen(
             WorkspaceImage(
                 workspace = workspace,
                 modifier = Modifier.size(24.dp),
+                error = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
             )
         },
     )

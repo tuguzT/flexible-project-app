@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -81,6 +84,7 @@ private fun UserTitle(
             UserAvatar(
                 user = user,
                 modifier = Modifier.size(42.dp).clip(CircleShape),
+                error = { Icon(Icons.Rounded.Person, contentDescription = null) },
             )
             Spacer(modifier = Modifier.width(8.dp))
         }

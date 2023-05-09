@@ -1,21 +1,19 @@
 package io.github.tuguzt.flexibleproject.view.utils
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.google.accompanist.placeholder.material.placeholder
 import io.github.tuguzt.flexibleproject.R
@@ -31,6 +29,8 @@ fun WorkspaceImage(
     modifier: Modifier = Modifier,
     contentDescription: String? = stringResource(R.string.workspace_image),
     crossfade: Boolean = true,
+    colorFilter: ColorFilter? = null,
+    error: @Composable (() -> Unit)? = null,
 ) {
     val model = ImageRequest.Builder(LocalContext.current)
         .data(workspace?.data?.imageUrl)
@@ -38,12 +38,13 @@ fun WorkspaceImage(
         .build()
     var isLoading by remember { mutableStateOf(true) }
 
-    AsyncImage(
+    SubcomposeAsyncImage(
         model = model,
         contentDescription = contentDescription,
         contentScale = ContentScale.Crop,
         modifier = modifier.placeholder(visible = isLoading || workspace == null),
-        error = rememberVectorPainter(Icons.Rounded.Person),
+        colorFilter = colorFilter,
+        error = error?.let { { it() } },
         onLoading = { isLoading = true },
         onSuccess = { isLoading = false },
         onError = { isLoading = false },

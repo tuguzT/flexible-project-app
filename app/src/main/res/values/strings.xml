@@ -8,4 +8,6 @@
     <string name="user">User</string>
     <string name="navigate_up">Navigate up</string>
     <string name="workspace_image">Workspace image</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
 </resources>
