@@ -29,6 +29,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,11 +60,21 @@ fun UserTopBar(
     val containerColor by remember {
         derivedStateOf { surfaceColor.copy(alpha = collapsedFraction) }
     }
+    val gradient = remember {
+        val cornerColor = surfaceColor.copy(alpha = 0.5f)
+        val colors = listOf(cornerColor, Color.Transparent, cornerColor)
+        Brush.verticalGradient(colors)
+    }
 
     Box {
         UserAvatar(
             user = user,
-            modifier = Modifier.matchParentSize(),
+            modifier = Modifier
+                .matchParentSize()
+                .drawWithContent {
+                    drawContent()
+                    drawRect(gradient)
+                },
         )
         LargeTopAppBar(
             modifier = modifier,
