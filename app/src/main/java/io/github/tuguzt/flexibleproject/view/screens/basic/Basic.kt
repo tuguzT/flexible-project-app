@@ -27,6 +27,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AboutScreenDestination
+import io.github.tuguzt.flexibleproject.view.screens.destinations.AddWorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
@@ -125,7 +126,9 @@ fun BasicScreen(
             coroutineScope.launch { drawerState.close() }
         },
         onAddNewWorkspaceClick = {
-            TODO("add new workspace")
+            val direction = AddWorkspaceScreenDestination()
+            navigator.navigate(direction)
+            coroutineScope.launch { drawerState.close() }
         },
     ) {
         Scaffold(

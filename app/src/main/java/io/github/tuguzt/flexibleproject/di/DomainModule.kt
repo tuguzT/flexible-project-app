@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
 import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
+import io.github.tuguzt.flexibleproject.domain.usecase.workspace.CreateWorkspace
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.ReadAllWorkspaces
 
@@ -21,4 +22,7 @@ object DomainModule {
 
     @Provides
     fun provideFindWorkspaceById(repository: WorkspaceRepository) = FindWorkspaceById(repository)
+
+    @Provides
+    fun provideCreateWorkspace(repository: WorkspaceRepository) = CreateWorkspace(repository)
 }

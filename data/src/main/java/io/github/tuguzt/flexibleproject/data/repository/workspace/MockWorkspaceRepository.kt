@@ -5,9 +5,10 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
+import java.util.UUID
 
 class MockWorkspaceRepository : WorkspaceRepository {
-    private val workspaces: Map<WorkspaceId, WorkspaceData> = mapOf(
+    private val workspaces: MutableMap<WorkspaceId, WorkspaceData> = mutableMapOf(
         WorkspaceId("1") to WorkspaceData(
             name = "First workspace",
             description = "Empty workspace",
@@ -28,5 +29,11 @@ class MockWorkspaceRepository : WorkspaceRepository {
     override suspend fun findById(id: WorkspaceId): Workspace? {
         val data = workspaces[id] ?: return null
         return Workspace(id, data)
+    }
+
+    override suspend fun create(data: WorkspaceData): WorkspaceId {
+        val id = WorkspaceId(UUID.randomUUID().toString())
+        workspaces[id] = data
+        return id
     }
 }

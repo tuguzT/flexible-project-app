@@ -1,7 +1,7 @@
 package io.github.tuguzt.flexibleproject.view.utils
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -11,13 +11,13 @@ import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 
 @Composable
-fun NavigateUpIconButton(
+fun CloseIconButton(
     onClick: () -> Unit,
-    contentDescription: String? = stringResource(R.string.navigate_up),
+    contentDescription: String? = stringResource(R.string.close),
 ) {
     IconButton(onClick = onClick) {
         Icon(
-            imageVector = Icons.Rounded.ArrowBack,
+            imageVector = Icons.Rounded.Close,
             contentDescription = contentDescription,
         )
     }
@@ -25,8 +25,8 @@ fun NavigateUpIconButton(
 
 @Preview
 @Composable
-private fun NavigateUpIconButton() {
+private fun CloseIconButton() {
     AppTheme {
-        NavigateUpIconButton(onClick = {})
+        CloseIconButton(onClick = {})
     }
 }
