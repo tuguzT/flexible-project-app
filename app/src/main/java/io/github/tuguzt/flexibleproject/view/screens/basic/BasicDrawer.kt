@@ -1,5 +1,8 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,8 +15,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.ArrowDropUp
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Divider
@@ -27,6 +28,7 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -43,6 +45,7 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
+import io.github.tuguzt.flexibleproject.view.utils.ExpandedIcon
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
@@ -182,8 +185,11 @@ private fun WorkspacesContent(
             expanded = workspacesExpanded,
             onExpandedChange = onWorkspacesExpandedChange,
         )
-        // TODO animation
-        if (workspacesExpanded) {
+        AnimatedVisibility(
+            visible = workspacesExpanded,
+            enter = expandVertically(expandFrom = Alignment.Top),
+            exit = shrinkVertically(shrinkTowards = Alignment.Top),
+        ) {
             LazyColumn {
                 items(
                     items = workspaces,
@@ -214,14 +220,7 @@ private fun WorkspacesHeader(
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
         label = { OneLineTitle(text = stringResource(R.string.workspaces)) },
-        badge = {
-            // TODO animation
-            if (expanded) {
-                Icon(Icons.Rounded.ArrowDropUp, contentDescription = null)
-            } else {
-                Icon(Icons.Rounded.ArrowDropDown, contentDescription = null)
-            }
-        },
+        badge = { ExpandedIcon(expanded) },
         selected = false,
         onClick = { onExpandedChange(!expanded) },
     )
