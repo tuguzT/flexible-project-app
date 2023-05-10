@@ -5,6 +5,9 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import java.util.UUID
 
 class MockWorkspaceRepository : WorkspaceRepository {
@@ -22,6 +25,12 @@ class MockWorkspaceRepository : WorkspaceRepository {
             imageUrl = null,
         ),
     )
+    private val workspacesStateFlow = MutableStateFlow(workspaces)
+
+    override suspend fun allFlow(): Flow<List<Workspace>> =
+        workspacesStateFlow.map { workspaces ->
+            workspaces.map { (id, data) -> Workspace(id, data) }
+        }
 
     override suspend fun readAll(): List<Workspace> =
         workspaces.map { (id, data) -> Workspace(id, data) }
@@ -34,6 +43,8 @@ class MockWorkspaceRepository : WorkspaceRepository {
     override suspend fun create(data: WorkspaceData): WorkspaceId {
         val id = WorkspaceId(UUID.randomUUID().toString())
         workspaces[id] = data
+        workspacesStateFlow.emit(workspaces)
+
         return id
     }
 }

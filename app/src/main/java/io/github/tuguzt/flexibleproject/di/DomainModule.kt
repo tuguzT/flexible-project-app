@@ -10,6 +10,7 @@ import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.CreateWorkspace
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.ReadAllWorkspaces
+import io.github.tuguzt.flexibleproject.domain.usecase.workspace.WorkspacesFlow
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -25,4 +26,7 @@ object DomainModule {
 
     @Provides
     fun provideCreateWorkspace(repository: WorkspaceRepository) = CreateWorkspace(repository)
+
+    @Provides
+    fun provideWorkspacesFlow(repository: WorkspaceRepository) = WorkspacesFlow(repository)
 }
