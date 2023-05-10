@@ -29,7 +29,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
 
     buildTypes {
@@ -59,7 +59,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
 
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.1")
@@ -70,7 +70,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // Jetpack Compose dependencies
-    val composeBomVersion = "2023.05.00"
+    val composeBomVersion = "2023.05.01"
     val composeBom = platform("androidx.compose:compose-bom:$composeBomVersion")
 
     implementation(composeBom)
