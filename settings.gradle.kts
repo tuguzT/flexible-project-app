@@ -1,3 +1,7 @@
+rootProject.name = "Flexible Project"
+
+include(":domain", ":data", ":app")
+
 pluginManagement {
     repositories {
         google()
@@ -14,6 +18,3 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
-rootProject.name = "Flexible Project"
-include(":domain", ":data", ":app")

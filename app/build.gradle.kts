@@ -1,25 +1,31 @@
-@file:Suppress("UnstableApiUsage")
-
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    id("com.google.devtools.ksp")
-    kotlin("kapt")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
+kapt {
+    useBuildCache = true
+    correctErrorTypes = true
+    showProcessorStats = true
+}
+
+@Suppress("UnstableApiUsage")
 android {
-    namespace = "io.github.tuguzt.flexibleproject"
-    compileSdk = 33
+    namespace = libs.versions.android.namespace.get()
+    compileSdk = libs.versions.android.sdk.compile.get().toInt()
 
     defaultConfig {
-        applicationId = "io.github.tuguzt.flexibleproject"
-        minSdk = 21
-        targetSdk = 33
+        applicationId = libs.versions.android.namespace.get()
+        minSdk = libs.versions.android.sdk.min.get().toInt()
+        targetSdk = libs.versions.android.sdk.target.get().toInt()
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = libs.versions.android.test.runner.get()
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -29,7 +35,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.7"
+        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 
     buildTypes {
@@ -56,69 +62,54 @@ android {
 }
 
 dependencies {
+    // Clean Architecture layers
     implementation(project(":domain"))
     implementation(project(":data"))
 
-    implementation("androidx.core:core-ktx:1.10.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
-    implementation("androidx.activity:activity-compose:1.7.1")
-    implementation("androidx.core:core-splashscreen:1.0.1")
+    // MVI
+    implementation(libs.mvi)
+    implementation(libs.mvi.main)
+    implementation(libs.mvi.logging)
+    implementation(libs.mvi.coroutines)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    // Android
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel)
 
-    // Jetpack Compose dependencies
-    val composeBomVersion = "2023.05.01"
-    val composeBom = platform("androidx.compose:compose-bom:$composeBomVersion")
+    // Testing
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 
+    // Hilt
+    implementation(libs.hilt)
+    kapt(libs.hilt.kapt)
+    implementation(libs.hilt.navigation)
+
+    // Jetpack Compose
+    val composeBom = platform(libs.compose.bom)
     implementation(composeBom)
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.compose.material3:material3")
-
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.compose.material.icons)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material3.window.size)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
     androidTestImplementation(composeBom)
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation(libs.compose.ui.test.junit4)
 
-    // Accompanist dependencies
-    val accompanistVersion = "0.30.1"
+    // Accompanist
+    implementation(libs.accompanist.placeholder)
 
-    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
+    // Compose Destinations
+    implementation(libs.compose.destinations.core)
+    ksp(libs.compose.destinations.ksp)
 
-    // Compose Destinations dependencies
-    val destinationsVersion = "1.8.41-beta"
-
-    implementation("io.github.raamcosta.compose-destinations:core:$destinationsVersion")
-    ksp("io.github.raamcosta.compose-destinations:ksp:$destinationsVersion")
-
-    // Coil dependencies
-    val coilVersion = "2.3.0"
-
-    implementation("io.coil-kt:coil-compose:$coilVersion")
-
-    // Hilt dependencies
-    val hiltVersion = "2.44"
-
-    implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-android-compiler:$hiltVersion")
-
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-
-    // MVIKotlin dependencies
-    val mviKotlinVersion = "3.2.0"
-
-    implementation("com.arkivanov.mvikotlin:mvikotlin:$mviKotlinVersion")
-    implementation("com.arkivanov.mvikotlin:mvikotlin-main:$mviKotlinVersion")
-    implementation("com.arkivanov.mvikotlin:mvikotlin-logging:$mviKotlinVersion")
-    implementation("com.arkivanov.mvikotlin:mvikotlin-extensions-coroutines:$mviKotlinVersion")
-}
-
-kapt {
-    correctErrorTypes = true
+    // Coil
+    implementation(libs.coil.compose)
 }

@@ -1,8 +1,11 @@
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    id("com.android.application") version "8.0.1" apply false
-    id("com.android.library") version "8.0.1" apply false
-    kotlin("jvm") version "1.8.21" apply false
-    kotlin("android") version "1.8.21" apply false
-    id("com.google.devtools.ksp") version "1.8.21-1.0.11" apply false
-    id("com.google.dagger.hilt.android") version "2.44" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.kapt) apply false
+    alias(libs.plugins.devtools.ksp) apply false
+    alias(libs.plugins.hilt.android) apply false
 }
+true // Needed to make the Suppress annotation work for the plugins block

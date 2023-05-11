@@ -1,5 +1,6 @@
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    kotlin("jvm")
+    alias(libs.plugins.kotlin.jvm)
 }
 
 java {
@@ -14,5 +15,5 @@ kotlin {
 dependencies {
     implementation(project(":domain"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
+    implementation(libs.kotlinx.coroutines.core)
 }
