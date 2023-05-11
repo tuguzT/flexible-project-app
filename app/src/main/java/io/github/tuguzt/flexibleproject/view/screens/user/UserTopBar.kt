@@ -56,12 +56,25 @@ fun UserTopBar(
     val collapsedFraction by remember {
         derivedStateOf { scrollBehavior?.state?.collapsedFraction ?: 0.0f }
     }
+    val collapsed by remember {
+        derivedStateOf { collapsedFraction > 0.8 }
+    }
+
     val surfaceColor = MaterialTheme.colorScheme.surface
     val containerColor by remember {
         derivedStateOf { surfaceColor.copy(alpha = collapsedFraction) }
     }
+    val onSurfaceColor = MaterialTheme.colorScheme.onSurface
+    val contentColor by remember {
+        derivedStateOf { if (collapsed) onSurfaceColor else Color.White }
+    }
+    val onSurfaceVariantColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val actionContentColor by remember {
+        derivedStateOf { if (collapsed) onSurfaceVariantColor else Color.White }
+    }
+
     val gradient = remember {
-        val cornerColor = surfaceColor.copy(alpha = 0.5f)
+        val cornerColor = Color.Black.copy(alpha = 0.25f)
         val colors = listOf(cornerColor, Color.Transparent, cornerColor)
         Brush.verticalGradient(colors)
     }
@@ -78,10 +91,15 @@ fun UserTopBar(
         )
         LargeTopAppBar(
             modifier = modifier,
-            title = { UserTitle(user, collapsedFraction) },
+            title = { UserTitle(user, collapsed) },
             navigationIcon = { NavigateUpIconButton(onClick = onNavigationClick) },
             scrollBehavior = scrollBehavior,
-            colors = TopAppBarDefaults.largeTopAppBarColors(containerColor),
+            colors = TopAppBarDefaults.largeTopAppBarColors(
+                containerColor = containerColor,
+                navigationIconContentColor = contentColor,
+                titleContentColor = contentColor,
+                actionIconContentColor = actionContentColor,
+            ),
         )
     }
 }
@@ -89,13 +107,13 @@ fun UserTopBar(
 @Composable
 private fun UserTitle(
     user: User?,
-    collapsedFraction: Float,
+    collapsed: Boolean,
 ) {
     Row(
         modifier = Modifier.alpha(LocalContentColor.current.alpha),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (collapsedFraction > 0.8) {
+        if (collapsed) {
             UserAvatar(
                 user = user,
                 modifier = Modifier.size(42.dp).clip(CircleShape),
