@@ -10,6 +10,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.view.utils.CloseIconButton
@@ -42,7 +43,10 @@ fun AddWorkspaceTopBar(
             visible = loading,
             modifier = Modifier.align(Alignment.BottomCenter),
         ) {
-            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+            LinearProgressIndicator(
+                modifier = Modifier.fillMaxWidth(),
+                strokeCap = StrokeCap.Round,
+            )
         }
     }
 }

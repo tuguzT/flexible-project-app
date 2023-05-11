@@ -23,7 +23,7 @@ class WorkspaceStoreProvider(
             WorkspaceStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = WorkspaceStore::class.simpleName,
-                initialState = State(workspace = null, isLoading = true),
+                initialState = State(workspace = null, loading = true),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}
@@ -58,9 +58,9 @@ class WorkspaceStoreProvider(
     private object ReducerImpl : Reducer<State, Message> {
         override fun State.reduce(msg: Message): State =
             when (msg) {
-                Message.Loading -> copy(isLoading = true)
-                is Message.Loaded -> copy(workspace = msg.workspace, isLoading = false)
-                is Message.NotFound -> copy(workspace = null, isLoading = false)
+                Message.Loading -> copy(loading = true)
+                is Message.Loaded -> copy(workspace = msg.workspace, loading = false)
+                is Message.NotFound -> copy(workspace = null, loading = false)
             }
     }
 }

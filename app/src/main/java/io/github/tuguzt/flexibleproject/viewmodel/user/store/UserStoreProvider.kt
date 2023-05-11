@@ -23,7 +23,7 @@ class UserStoreProvider(
             UserStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = UserStore::class.simpleName,
-                initialState = State(user = null, isLoading = true),
+                initialState = State(user = null, loading = true),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}
@@ -58,9 +58,9 @@ class UserStoreProvider(
     private object ReducerImpl : Reducer<State, Message> {
         override fun State.reduce(msg: Message): State =
             when (msg) {
-                Message.Loading -> copy(isLoading = true)
-                is Message.Loaded -> copy(user = msg.user, isLoading = false)
-                is Message.NotFound -> copy(user = null, isLoading = false)
+                Message.Loading -> copy(loading = true)
+                is Message.Loaded -> copy(user = msg.user, loading = false)
+                is Message.NotFound -> copy(user = null, loading = false)
             }
     }
 }

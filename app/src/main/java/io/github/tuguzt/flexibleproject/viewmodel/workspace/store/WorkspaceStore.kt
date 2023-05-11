@@ -14,7 +14,7 @@ interface WorkspaceStore : Store<Intent, State, Label> {
 
     data class State(
         val workspace: Workspace?,
-        val isLoading: Boolean,
+        val loading: Boolean,
     )
 
     sealed interface Label {

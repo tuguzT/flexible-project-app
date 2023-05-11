@@ -28,7 +28,6 @@ fun AboutTopBar(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun AboutTopBar() {

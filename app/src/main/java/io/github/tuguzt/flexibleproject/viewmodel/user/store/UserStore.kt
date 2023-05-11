@@ -14,7 +14,7 @@ interface UserStore : Store<Intent, State, Label> {
 
     data class State(
         val user: User?,
-        val isLoading: Boolean,
+        val loading: Boolean,
     )
 
     sealed interface Label {

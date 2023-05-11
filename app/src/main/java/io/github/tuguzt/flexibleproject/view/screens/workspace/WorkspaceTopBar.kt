@@ -40,7 +40,6 @@ private fun WorkspaceTitle(workspace: Workspace?) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun WorkspaceTopBarWithWorkspace() {
@@ -65,7 +64,6 @@ private fun WorkspaceTopBarWithWorkspace() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun WorkspaceTopBarWithoutWorkspace() {

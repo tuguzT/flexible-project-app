@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().setKeepOnScreenCondition {
             val state = authViewModel.stateFlow.value
-            state.isLoading
+            state.loading
         }
 
         super.onCreate(savedInstanceState)

@@ -2,7 +2,6 @@ package io.github.tuguzt.flexibleproject.view.screens.workspace
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,7 +16,6 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.WorkspaceViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Intent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph
 @Destination
 @Composable

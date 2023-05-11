@@ -37,7 +37,6 @@ import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceSt
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Label
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph
 @Destination
 @Composable
@@ -113,7 +112,6 @@ fun AddWorkspaceScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NameTextField(
     name: String,
@@ -131,7 +129,6 @@ private fun NameTextField(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DescriptionTextField(
     description: String,

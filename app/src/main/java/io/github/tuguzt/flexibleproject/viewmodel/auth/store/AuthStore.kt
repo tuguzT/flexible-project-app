@@ -16,7 +16,7 @@ interface AuthStore : Store<Intent, State, Label> {
 
     data class State(
         val currentUser: UserId?,
-        val isLoading: Boolean,
+        val loading: Boolean,
     )
 
     sealed interface Label {

@@ -20,7 +20,6 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
@@ -66,7 +65,6 @@ data class BasicDrawerContent(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BasicDrawer(
     drawerContent: BasicDrawerContent,
@@ -146,7 +144,6 @@ private fun UserContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsDrawerItem(onClick: () -> Unit) {
     NavigationDrawerItem(
@@ -158,7 +155,6 @@ private fun SettingsDrawerItem(onClick: () -> Unit) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AboutDrawerItem(onClick: () -> Unit) {
     NavigationDrawerItem(
@@ -211,7 +207,6 @@ private fun WorkspacesContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WorkspacesHeader(
     expanded: Boolean,
@@ -226,7 +221,6 @@ private fun WorkspacesHeader(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WorkspaceDrawerItem(
     workspace: Workspace,
@@ -242,7 +236,6 @@ private fun WorkspaceDrawerItem(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AddNewWorkspaceDrawerItem(onClick: () -> Unit) {
     NavigationDrawerItem(
@@ -254,7 +247,6 @@ private fun AddNewWorkspaceDrawerItem(onClick: () -> Unit) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun BasicDrawer() {

@@ -23,7 +23,7 @@ class AuthStoreProvider(
             AuthStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = AuthStore::class.simpleName,
-                initialState = State(currentUser = null, isLoading = false),
+                initialState = State(currentUser = null, loading = false),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}
@@ -80,10 +80,10 @@ class AuthStoreProvider(
     private object ReducerImpl : Reducer<State, Message> {
         override fun State.reduce(msg: Message): State =
             when (msg) {
-                Message.Loading -> copy(isLoading = true)
-                Message.LoggedOut -> copy(currentUser = null, isLoading = false)
-                is Message.SignedIn -> copy(currentUser = msg.id, isLoading = false)
-                Message.SomeError -> copy(currentUser = null, isLoading = false)
+                Message.Loading -> copy(loading = true)
+                Message.LoggedOut -> copy(currentUser = null, loading = false)
+                is Message.SignedIn -> copy(currentUser = msg.id, loading = false)
+                Message.SomeError -> copy(currentUser = null, loading = false)
             }
     }
 }
