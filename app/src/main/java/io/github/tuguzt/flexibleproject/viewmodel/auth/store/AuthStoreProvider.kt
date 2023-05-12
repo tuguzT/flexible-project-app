@@ -4,8 +4,10 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
+import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.State
@@ -15,6 +17,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.seconds
 
 class AuthStoreProvider(
+    private val findById: FindUserById,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
 ) {
@@ -31,7 +34,7 @@ class AuthStoreProvider(
     private sealed interface Message {
         object Loading : Message
         object LoggedOut : Message
-        data class SignedIn(val id: UserId) : Message
+        data class SignedIn(val user: User) : Message
         object SomeError : Message
     }
 
@@ -57,13 +60,13 @@ class AuthStoreProvider(
             scope.launch {
                 delay(2.seconds)
                 val (name, _) = credentials
-                if (name != "tuguzT") {
+                val user = findById.findById(UserId("timur"))
+                if (name != "tuguzT" || user == null) {
                     dispatch(Message.SomeError)
                     publish(Label.SomeError)
                     return@launch
                 }
-                val id = UserId("timur")
-                dispatch(Message.SignedIn(id))
+                dispatch(Message.SignedIn(user))
             }
         }
 
@@ -82,7 +85,7 @@ class AuthStoreProvider(
             when (msg) {
                 Message.Loading -> copy(loading = true)
                 Message.LoggedOut -> copy(currentUser = null, loading = false)
-                is Message.SignedIn -> copy(currentUser = msg.id, loading = false)
+                is Message.SignedIn -> copy(currentUser = msg.user, loading = false)
                 Message.SomeError -> copy(currentUser = null, loading = false)
             }
     }

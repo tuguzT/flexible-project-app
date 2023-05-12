@@ -3,6 +3,7 @@ package io.github.tuguzt.flexibleproject.viewmodel.auth
 import androidx.lifecycle.viewModelScope
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
 import io.github.tuguzt.flexibleproject.viewmodel.StoreViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Intent
@@ -13,9 +14,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
+    findById: FindUserById,
     storeFactory: StoreFactory,
 ) : StoreViewModel<Intent, State, Label>() {
     private val provider = AuthStoreProvider(
+        findById = findById,
         storeFactory = storeFactory,
         coroutineContext = viewModelScope.coroutineContext,
     )

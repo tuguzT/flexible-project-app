@@ -58,9 +58,9 @@ fun BasicScreen(
     val userState by userViewModel.stateFlow.collectAsState()
     val basicState by basicViewModel.stateFlow.collectAsState()
 
-    val userId = authState.currentUser ?: return // TODO navigate to the auth flow
-    LaunchedEffect(userId) {
-        val intent = UserStore.Intent.Load(userId)
+    val currentUser = authState.currentUser ?: return // TODO navigate to the auth flow
+    LaunchedEffect(currentUser) {
+        val intent = UserStore.Intent.Load(currentUser.id)
         userViewModel.accept(intent)
     }
     LaunchedEffect(Unit) {
