@@ -107,7 +107,7 @@ dependencies {
     implementation(libs.accompanist.placeholder)
 
     // Compose Destinations
-    implementation(libs.compose.destinations.core)
+    implementation(libs.compose.destinations)
     ksp(libs.compose.destinations.ksp)
 
     // Coil

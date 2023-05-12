@@ -12,13 +12,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -54,9 +54,9 @@ fun BasicScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    val authState by authViewModel.stateFlow.collectAsState()
-    val userState by userViewModel.stateFlow.collectAsState()
-    val basicState by basicViewModel.stateFlow.collectAsState()
+    val authState by authViewModel.stateFlow.collectAsStateWithLifecycle()
+    val userState by userViewModel.stateFlow.collectAsStateWithLifecycle()
+    val basicState by basicViewModel.stateFlow.collectAsStateWithLifecycle()
 
     val currentUser = authState.currentUser ?: return // TODO navigate to the auth flow
     LaunchedEffect(currentUser) {
