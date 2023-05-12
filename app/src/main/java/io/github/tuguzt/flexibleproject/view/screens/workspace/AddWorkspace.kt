@@ -15,7 +15,6 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,10 +31,10 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
+import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.AddWorkspaceViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Label
-import kotlinx.coroutines.flow.collectLatest
 
 @RootNavGraph
 @Destination
@@ -45,6 +44,12 @@ fun AddWorkspaceScreen(
     viewModel: AddWorkspaceViewModel = hiltViewModel(),
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
+    viewModel.labels.collectInLaunchedEffectWithLifecycle { label ->
+        when (label) {
+            is Label.WorkspaceCreated -> navigator.navigateUp()
+        }
+    }
+
     val focusManager = LocalFocusManager.current
 
     Scaffold(
@@ -100,14 +105,6 @@ fun AddWorkspaceScreen(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.loading,
             )
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.labels.collectLatest { label ->
-            when (label) {
-                is Label.WorkspaceCreated -> navigator.navigateUp()
-            }
         }
     }
 }
