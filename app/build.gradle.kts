@@ -1,6 +1,7 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.android.junit5)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.devtools.ksp)
@@ -25,10 +26,12 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = libs.versions.android.test.runner.get()
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        testInstrumentationRunner = libs.versions.android.test.runner.get()
+        testInstrumentationRunnerArguments["runnerBuilder"] = libs.versions.android.test.args.get()
     }
 
     buildFeatures {
@@ -80,9 +83,14 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel)
 
     // Testing
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.junit4)
+    testImplementation(libs.junit5.api)
+    testImplementation(libs.junit5.params)
+    testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit5.vintage.engine)
+    androidTestImplementation(libs.junit4.android)
+    androidTestImplementation(libs.junit5.api)
+    androidTestImplementation(libs.androidx.espresso)
 
     // Hilt
     implementation(libs.hilt)

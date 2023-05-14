@@ -9,6 +9,7 @@ android-sdk-target = "33"
 android-sdk-compile = "33"
 android-namespace = "io.github.tuguzt.flexibleproject"
 android-test-runner = "androidx.test.runner.AndroidJUnitRunner"
+android-test-args = "de.mannodermaus.junit5.AndroidJUnit5Builder"
 # KotlinX
 kotlinx-coroutines-core = "1.7.0"
 # MVI
@@ -31,8 +32,10 @@ compose-destinations = "1.8.41-beta"
 # Coil
 coil = "2.3.0"
 # Testing
-junit = "4.13.2"
-androidx-junit = "1.1.5"
+junit4 = "4.13.2"
+junit4-android = "1.1.5"
+junit5 = "5.9.3"
+junit5-android = "1.9.3.0"
 androidx-espresso = "3.5.1"
 
 [libraries]
@@ -72,15 +75,20 @@ compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations",
 # Coil
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 # Testing
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso" }
+junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
+junit4-android = { group = "androidx.test.ext", name = "junit", version.ref = "junit4-android" }
+androidx-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso" }
+junit5-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit5" }
+junit5-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit5" }
+junit5-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit5" }
+junit5-vintage-engine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junit5" }
 
 [bundles]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
+android-junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "junit5-android" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
