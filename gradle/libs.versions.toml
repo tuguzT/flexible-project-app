@@ -31,6 +31,8 @@ accompanist = "0.30.1"
 compose-destinations = "1.8.41-beta"
 # Coil
 coil = "2.3.0"
+# ObjectBox
+objectbox = "3.6.0"
 # Testing
 junit4 = "4.13.2"
 junit4-android = "1.1.5"
@@ -74,6 +76,11 @@ compose-destinations = { group = "io.github.raamcosta.compose-destinations", nam
 compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "compose-destinations" }
 # Coil
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+# ObjectBox
+objectbox-gradle-plugin = { group = "io.objectbox", name = "objectbox-gradle-plugin", version.ref = "objectbox" }
+objectbox-kotlin = { group = "io.objectbox", name = "objectbox-kotlin", version.ref = "objectbox" }
+objectbox-android = { group = "io.objectbox", name = "objectbox-android", version.ref = "objectbox" }
+objectbox-android-objectbrowser = { group = "io.objectbox", name = "objectbox-android-objectbrowser", version.ref = "objectbox" }
 # Testing
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 junit4-android = { group = "androidx.test.ext", name = "junit", version.ref = "junit4-android" }
@@ -94,3 +101,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt-google" }
+objectbox = { id = "io.objectbox", version.ref = "objectbox" }

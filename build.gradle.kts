@@ -9,4 +9,11 @@ plugins {
     alias(libs.plugins.devtools.ksp) apply false
     alias(libs.plugins.hilt.android) apply false
 }
+
+buildscript {
+    dependencies {
+        classpath(libs.objectbox.gradle.plugin)
+    }
+}
+
 true // Needed to make the Suppress annotation work for the plugins block
