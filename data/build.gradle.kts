@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.junit5)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.apollo.graphql)
 }
 
 kapt {
@@ -12,14 +13,21 @@ kapt {
     showProcessorStats = true
 }
 
+val dataNamespace = libs.versions.android.namespace.get() + ".data"
+
+apollo {
+    service("service") {
+        packageName.set(dataNamespace)
+    }
+}
+
 @Suppress("UnstableApiUsage")
 android {
-    namespace = libs.versions.android.namespace.get()
+    namespace = dataNamespace
     compileSdk = libs.versions.android.sdk.compile.get().toInt()
 
     defaultConfig {
         minSdk = libs.versions.android.sdk.min.get().toInt()
-        targetSdk = libs.versions.android.sdk.target.get().toInt()
 
         testInstrumentationRunner = libs.versions.android.test.runner.get()
         testInstrumentationRunnerArguments["runnerBuilder"] = libs.versions.android.test.args.get()
@@ -59,6 +67,9 @@ dependencies {
     implementation(libs.objectbox.kotlin)
     debugImplementation(libs.objectbox.android.objectbrowser)
     releaseImplementation(libs.objectbox.android)
+
+    // Apollo GraphQL
+    implementation(libs.apollo.graphql.runtime)
 
     // Testing
     testImplementation(libs.junit4)

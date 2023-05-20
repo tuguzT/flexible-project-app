@@ -1,0 +1,10 @@
+query FilterUsers($filters: UserFilters!) {
+    users(filters: $filters) {
+        id
+        name
+        displayName
+        role
+        email
+        avatarUrl
+    }
+}

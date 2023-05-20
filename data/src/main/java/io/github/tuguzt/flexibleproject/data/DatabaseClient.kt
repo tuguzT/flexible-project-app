@@ -1,7 +1,6 @@
 package io.github.tuguzt.flexibleproject.data
 
 import android.content.Context
-import io.github.tuguzt.flexibleproject.BuildConfig
 import io.github.tuguzt.flexibleproject.data.model.MyObjectBox
 import io.github.tuguzt.flexibleproject.data.model.UserEntity
 import io.objectbox.Box

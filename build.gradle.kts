@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt) apply false
     alias(libs.plugins.devtools.ksp) apply false
     alias(libs.plugins.hilt.android) apply false
+    alias(libs.plugins.apollo.graphql) apply false
 }
 
 buildscript {

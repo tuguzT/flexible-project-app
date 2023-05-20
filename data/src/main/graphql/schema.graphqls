@@ -1,0 +1,1308 @@
+"""
+The `Boolean` scalar type represents `true` or `false`.
+"""
+scalar Boolean
+
+"""
+Implement the DateTime<Utc> scalar
+
+The input/output is a string in RFC3339 format.
+"""
+scalar DateTime
+
+"""
+Implement the Duration scalar
+
+The input/output is a string in ISO8601 format.
+"""
+scalar Duration
+
+"""
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
+"""
+scalar Float
+
+scalar ID
+
+"""
+The `Int` scalar type represents non-fractional whole numeric values.
+"""
+scalar Int
+
+"""
+Methodology properties of the Flexible Project system.
+"""
+type Methodology {
+  """
+  Unique identifier of the methodology.
+  """
+  id: ID!
+
+  """
+  Owner of the methodology.
+  """
+  owner: MethodologyOwner!
+
+  """
+  Name of the methodology.
+  """
+  name: String!
+
+  """
+  Description of the methodology.
+  """
+  description: String!
+
+  """
+  Visibility of the methodology.
+  """
+  visibility: MethodologyVisibility!
+
+  """
+  Set of roles of the methodology.
+  """
+  roles: [MethodologyRole!]!
+
+  """
+  Set of stages of the methodology.
+  """
+  stages: [MethodologyStage!]!
+
+  """
+  Set of stage links of the methodology.
+  """
+  stageLinks: [MethodologyStageLink!]!
+}
+
+"""
+Filters of methodology of the Flexible Project system.
+"""
+input MethodologyFilters {
+  """
+  Identifier filter of the methodology.
+  """
+  id: ID
+}
+
+"""
+Methodology operation properties of the Flexible Project system.
+"""
+type MethodologyOperation {
+  """
+  Unique identifier of the operation.
+  """
+  id: ID!
+
+  """
+  Name of the operation.
+  """
+  name: String!
+
+  """
+  Targets of the operation.
+  """
+  targets: [ID!]!
+}
+
+"""
+Owner of the methodology: either user, workspace of specific project.
+"""
+interface MethodologyOwner {
+  """
+  Unique identifier of the object.
+  """
+  id: ID!
+}
+
+"""
+Owner of the methodology: either user, workspace of specific project.
+"""
+input MethodologyOwnerInput {
+  """
+  Owner of the methodology: either user, workspace of specific project.
+  """
+  user: ID
+
+  """
+  Owner of the methodology: either user, workspace of specific project.
+  """
+  workspace: ID
+
+  """
+  Owner of the methodology: either user, workspace of specific project.
+  """
+  project: ID
+}
+
+"""
+Methodology role properties of the Flexible Project system.
+"""
+type MethodologyRole {
+  """
+  Unique identifier of the role.
+  """
+  id: ID!
+
+  """
+  Name of the role.
+  """
+  name: String!
+
+  """
+  Description of the role.
+  """
+  description: String!
+
+  """
+  Color of the role.
+  """
+  color: Int!
+
+  """
+  Set of operation of the role applied to the methodology.
+  """
+  operations: [MethodologyOperation!]!
+}
+
+"""
+Methodology stage properties of the Flexible Project system.
+"""
+type MethodologyStage {
+  """
+  Unique identifier of the stage.
+  """
+  id: ID!
+
+  """
+  Name of the stage.
+  """
+  name: String!
+
+  """
+  Description of the stage.
+  """
+  description: String!
+
+  """
+  Duration of the stage.
+  """
+  duration: Duration!
+
+  """
+  Previous stage of this stage, if exists.
+  """
+  previousStage: MethodologyStage
+
+  """
+  Next stage of this stage, if exists.
+  """
+  nextStage: MethodologyStage
+}
+
+"""
+Methodology stage link properties of the Flexible Project system.
+"""
+type MethodologyStageLink {
+  """
+  Current stage of the link.
+  """
+  currentStage: MethodologyStage!
+
+  """
+  Next stage of the link.
+  """
+  nextStage: MethodologyStage!
+
+  """
+  Name of the link.
+  """
+  name: String!
+
+  """
+  Set of transition conditions of the link.
+  """
+  transitionConditions: [MethodologyStageTransitionCondition!]!
+}
+
+"""
+Methodology stage transition condition properties of the Flexible Project system.
+"""
+type MethodologyStageTransitionCondition {
+  """
+  Unique identifier of the transition condition.
+  """
+  id: ID!
+}
+
+"""
+Visibility level of the methodology of the Flexible Project system.
+"""
+enum MethodologyVisibility {
+  """
+  Methodology is visible outside of the owner scope.
+  """
+  PUBLIC
+
+  """
+  Methodology is visible only for the owner.
+  """
+  PRIVATE
+}
+
+"""
+Root mutation object of the service.
+"""
+type Mutation {
+  """
+  Creates new user with provided name in the system.
+  """
+  createUser(name: String!): User!
+
+  """
+  Updates properties of the user by provided identifier with provided data.
+  """
+  updateUser(id: ID!, update: UpdateUser!): User!
+
+  """
+  Deletes user from the system by provided identifier.
+  """
+  deleteUser(id: ID!): User!
+
+  """
+  Creates new workspace with provided name in the system.
+  Newly created workspace will be owned by the user that created it.
+  """
+  createWorkspace(userId: ID!, name: String!): Workspace!
+
+  """
+  Updates properties of the workspace by provided identifier with provided data.
+  """
+  updateWorkspace(id: ID!, update: UpdateWorkspace!): Workspace!
+
+  """
+  Deletes workspace from the system by provided identifier.
+  """
+  deleteWorkspace(id: ID!): Workspace!
+
+  """
+  Creates new methodology in the system.
+  """
+  createMethodology(owner: MethodologyOwnerInput!, name: String!): Methodology!
+
+  """
+  Updates properties of the methodology by provided identifier with provided data.
+  """
+  updateMethodology(id: ID!, update: UpdateMethodology!): Methodology!
+
+  """
+  Deletes methodology from the system by provided identifier.
+  """
+  deleteMethodology(id: ID!): Methodology!
+
+  """
+  Creates new project in the system.
+  """
+  createProject(workspace: ID!, name: String!): Project!
+
+  """
+  Updates properties of the project by provided identifier with provided data.
+  """
+  updateProject(id: ID!, update: UpdateProject!): Project!
+
+  """
+  Deletes project from the system by provided identifier.
+  """
+  deleteProject(id: ID!): Project!
+
+  """
+  Mark notification from the input notification stream as received by the user.
+  """
+  receiveNotification(userId: ID!, notificationId: ID!): Notification!
+
+  """
+  Update properties of the notification properties of user by provided identifier with provided data.
+  """
+  updateNotificationPreferences(userId: ID!, update: UpdateNotificationPreferences!): NotificationPreferences!
+}
+
+"""
+Notification properties of the Flexible project system.
+"""
+type Notification {
+  """
+  Unique identifier of the notification.
+  """
+  id: ID!
+
+  """
+  Type of the notification.
+  """
+  type: NotificationType!
+
+  """
+  Message of the notification.
+  """
+  message: String!
+
+  """
+  Source of the notification (could be another user, workspace or project).
+  """
+  source: NotificationSource!
+
+  """
+  Destination of the notification (always user).
+  """
+  destination: User!
+
+  """
+  Send time of the notification.
+  """
+  sendTime: DateTime!
+
+  """
+  Receive time of the notification.
+  """
+  receiveTime: DateTime!
+}
+
+"""
+Notification preferences properties of the Flexible Project system.
+"""
+type NotificationPreferences {
+  """
+  User which owns these preferences.
+  """
+  user: User!
+
+  """
+  Set of preferences for each notification type.
+  """
+  typePreferences: [NotificationTypePreferences!]!
+}
+
+"""
+Source of the notification: either another user, workspace or project.
+"""
+interface NotificationSource {
+  """
+  Unique identifier of the object.
+  """
+  id: ID!
+}
+
+"""
+Notification type properties of the Flexible project system.
+"""
+type NotificationType {
+  """
+  Unique identifier of the notification type.
+  """
+  id: ID!
+
+  """
+  Unique name of the notification type.
+  """
+  name: String!
+
+  """
+  Description of the notification type.
+  """
+  description: String!
+}
+
+"""
+Notification type preferences properties of the Flexible Project system.
+"""
+type NotificationTypePreferences {
+  """
+  Type of the notification.
+  """
+  type: NotificationType!
+
+  """
+  If notifications of this type are ignored.
+  """
+  ignore: Boolean!
+
+  """
+  If notifications of this type are muted.
+  """
+  mute: Boolean!
+}
+
+"""
+Project properties of the Flexible Project system.
+"""
+type Project implements MethodologyOwner & NotificationSource {
+  """
+  Unique identifier of the project.
+  """
+  id: ID!
+
+  """
+  Name of the project.
+  """
+  name: String!
+
+  """
+  Description of the project.
+  """
+  description: String!
+
+  """
+  Visibility of the project.
+  """
+  visibility: ProjectVisibility!
+
+  """
+  Current stage of methodology used in the project.
+  """
+  currentStage: MethodologyStage!
+
+  """
+  Members of the project.
+  """
+  members: [ProjectMember!]!
+
+  """
+  Roles of the project.
+  """
+  roles: [ProjectRole!]!
+
+  """
+  Tasks of the project.
+  """
+  tasks: [ProjectTask!]!
+
+  """
+  Methodology used in the project.
+  """
+  methodology: Methodology!
+}
+
+"""
+Filters of projects of the Flexible Project system.
+"""
+input ProjectFilters {
+  """
+  Identifier filter of the project.
+  """
+  id: ID
+}
+
+"""
+Project member properties of the Flexible Project system.
+"""
+type ProjectMember {
+  """
+  User which is a member of the project.
+  """
+  user: User!
+
+  """
+  Role of member in the project.
+  """
+  roles: [ProjectRole!]!
+}
+
+"""
+Project operation properties of the Flexible Project system.
+"""
+type ProjectOperation {
+  """
+  Unique identifier of the operation.
+  """
+  id: ID!
+
+  """
+  Name of the operation.
+  """
+  name: String!
+
+  """
+  Targets of the operation.
+  """
+  targets: [ID!]!
+}
+
+"""
+Project role properties of the Flexible Project system.
+"""
+type ProjectRole {
+  """
+  Unique identifier of the role.
+  """
+  id: ID!
+
+  """
+  Name of the role.
+  """
+  name: String!
+
+  """
+  Description of the role.
+  """
+  description: String!
+
+  """
+  Color of the role.
+  """
+  color: Int!
+
+  """
+  Set of operations of the role.
+  """
+  operations: [ProjectOperation!]!
+}
+
+"""
+Project task properties of the Flexible Project system.
+"""
+type ProjectTask {
+  """
+  Unique identifier of the task.
+  """
+  id: ID!
+
+  """
+  Name of the task.
+  """
+  name: String!
+
+  """
+  Description of the task.
+  """
+  description: String!
+
+  """
+  Start date of the task.
+  """
+  startDate: DateTime
+
+  """
+  End date of the task.
+  """
+  endDate: DateTime
+
+  """
+  If the task is completed.
+  """
+  completed: Boolean!
+}
+
+"""
+Visibility level of the project of the Flexible Project system.
+"""
+enum ProjectVisibility {
+  """
+  Workspace is visible for any user which can view the parent workspace.
+  """
+  PUBLIC
+
+  """
+  Workspace is only visible for members of this project.
+  """
+  PRIVATE
+}
+
+"""
+Root query object of the service.
+"""
+type Query {
+  """
+  Filters all users of the system.
+  """
+  users(filters: UserFilters!): [User!]!
+
+  """
+  Filters all workspaces of the system.
+  """
+  workspaces(filters: WorkspaceFilters!): [Workspace!]!
+
+  """
+  Filters all methodologies of the system.
+  """
+  methodologies(filters: MethodologyFilters!): [Methodology!]!
+
+  """
+  Filters all projects of the system.
+  """
+  projects(filters: ProjectFilters!): [Project!]!
+
+  """
+  Retrieve a list of all notifications of the user received earlier.
+  """
+  receivedNotifications(userId: ID!): [Notification!]!
+}
+
+"""
+The `String` scalar type represents textual data, represented as UTF-8
+character sequences. The String type is most often used by GraphQL to
+represent free-form human-readable text.
+"""
+scalar String
+
+"""
+Root subscription object of the service.
+"""
+type Subscription {
+  """
+  Subscribe for all incoming notifications of the user by provided identifier.
+  """
+  incomingNotifications(userId: ID!): Notification!
+}
+
+"""
+Data of the methodology to update.
+"""
+input UpdateMethodology {
+  """
+  Owner of the methodology to update, if exists.
+  """
+  owner: MethodologyOwnerInput
+
+  """
+  Name of the methodology to update, if exists.
+  """
+  name: String
+
+  """
+  Description of the methodology to update, if exists.
+  """
+  description: String
+
+  """
+  Visibility of the methodology to update, if exists.
+  """
+  visibility: MethodologyVisibility
+}
+
+"""
+Data of notification preferences to update.
+"""
+input UpdateNotificationPreferences {
+  """
+  Set of preferences for each notification type to update, if present.
+  """
+  typePreferences: [UpdateNotificationTypePreferences!]
+}
+
+"""
+Notification type preferences properties of the Flexible Project system.
+"""
+input UpdateNotificationTypePreferences {
+  """
+  Identifier of notification type.
+  """
+  typeId: ID!
+
+  """
+  Updates if notifications of this type are ignored, if exists.
+  """
+  ignore: Boolean
+
+  """
+  Updates if notifications of this type are muted, if exists.
+  """
+  mute: Boolean
+}
+
+"""
+Data of the project to update.
+"""
+input UpdateProject {
+  """
+  Name of the project to update, if present.
+  """
+  name: String
+
+  """
+  Description of the project to update, if present.
+  """
+  description: String
+
+  """
+  Visibility of the project to update, if present.
+  """
+  visibility: ProjectVisibility
+}
+
+"""
+Data of the user to update.
+"""
+input UpdateUser {
+  """
+  Name of the user to update, if present.
+  """
+  name: String
+
+  """
+  Display name of the user to update, if present.
+  """
+  displayName: String
+
+  """
+  Email of the user to update, if present.
+  """
+  email: String
+
+  """
+  Avatar of the user to update, if present.
+  """
+  avatarUrl: String
+}
+
+"""
+Data of the workspace to update.
+"""
+input UpdateWorkspace {
+  """
+  Name of the workspace to update, if present.
+  """
+  name: String
+
+  """
+  Description of the workspace to update, if present.
+  """
+  description: String
+
+  """
+  Visibility of the workspace to update, if present.
+  """
+  visibility: WorkspaceVisibility
+
+  """
+  Optional image of the workspace to update, if present.
+  """
+  imageUrl: String
+}
+
+"""
+User properties of the Flexible Project system.
+"""
+type User implements MethodologyOwner & NotificationSource {
+  """
+  Unique identifier of the user.
+  """
+  id: ID!
+
+  """
+  Unique name of the user.
+  """
+  name: String!
+
+  """
+  Display name of the user.
+  """
+  displayName: String!
+
+  """
+  Role of the user.
+  """
+  role: UserRole!
+
+  """
+  Optional email of the user.
+  """
+  email: String
+
+  """
+  Optional avatar of the user.
+  """
+  avatarUrl: String
+}
+
+"""
+Filters of users of the Flexible Project system.
+"""
+input UserFilters {
+  """
+  Identifier filter of the user.
+  """
+  id: ID
+}
+
+"""
+Role of the user in the Flexible Project system.
+"""
+enum UserRole {
+  """
+  An ordinary user with no special rights.
+  """
+  USER
+
+  """
+  A moderator of the system which is responsible
+  for public user content moderation.
+  """
+  MODERATOR
+
+  """
+  An administrator of the system with special rights.
+  """
+  ADMINISTRATOR
+}
+
+"""
+Workspace properties of the Flexible project system.
+"""
+type Workspace implements MethodologyOwner & NotificationSource {
+  """
+  Unique identifier of the workspace.
+  """
+  id: ID!
+
+  """
+  Name of the workspace.
+  """
+  name: String!
+
+  """
+  Description of the workspace.
+  """
+  description: String!
+
+  """
+  Visibility of the workspace.
+  """
+  visibility: WorkspaceVisibility!
+
+  """
+  Optional image of the workspace.
+  """
+  imageUrl: String
+
+  """
+  Members of the workspace.
+  """
+  members: [WorkspaceMember!]!
+
+  """
+  Roles of the workspace.
+  """
+  roles: [WorkspaceRole!]!
+
+  """
+  Projects of the workspace.
+  """
+  projects: [Project!]!
+}
+
+"""
+Filters of workspaces of the Flexible Project system.
+"""
+input WorkspaceFilters {
+  """
+  Identifier filter of the workspace.
+  """
+  id: ID
+}
+
+"""
+Workspace member properties of the Flexible Project system.
+"""
+type WorkspaceMember {
+  """
+  User which is a member of the workspace.
+  """
+  user: User!
+
+  """
+  Role of member in the workspace.
+  """
+  role: WorkspaceRole!
+}
+
+"""
+Workspace role properties of the Flexible Project system.
+"""
+type WorkspaceRole {
+  """
+  Unique identifier of the role.
+  """
+  id: ID!
+
+  """
+  Unique name of the role in the workspace.
+  """
+  name: String!
+
+  """
+  Set of available operations which modify workspace data.
+  """
+  operations: [WorkspaceUpdateOperation!]!
+}
+
+"""
+Operation of update role access level which can modify different workspace aspects.
+"""
+enum WorkspaceUpdateOperation {
+  """
+  Member can update general information of the workspace,
+  such as name and description.
+  """
+  UPDATE_WORKSPACE
+
+  """
+  Member can create new project in the workspace.
+  """
+  CREATE_PROJECT
+
+  """
+  Member can delete existing project of the workspace.
+  """
+  DELETE_PROJECT
+
+  """
+  Member can add another user (as a new member) into the workspace.
+  """
+  ADD_MEMBER
+
+  """
+  Member can remove another member from the workspace.
+  """
+  REMOVE_MEMBER
+
+  """
+  Member can create new role in the workspace.
+  """
+  CREATE_ROLE
+
+  """
+  Member can update data of existing role in the workspace,
+  such as name and access level.
+  """
+  UPDATE_ROLE
+
+  """
+  Member can delete existing role in the workspace.
+  """
+  DELETE_ROLE
+
+  """
+  Member can grant an existing role to another member of the workspace.
+  """
+  GRANT_ROLE
+
+  """
+  Member can revoke an existing role from another member of the workspace.
+  """
+  REVOKE_ROLE
+}
+
+"""
+Visibility level of the workspace of the Flexible Project system.
+"""
+enum WorkspaceVisibility {
+  """
+  Workspace is visible for any user of the system.
+  """
+  PUBLIC
+
+  """
+  Workspace is only visible for members of this workspace.
+  """
+  PRIVATE
+}
+
+"""
+A Directive provides a way to describe alternate runtime execution and type
+validation behavior in a GraphQL document.
+
+In some cases, you need to provide options to alter GraphQL's execution
+behavior in ways field arguments will not suffice, such as conditionally
+including or skipping a field. Directives provide this by describing
+additional information to the executor.
+"""
+type __Directive {
+  name: String!
+
+  description: String
+
+  locations: [__DirectiveLocation!]!
+
+  args: [__InputValue!]!
+
+  isRepeatable: Boolean!
+}
+
+"""
+A Directive can be adjacent to many parts of the GraphQL language, a
+__DirectiveLocation describes one such possible adjacencies.
+"""
+enum __DirectiveLocation {
+  """
+  Location adjacent to a query operation.
+  """
+  QUERY
+
+  """
+  Location adjacent to a mutation operation.
+  """
+  MUTATION
+
+  """
+  Location adjacent to a subscription operation.
+  """
+  SUBSCRIPTION
+
+  """
+  Location adjacent to a field.
+  """
+  FIELD
+
+  """
+  Location adjacent to a fragment definition.
+  """
+  FRAGMENT_DEFINITION
+
+  """
+  Location adjacent to a fragment spread.
+  """
+  FRAGMENT_SPREAD
+
+  """
+  Location adjacent to an inline fragment.
+  """
+  INLINE_FRAGMENT
+
+  """
+  Location adjacent to a variable definition.
+  """
+  VARIABLE_DEFINITION
+
+  """
+  Location adjacent to a schema definition.
+  """
+  SCHEMA
+
+  """
+  Location adjacent to a scalar definition.
+  """
+  SCALAR
+
+  """
+  Location adjacent to an object type definition.
+  """
+  OBJECT
+
+  """
+  Location adjacent to a field definition.
+  """
+  FIELD_DEFINITION
+
+  """
+  Location adjacent to an argument definition.
+  """
+  ARGUMENT_DEFINITION
+
+  """
+  Location adjacent to an interface definition.
+  """
+  INTERFACE
+
+  """
+  Location adjacent to a union definition.
+  """
+  UNION
+
+  """
+  Location adjacent to an enum definition.
+  """
+  ENUM
+
+  """
+  Location adjacent to an enum value definition.
+  """
+  ENUM_VALUE
+
+  """
+  Location adjacent to an input object type definition.
+  """
+  INPUT_OBJECT
+
+  """
+  Location adjacent to an input object field definition.
+  """
+  INPUT_FIELD_DEFINITION
+}
+
+"""
+One possible value for a given Enum. Enum values are unique values, not a
+placeholder for a string or numeric value. However an Enum value is returned
+in a JSON response as a string.
+"""
+type __EnumValue {
+  name: String!
+
+  description: String
+
+  isDeprecated: Boolean!
+
+  deprecationReason: String
+}
+
+"""
+Object and Interface types are described by a list of Fields, each of which
+has a name, potentially a list of arguments, and a return type.
+"""
+type __Field {
+  name: String!
+
+  description: String
+
+  args: [__InputValue!]!
+
+  type: __Type!
+
+  isDeprecated: Boolean!
+
+  deprecationReason: String
+}
+
+"""
+Arguments provided to Fields or Directives and the input fields of an
+InputObject are represented as Input Values which describe their type and
+optionally a default value.
+"""
+type __InputValue {
+  name: String!
+
+  description: String
+
+  type: __Type!
+
+  defaultValue: String
+}
+
+"""
+A GraphQL Schema defines the capabilities of a GraphQL server. It exposes
+all available types and directives on the server, as well as the entry
+points for query, mutation, and subscription operations.
+"""
+type __Schema {
+  """
+  A list of all types supported by this server.
+  """
+  types: [__Type!]!
+
+  """
+  The type that query operations will be rooted at.
+  """
+  queryType: __Type!
+
+  """
+  If this server supports mutation, the type that mutation operations will
+  be rooted at.
+  """
+  mutationType: __Type
+
+  """
+  If this server support subscription, the type that subscription
+  operations will be rooted at.
+  """
+  subscriptionType: __Type
+
+  """
+  A list of all directives supported by this server.
+  """
+  directives: [__Directive!]!
+}
+
+"""
+The fundamental unit of any GraphQL Schema is the type. There are many kinds
+of types in GraphQL as represented by the `__TypeKind` enum.
+
+Depending on the kind of a type, certain fields describe information about
+that type. Scalar types provide no information beyond a name and
+description, while Enum types provide their values. Object and Interface
+types provide the fields they describe. Abstract types, Union and Interface,
+provide the Object types possible at runtime. List and NonNull types compose
+other types.
+"""
+type __Type {
+  kind: __TypeKind!
+
+  name: String
+
+  description: String
+
+  fields(includeDeprecated: Boolean! = false): [__Field!]
+
+  interfaces: [__Type!]
+
+  possibleTypes: [__Type!]
+
+  enumValues(includeDeprecated: Boolean! = false): [__EnumValue!]
+
+  inputFields: [__InputValue!]
+
+  ofType: __Type
+
+  specifiedByURL: String
+
+  isOneOf: Boolean
+}
+
+"""
+An enum describing what kind of type a given `__Type` is.
+"""
+enum __TypeKind {
+  """
+  Indicates this type is a scalar.
+  """
+  SCALAR
+
+  """
+  Indicates this type is an object. `fields` and `interfaces` are valid
+  fields.
+  """
+  OBJECT
+
+  """
+  Indicates this type is an interface. `fields` and `possibleTypes` are
+  valid fields.
+  """
+  INTERFACE
+
+  """
+  Indicates this type is a union. `possibleTypes` is a valid field.
+  """
+  UNION
+
+  """
+  Indicates this type is an enum. `enumValues` is a valid field.
+  """
+  ENUM
+
+  """
+  Indicates this type is an input object. `inputFields` is a valid field.
+  """
+  INPUT_OBJECT
+
+  """
+  Indicates this type is a list. `ofType` is a valid field.
+  """
+  LIST
+
+  """
+  Indicates this type is a non-null. `ofType` is a valid field.
+  """
+  NON_NULL
+}
+
+"""
+Directs the executor to include this field or fragment only when the `if` argument is true.
+"""
+directive @include ("Included when true." if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+
+"""
+Directs the executor to skip this field or fragment when the `if` argument is true.
+"""
+directive @skip ("Skipped when true." if: Boolean!) on FIELD|FRAGMENT_SPREAD|INLINE_FRAGMENT
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}

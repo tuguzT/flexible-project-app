@@ -33,6 +33,8 @@ compose-destinations = "1.8.41-beta"
 coil = "2.3.0"
 # ObjectBox
 objectbox = "3.6.0"
+# Apollo GraphQL
+apollo-graphql = "3.8.1"
 # Testing
 junit4 = "4.13.2"
 junit4-android = "1.1.5"
@@ -81,6 +83,8 @@ objectbox-gradle-plugin = { group = "io.objectbox", name = "objectbox-gradle-plu
 objectbox-kotlin = { group = "io.objectbox", name = "objectbox-kotlin", version.ref = "objectbox" }
 objectbox-android = { group = "io.objectbox", name = "objectbox-android", version.ref = "objectbox" }
 objectbox-android-objectbrowser = { group = "io.objectbox", name = "objectbox-android-objectbrowser", version.ref = "objectbox" }
+# Apollo GraphQL
+apollo-graphql-runtime = { group = "com.apollographql.apollo3", name = "apollo-runtime", version.ref = "apollo-graphql" }
 # Testing
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 junit4-android = { group = "androidx.test.ext", name = "junit", version.ref = "junit4-android" }
@@ -102,3 +106,4 @@ kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt-google" }
 objectbox = { id = "io.objectbox", version.ref = "objectbox" }
+apollo-graphql = { id = "com.apollographql.apollo3", version.ref = "apollo-graphql" }
