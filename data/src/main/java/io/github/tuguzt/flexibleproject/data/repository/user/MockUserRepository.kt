@@ -4,6 +4,7 @@ import io.github.tuguzt.flexibleproject.domain.model.user.Name
 import io.github.tuguzt.flexibleproject.domain.model.user.Role
 import io.github.tuguzt.flexibleproject.domain.model.user.UpdateUser
 import io.github.tuguzt.flexibleproject.domain.model.user.User
+import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
 import io.github.tuguzt.flexibleproject.domain.model.user.UserData
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
@@ -11,7 +12,17 @@ import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 import java.util.UUID
 
 class MockUserRepository : UserRepository {
-    override suspend fun create(name: Name): User {
+    override suspend fun signIn(credentials: UserCredentials): User {
+        val name = credentials.name
+        val user = users.asSequence().find { (_, data) -> data.name == name }
+        checkNotNull(user) { """No user found with name "$name"""" }
+
+        val (id, data) = user
+        return User(id, data)
+    }
+
+    override suspend fun signUp(credentials: UserCredentials): User {
+        val name = credentials.name
         checkUniqueName(name)
 
         val id = UserId(UUID.randomUUID().toString())
@@ -23,6 +34,12 @@ class MockUserRepository : UserRepository {
             avatar = null,
         )
         users[id] = data
+        return User(id, data)
+    }
+
+    override suspend fun signOut(id: UserId): User {
+        val data = users[id]
+        checkNotNull(data) { """No user found with identifier "$id"""" }
         return User(id, data)
     }
 
@@ -53,8 +70,8 @@ class MockUserRepository : UserRepository {
     }
 
     private fun checkUniqueName(name: Name) {
-        val user = users.values.find { data -> data.name == name }
-        check(user == null) { """User with name "$name" already exists""" }
+        val data = users.values.find { data -> data.name == name }
+        check(data == null) { """User with name "$name" already exists""" }
     }
 
     private val users = mutableMapOf(
