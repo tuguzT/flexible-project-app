@@ -4,9 +4,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
 import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
+import io.github.tuguzt.flexibleproject.domain.usecase.user.GetCurrentUser
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignIn
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignOut
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignUp
@@ -22,13 +24,25 @@ object DomainModule {
     fun provideFindUserById(repository: UserRepository) = FindUserById(repository)
 
     @Provides
-    fun provideSignIn(repository: UserRepository) = SignIn(repository)
+    fun provideSignIn(
+        userRepository: UserRepository,
+        currentUserRepository: CurrentUserRepository,
+    ) = SignIn(userRepository, currentUserRepository)
 
     @Provides
-    fun provideSignUp(repository: UserRepository) = SignUp(repository)
+    fun provideSignUp(
+        userRepository: UserRepository,
+        currentUserRepository: CurrentUserRepository,
+    ) = SignUp(userRepository, currentUserRepository)
 
     @Provides
-    fun provideSignOut(repository: UserRepository) = SignOut(repository)
+    fun provideSignOut(
+        userRepository: UserRepository,
+        currentUserRepository: CurrentUserRepository,
+    ) = SignOut(userRepository, currentUserRepository)
+
+    @Provides
+    fun provideGetCurrentUser(repository: CurrentUserRepository) = GetCurrentUser(repository)
 
     @Provides
     fun provideReadAllWorkspaces(repository: WorkspaceRepository) = ReadAllWorkspaces(repository)

@@ -9,20 +9,31 @@ import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.model.user.UserIdFilters
+import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 
-class DeleteUser(private val repository: UserRepository) {
+class DeleteUser(
+    private val userRepository: UserRepository,
+    private val currentUserRepository: CurrentUserRepository,
+) {
     suspend fun delete(id: UserId): Result<User, Exception> {
         val filters = UserFilters(id = UserIdFilters(eq = Equal(id)))
-        val user = when (val result = repository.read(filters)) {
+        val user = when (val result = userRepository.read(filters)) {
             is Result.Error -> return error(Exception.Repository(result.error))
             is Result.Success -> result.data.firstOrNull()
         }
         user ?: return error(Exception.NoUser(id))
 
-        return when (val result = repository.delete(id)) {
+        return when (val result = userRepository.delete(id)) {
             is Result.Error -> error(Exception.Repository(result.error))
-            is Result.Success -> success(result.data)
+            is Result.Success -> {
+                @Suppress("NAME_SHADOWING")
+                val user = result.data
+                if (currentUserRepository.currentUserFlow.value == user) {
+                    currentUserRepository.setCurrentUser(null)
+                }
+                success(user)
+            }
         }
     }
 

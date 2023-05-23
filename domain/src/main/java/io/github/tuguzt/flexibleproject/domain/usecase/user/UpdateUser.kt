@@ -15,12 +15,16 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserDataFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.model.user.UserIdFilters
+import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 
-class UpdateUser(private val repository: UserRepository) {
+class UpdateUser(
+    private val userRepository: UserRepository,
+    private val currentUserRepository: CurrentUserRepository,
+) {
     suspend fun update(id: UserId, update: UpdateUser): Result<User, Error> {
         val filters = UserFilters(id = UserIdFilters(eq = Equal(id)))
-        val user = when (val result = repository.read(filters)) {
+        val user = when (val result = userRepository.read(filters)) {
             is Result.Error -> return error(Error.Repository(result.error))
             is Result.Success -> result.data.firstOrNull()
         }
@@ -31,7 +35,7 @@ class UpdateUser(private val repository: UserRepository) {
             val name = update.name
             val dataFilters = UserDataFilters(name = NameFilters(eq = Equal(name)))
             val filters = UserFilters(data = dataFilters)
-            val user = when (val result = repository.read(filters)) {
+            val user = when (val result = userRepository.read(filters)) {
                 is Result.Error -> return error(Error.Repository(result.error))
                 is Result.Success -> result.data.firstOrNull()
             }
@@ -45,7 +49,7 @@ class UpdateUser(private val repository: UserRepository) {
             val email = update.email
             val dataFilters = UserDataFilters(email = EmailFilters(eq = Equal(email)))
             val filters = UserFilters(data = dataFilters)
-            val user = when (val result = repository.read(filters)) {
+            val user = when (val result = userRepository.read(filters)) {
                 is Result.Error -> return error(Error.Repository(result.error))
                 is Result.Success -> result.data.firstOrNull()
             }
@@ -54,9 +58,16 @@ class UpdateUser(private val repository: UserRepository) {
             }
         }
 
-        return when (val result = repository.update(id, update)) {
+        return when (val result = userRepository.update(id, update)) {
             is Result.Error -> error(Error.Repository(result.error))
-            is Result.Success -> success(result.data)
+            is Result.Success -> {
+                @Suppress("NAME_SHADOWING")
+                val user = result.data
+                if (currentUserRepository.currentUserFlow.value == user) {
+                    currentUserRepository.setCurrentUser(user)
+                }
+                success(user)
+            }
         }
     }
 

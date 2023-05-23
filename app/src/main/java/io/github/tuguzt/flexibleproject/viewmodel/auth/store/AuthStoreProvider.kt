@@ -61,6 +61,7 @@ class AuthStoreProvider(
                     is Result.Error -> {
                         dispatch(Message.Error)
                         when (val error = result.error) {
+                            SignOut.Exception.NotSignedIn -> TODO()
                             is SignOut.Exception.NoUser -> publish(Label.IdNotFound(user.id))
                             is SignOut.Exception.Repository -> when (error.error) {
                                 is BaseException.LocalStore -> publish(Label.LocalStoreError)
@@ -81,6 +82,7 @@ class AuthStoreProvider(
                     is Result.Error -> {
                         dispatch(Message.Error)
                         when (val error = result.error) {
+                            is SignIn.Exception.AlreadySignedIn -> TODO()
                             is SignIn.Exception.NoUser -> {
                                 publish(Label.CredentialsNotFound(credentials))
                             }
@@ -104,6 +106,7 @@ class AuthStoreProvider(
                     is Result.Error -> {
                         dispatch(Message.Error)
                         when (val error = result.error) {
+                            is SignUp.Exception.AlreadySignedIn -> TODO()
                             is SignUp.Exception.NameAlreadyTaken -> {
                                 publish(Label.NameAlreadyTaken(credentials.name))
                             }
