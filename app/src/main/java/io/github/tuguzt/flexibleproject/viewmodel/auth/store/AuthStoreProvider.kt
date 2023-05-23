@@ -29,7 +29,7 @@ class AuthStoreProvider(
             AuthStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = AuthStore::class.simpleName,
-                initialState = State(currentUser = null, loading = false),
+                initialState = State(currentUser = null, loading = true),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}

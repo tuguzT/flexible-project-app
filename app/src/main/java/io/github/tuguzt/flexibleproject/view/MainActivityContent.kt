@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.navigation.dependency
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
+import io.github.tuguzt.flexibleproject.view.screens.destinations.AuthScreenDestination
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
 
@@ -15,10 +16,21 @@ import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
 fun MainActivityContent(
     authViewModel: AuthViewModel = hiltViewModel(),
 ) {
+    val navGraph = NavGraphs.root
+    val startRoute = run {
+        val state = authViewModel.stateFlow.value
+        if (state.currentUser == null) {
+            AuthScreenDestination
+        } else {
+            navGraph.startRoute
+        }
+    }
+
     AppTheme {
         Surface(modifier = Modifier.fillMaxSize()) {
             DestinationsNavHost(
-                navGraph = NavGraphs.root,
+                navGraph = navGraph,
+                startRoute = startRoute,
                 dependenciesContainerBuilder = {
                     dependency(authViewModel)
                 },
