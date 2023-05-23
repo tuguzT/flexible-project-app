@@ -5,17 +5,18 @@ import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
+import io.github.tuguzt.flexibleproject.domain.repository.RepositoryResult
 
 interface UserRepository {
-    suspend fun signIn(credentials: UserCredentials): User
+    suspend fun signIn(credentials: UserCredentials): RepositoryResult<User>
 
-    suspend fun signUp(credentials: UserCredentials): User
+    suspend fun signUp(credentials: UserCredentials): RepositoryResult<User>
 
-    suspend fun signOut(id: UserId): User
+    suspend fun signOut(id: UserId): RepositoryResult<User>
 
-    suspend fun read(filters: UserFilters): List<User>
+    suspend fun read(filters: UserFilters): RepositoryResult<List<User>>
 
-    suspend fun update(id: UserId, update: UpdateUser): User
+    suspend fun update(id: UserId, update: UpdateUser): RepositoryResult<User>
 
-    suspend fun delete(id: UserId): User
+    suspend fun delete(id: UserId): RepositoryResult<User>
 }

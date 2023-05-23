@@ -19,5 +19,8 @@ interface UserStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data class NotFound(val id: UserId) : Label
+        object LocalStoreError : Label
+        object NetworkAccessError : Label
+        object UnknownError : Label
     }
 }

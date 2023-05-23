@@ -9,33 +9,34 @@ import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
+import io.github.tuguzt.flexibleproject.domain.repository.RepositoryResult
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 
 class UserRepositoryImpl(local: LocalClient, remote: RemoteClient) : UserRepository {
     private val local = LocalUserDataSource(local)
     private val remote = RemoteUserDataSource(remote)
 
-    override suspend fun signIn(credentials: UserCredentials): User {
+    override suspend fun signIn(credentials: UserCredentials): RepositoryResult<User> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun signUp(credentials: UserCredentials): User {
+    override suspend fun signUp(credentials: UserCredentials): RepositoryResult<User> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun signOut(id: UserId): User {
+    override suspend fun signOut(id: UserId): RepositoryResult<User> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun read(filters: UserFilters): List<User> {
+    override suspend fun read(filters: UserFilters): RepositoryResult<List<User>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun update(id: UserId, update: UpdateUser): User {
+    override suspend fun update(id: UserId, update: UpdateUser): RepositoryResult<User> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun delete(id: UserId): User {
+    override suspend fun delete(id: UserId): RepositoryResult<User> {
         TODO("Not yet implemented")
     }
 }

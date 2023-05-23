@@ -3,7 +3,9 @@ package io.github.tuguzt.flexibleproject.viewmodel.auth
 import androidx.lifecycle.viewModelScope
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
+import io.github.tuguzt.flexibleproject.domain.usecase.user.SignIn
+import io.github.tuguzt.flexibleproject.domain.usecase.user.SignOut
+import io.github.tuguzt.flexibleproject.domain.usecase.user.SignUp
 import io.github.tuguzt.flexibleproject.viewmodel.StoreViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Intent
@@ -14,11 +16,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    findById: FindUserById,
+    signIn: SignIn,
+    signUp: SignUp,
+    signOut: SignOut,
     storeFactory: StoreFactory,
 ) : StoreViewModel<Intent, State, Label>() {
     private val provider = AuthStoreProvider(
-        findById = findById,
+        signIn = signIn,
+        signUp = signUp,
+        signOut = signOut,
         storeFactory = storeFactory,
         coroutineContext = viewModelScope.coroutineContext,
     )

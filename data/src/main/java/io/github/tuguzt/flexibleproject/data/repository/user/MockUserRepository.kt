@@ -1,6 +1,8 @@
 package io.github.tuguzt.flexibleproject.data.repository.user
 
-import io.github.tuguzt.flexibleproject.domain.model.user.Name
+import io.github.tuguzt.flexibleproject.domain.model.BaseException
+import io.github.tuguzt.flexibleproject.domain.model.error
+import io.github.tuguzt.flexibleproject.domain.model.success
 import io.github.tuguzt.flexibleproject.domain.model.user.Role
 import io.github.tuguzt.flexibleproject.domain.model.user.UpdateUser
 import io.github.tuguzt.flexibleproject.domain.model.user.User
@@ -8,50 +10,66 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
 import io.github.tuguzt.flexibleproject.domain.model.user.UserData
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
+import io.github.tuguzt.flexibleproject.domain.repository.RepositoryResult
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 import java.util.UUID
 
 class MockUserRepository : UserRepository {
-    override suspend fun signIn(credentials: UserCredentials): User {
+    override suspend fun signIn(credentials: UserCredentials): RepositoryResult<User> {
         val name = credentials.name
         val user = users.asSequence().find { (_, data) -> data.name == name }
-        checkNotNull(user) { """No user found with name "$name"""" }
+        if (user == null) {
+            val cause = IllegalStateException("""No user found with name "$name"""")
+            return error(BaseException.Unknown(cause))
+        }
 
         val (id, data) = user
-        return User(id, data)
+        return success(User(id, data))
     }
 
-    override suspend fun signUp(credentials: UserCredentials): User {
+    override suspend fun signUp(credentials: UserCredentials): RepositoryResult<User> {
         val name = credentials.name
-        checkUniqueName(name)
+        val data = users.values.find { data -> data.name == name }
+        if (data != null) {
+            val cause = IllegalStateException("""User with name "$name" already exists""")
+            return error(BaseException.Unknown(cause))
+        }
 
         val id = UserId(UUID.randomUUID().toString())
-        val data = UserData(
+        val new = UserData(
             name = name,
             displayName = name,
             role = Role.User,
             email = null,
             avatar = null,
         )
-        users[id] = data
-        return User(id, data)
+        users[id] = new
+        return success(User(id, new))
     }
 
-    override suspend fun signOut(id: UserId): User {
+    override suspend fun signOut(id: UserId): RepositoryResult<User> {
         val data = users[id]
-        checkNotNull(data) { """No user found with identifier "$id"""" }
-        return User(id, data)
+        if (data == null) {
+            val cause = IllegalStateException("""No user found with identifier "$id"""")
+            return error(BaseException.Unknown(cause))
+        }
+        return success(User(id, data))
     }
 
-    override suspend fun read(filters: UserFilters): List<User> =
-        users.asSequence()
+    override suspend fun read(filters: UserFilters): RepositoryResult<List<User>> {
+        val users = users.asSequence()
             .map { (id, data) -> User(id, data) }
             .filter { user -> filters satisfies user }
             .toList()
+        return success(users)
+    }
 
-    override suspend fun update(id: UserId, update: UpdateUser): User {
+    override suspend fun update(id: UserId, update: UpdateUser): RepositoryResult<User> {
         val data = users[id]
-        checkNotNull(data) { """No user found with identifier "$id"""" }
+        if (data == null) {
+            val cause = IllegalStateException("""No user found with identifier "$id"""")
+            return error(BaseException.Unknown(cause))
+        }
 
         val updated = data.copy(
             name = update.name ?: data.name,
@@ -60,18 +78,16 @@ class MockUserRepository : UserRepository {
             avatar = update.avatar ?: data.avatar,
         )
         users[id] = updated
-        return User(id, updated)
+        return success(User(id, updated))
     }
 
-    override suspend fun delete(id: UserId): User {
+    override suspend fun delete(id: UserId): RepositoryResult<User> {
         val data = users.remove(id)
-        checkNotNull(data) { """No user found with identifier "$id"""" }
-        return User(id, data)
-    }
-
-    private fun checkUniqueName(name: Name) {
-        val data = users.values.find { data -> data.name == name }
-        check(data == null) { """User with name "$name" already exists""" }
+        if (data == null) {
+            val cause = IllegalStateException("""No user found with identifier "$id"""")
+            return error(BaseException.Unknown(cause))
+        }
+        return success(User(id, data))
     }
 
     private val users = mutableMapOf(

@@ -7,6 +7,9 @@ import dagger.hilt.components.SingletonComponent
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
 import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
+import io.github.tuguzt.flexibleproject.domain.usecase.user.SignIn
+import io.github.tuguzt.flexibleproject.domain.usecase.user.SignOut
+import io.github.tuguzt.flexibleproject.domain.usecase.user.SignUp
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.CreateWorkspace
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.ReadAllWorkspaces
@@ -17,6 +20,15 @@ import io.github.tuguzt.flexibleproject.domain.usecase.workspace.WorkspacesFlow
 object DomainModule {
     @Provides
     fun provideFindUserById(repository: UserRepository) = FindUserById(repository)
+
+    @Provides
+    fun provideSignIn(repository: UserRepository) = SignIn(repository)
+
+    @Provides
+    fun provideSignUp(repository: UserRepository) = SignUp(repository)
+
+    @Provides
+    fun provideSignOut(repository: UserRepository) = SignOut(repository)
 
     @Provides
     fun provideReadAllWorkspaces(repository: WorkspaceRepository) = ReadAllWorkspaces(repository)

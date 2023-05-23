@@ -4,6 +4,8 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import io.github.tuguzt.flexibleproject.domain.model.BaseException
+import io.github.tuguzt.flexibleproject.domain.model.Result
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
@@ -31,11 +33,12 @@ class UserStoreProvider(
     private sealed interface Message {
         object Loading : Message
         data class Loaded(val user: User) : Message
-        data class NotFound(val id: UserId) : Message
+        object Error : Message
     }
 
-    private inner class ExecutorImpl :
-        CoroutineExecutor<Intent, Unit, State, Message, Label>(mainContext = coroutineContext) {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Message, Label>(
+        mainContext = coroutineContext,
+    ) {
         override fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
                 is Intent.Load -> load(intent.id)
@@ -44,13 +47,25 @@ class UserStoreProvider(
         private fun load(id: UserId) {
             dispatch(Message.Loading)
             scope.launch {
-                val user = findById.findById(id)
-                if (user == null) {
-                    dispatch(Message.NotFound(id))
-                    publish(Label.NotFound(id))
-                    return@launch
+                val result = findById.findById(id)
+                val data = result.data
+                if (data != null) {
+                    dispatch(Message.Loaded(data))
                 }
-                dispatch(Message.Loaded(user))
+                when (result) {
+                    is Result.Success -> Unit
+                    is Result.Error -> {
+                        dispatch(Message.Error)
+                        when (val error = result.error) {
+                            is FindUserById.Exception.NoUser -> publish(Label.NotFound(id))
+                            is FindUserById.Exception.Repository -> when (error.error) {
+                                is BaseException.LocalStore -> publish(Label.LocalStoreError)
+                                is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
+                                is BaseException.Unknown -> publish(Label.UnknownError)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -60,7 +75,7 @@ class UserStoreProvider(
             when (msg) {
                 Message.Loading -> copy(loading = true)
                 is Message.Loaded -> copy(user = msg.user, loading = false)
-                is Message.NotFound -> copy(user = null, loading = false)
+                Message.Error -> copy(loading = false)
             }
     }
 }
