@@ -6,7 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.github.tuguzt.flexibleproject.data.DatabaseClient
+import io.github.tuguzt.flexibleproject.data.LocalClient
 import io.github.tuguzt.flexibleproject.data.RemoteClient
 import io.github.tuguzt.flexibleproject.data.repository.user.MockUserRepository
 import io.github.tuguzt.flexibleproject.data.repository.workspace.MockWorkspaceRepository
@@ -19,8 +19,8 @@ import javax.inject.Singleton
 object DataModule {
     @Singleton
     @Provides
-    fun providesDatabaseClient(@ApplicationContext context: Context): DatabaseClient =
-        DatabaseClient(context)
+    fun providesLocalClient(@ApplicationContext context: Context): LocalClient =
+        LocalClient(context)
 
     @Singleton
     @Provides

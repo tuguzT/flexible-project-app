@@ -3,22 +3,24 @@ package io.github.tuguzt.flexibleproject.data.repository.user
 import io.github.tuguzt.flexibleproject.domain.model.user.Role
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserData
+import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 
 class MockUserRepository : UserRepository {
-    private val users: Map<UserId, UserData> = mapOf(
+    override suspend fun read(filters: UserFilters): List<User> =
+        users.asSequence()
+            .map { (id, data) -> User(id, data) }
+            .filter { user -> filters satisfies user }
+            .toList()
+
+    private val users = mapOf(
         UserId("timur") to UserData(
             name = "tuguzT",
             displayName = "Timur Tugushev",
             role = Role.User,
             email = "timurka.tugushev@gmail.com",
-            avatarUrl = "https://avatars.githubusercontent.com/u/56771526",
+            avatar = "https://avatars.githubusercontent.com/u/56771526",
         ),
     )
-
-    override suspend fun findById(id: UserId): User? {
-        val data = users[id] ?: return null
-        return User(id, data)
-    }
 }

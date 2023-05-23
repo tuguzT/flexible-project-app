@@ -33,7 +33,7 @@ fun UserAvatar(
     error: @Composable (() -> Unit)? = null,
 ) {
     val model = ImageRequest.Builder(LocalContext.current)
-        .data(user?.data?.avatarUrl)
+        .data(user?.data?.avatar)
         .crossfade(crossfade)
         .build()
     var isLoading by remember { mutableStateOf(true) }
@@ -61,7 +61,7 @@ private fun UserAvatarWithUser() {
             displayName = "Timur Tugushev",
             role = Role.User,
             email = "timurka.tugushev@gmail.com",
-            avatarUrl = "https://avatars.githubusercontent.com/u/56771526",
+            avatar = "https://avatars.githubusercontent.com/u/56771526",
         ),
     )
 

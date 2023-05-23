@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.data.model
+package io.github.tuguzt.flexibleproject.data.repository.user.model
 
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
@@ -12,5 +12,5 @@ internal data class UserEntity(
     val displayName: String? = null,
     val role: String? = null,
     @Unique val email: String? = null,
-    val avatarUrl: String? = null,
+    val avatar: String? = null,
 )

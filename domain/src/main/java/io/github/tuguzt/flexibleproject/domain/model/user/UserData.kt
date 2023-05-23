@@ -1,9 +1,9 @@
 package io.github.tuguzt.flexibleproject.domain.model.user
 
 data class UserData(
-    val name: String,
-    val displayName: String,
+    val name: Name,
+    val displayName: DisplayName,
     val role: Role,
-    val email: String?,
-    val avatarUrl: String?,
+    val email: Email?,
+    val avatar: Avatar?,
 )

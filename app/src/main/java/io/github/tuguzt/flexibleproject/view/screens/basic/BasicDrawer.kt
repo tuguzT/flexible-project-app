@@ -257,7 +257,7 @@ private fun BasicDrawer() {
             displayName = "Timur Tugushev",
             role = Role.User,
             email = "timurka.tugushev@gmail.com",
-            avatarUrl = "https://avatars.githubusercontent.com/u/56771526",
+            avatar = "https://avatars.githubusercontent.com/u/56771526",
         ),
     )
     val userContent = BasicDrawerContent.UserContent(

@@ -1,14 +1,14 @@
 package io.github.tuguzt.flexibleproject.data
 
 import android.content.Context
-import io.github.tuguzt.flexibleproject.data.model.MyObjectBox
-import io.github.tuguzt.flexibleproject.data.model.UserEntity
+import io.github.tuguzt.flexibleproject.data.repository.user.model.MyObjectBox
+import io.github.tuguzt.flexibleproject.data.repository.user.model.UserEntity
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.objectbox.android.Admin
 import io.objectbox.kotlin.boxFor
 
-class DatabaseClient(context: Context) {
+class LocalClient(context: Context) {
     private val boxStore: BoxStore = MyObjectBox.builder()
         .androidContext(context)
         .build()
