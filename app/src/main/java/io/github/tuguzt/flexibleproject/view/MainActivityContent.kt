@@ -10,15 +10,15 @@ import com.ramcosta.composedestinations.navigation.dependency
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AuthScreenDestination
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
-import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 
 @Composable
 fun MainActivityContent(
-    authViewModel: AuthViewModel = hiltViewModel(),
+    viewModel: CurrentUserViewModel = hiltViewModel(),
 ) {
     val navGraph = NavGraphs.root
     val startRoute = run {
-        val state = authViewModel.stateFlow.value
+        val state = viewModel.stateFlow.value
         if (state.currentUser == null) {
             AuthScreenDestination
         } else {
@@ -32,7 +32,7 @@ fun MainActivityContent(
                 navGraph = navGraph,
                 startRoute = startRoute,
                 dependenciesContainerBuilder = {
-                    dependency(authViewModel)
+                    dependency(viewModel)
                 },
             )
         }

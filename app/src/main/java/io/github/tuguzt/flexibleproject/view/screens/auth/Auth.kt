@@ -3,6 +3,7 @@ package io.github.tuguzt.flexibleproject.view.screens.auth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
@@ -14,18 +15,20 @@ import com.ramcosta.composedestinations.rememberNavHostEngine
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.screens.destinations.BasicScreenDestination
 import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 
 @RootNavGraph
 @Destination
 @Composable
 fun AuthScreen(
     navigator: DestinationsNavigator,
-    authViewModel: AuthViewModel,
+    viewModel: CurrentUserViewModel,
+    authViewModel: AuthViewModel = hiltViewModel(),
 ) {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
 
-    val state by authViewModel.stateFlow.collectAsStateWithLifecycle()
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     LaunchedEffect(state) {
         if (state.currentUser != null) {
             val direction = BasicScreenDestination()

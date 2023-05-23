@@ -32,11 +32,9 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDest
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
-import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.basic.BasicViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore
-import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore
+import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 import kotlinx.coroutines.launch
 
 @RootNavGraph(start = true)
@@ -44,8 +42,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun BasicScreen(
     navigator: DestinationsNavigator,
-    authViewModel: AuthViewModel,
-    userViewModel: UserViewModel = hiltViewModel(),
+    currentUserViewModel: CurrentUserViewModel,
     basicViewModel: BasicViewModel = hiltViewModel(),
 ) {
     val engine = rememberNavHostEngine()
@@ -54,25 +51,20 @@ fun BasicScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
-    val authState by authViewModel.stateFlow.collectAsStateWithLifecycle()
-    val userState by userViewModel.stateFlow.collectAsStateWithLifecycle()
+    val currentUserState by currentUserViewModel.stateFlow.collectAsStateWithLifecycle()
     val basicState by basicViewModel.stateFlow.collectAsStateWithLifecycle()
 
-    val currentUser = authState.currentUser ?: return // TODO navigate to the auth flow
-    LaunchedEffect(currentUser) {
-        val intent = UserStore.Intent.Load(currentUser.id)
-        userViewModel.accept(intent)
-    }
+    val currentUser = currentUserState.currentUser ?: return // TODO navigate to the auth flow
     LaunchedEffect(Unit) {
         val intent = BasicStore.Intent.Load
         basicViewModel.accept(intent)
     }
 
     val userContent = BasicDrawerContent.UserContent(
-        user = userState.user,
+        user = currentUser,
         avatar = {
             UserAvatar(
-                user = userState.user,
+                user = currentUser,
                 modifier = Modifier.size(72.dp).clip(CircleShape),
                 error = { Icon(Icons.Rounded.Person, contentDescription = null) },
             )
@@ -97,7 +89,7 @@ fun BasicScreen(
         drawerContent = drawerContent,
         drawerState = drawerState,
         onUserClick = click@{
-            val id = userState.user?.id
+            val id = currentUser.id
             val direction = UserScreenDestination(id.toString())
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }

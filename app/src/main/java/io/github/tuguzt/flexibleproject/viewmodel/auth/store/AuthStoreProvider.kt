@@ -9,7 +9,6 @@ import io.github.tuguzt.flexibleproject.domain.model.Result
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignIn
-import io.github.tuguzt.flexibleproject.domain.usecase.user.SignOut
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignUp
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Label
@@ -20,7 +19,6 @@ import kotlin.coroutines.CoroutineContext
 class AuthStoreProvider(
     private val signIn: SignIn,
     private val signUp: SignUp,
-    private val signOut: SignOut,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
 ) {
@@ -29,16 +27,24 @@ class AuthStoreProvider(
             AuthStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = AuthStore::class.simpleName,
-                initialState = State(currentUser = null, loading = true),
+                initialState = State(
+                    name = "",
+                    password = "",
+                    passwordVisible = false,
+                    valid = false,
+                    loading = false,
+                ),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}
 
     private sealed interface Message {
+        data class NameChanged(val name: String, val valid: Boolean) : Message
+        data class PasswordChanged(val password: String) : Message
+        data class PasswordVisibleChanged(val passwordVisible: Boolean) : Message
         object Loading : Message
         data class SignedIn(val user: User) : Message
         data class SignedUp(val user: User) : Message
-        data class SignedOut(val user: User) : Message
         object Error : Message
     }
 
@@ -47,31 +53,24 @@ class AuthStoreProvider(
     ) {
         override fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
-                Intent.SignOut -> signOut(state = getState())
+                is Intent.ChangeName -> changeName(intent.name)
+                is Intent.ChangePassword -> changePassword(intent.password)
+                is Intent.ChangePasswordVisible -> changePasswordVisible(intent.passwordVisible)
                 is Intent.SignIn -> signIn(intent.credentials)
                 is Intent.SignUp -> signUp(intent.credentials)
             }
 
-        private fun signOut(state: State) {
-            val user = state.currentUser ?: return
-            dispatch(Message.Loading)
-            scope.launch {
-                when (val result = signOut.signOut(user.id)) {
-                    is Result.Success -> dispatch(Message.SignedOut(result.data))
-                    is Result.Error -> {
-                        dispatch(Message.Error)
-                        when (val error = result.error) {
-                            SignOut.Exception.NotSignedIn -> TODO()
-                            is SignOut.Exception.NoUser -> publish(Label.IdNotFound(user.id))
-                            is SignOut.Exception.Repository -> when (error.error) {
-                                is BaseException.LocalStore -> publish(Label.LocalStoreError)
-                                is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
-                                is BaseException.Unknown -> publish(Label.UnknownError)
-                            }
-                        }
-                    }
-                }
-            }
+        private fun changeName(name: String) {
+            val valid = name.isNotBlank()
+            dispatch(Message.NameChanged(name, valid))
+        }
+
+        private fun changePassword(password: String) {
+            dispatch(Message.PasswordChanged(password))
+        }
+
+        private fun changePasswordVisible(passwordVisible: Boolean) {
+            dispatch(Message.PasswordVisibleChanged(passwordVisible))
         }
 
         private fun signIn(credentials: UserCredentials) {
@@ -84,7 +83,7 @@ class AuthStoreProvider(
                         when (val error = result.error) {
                             is SignIn.Exception.AlreadySignedIn -> TODO()
                             is SignIn.Exception.NoUser -> {
-                                publish(Label.CredentialsNotFound(credentials))
+                                publish(Label.NotFoundByName(credentials.name))
                             }
 
                             is SignIn.Exception.Repository -> when (error.error) {
@@ -126,10 +125,12 @@ class AuthStoreProvider(
     private object ReducerImpl : Reducer<State, Message> {
         override fun State.reduce(msg: Message): State =
             when (msg) {
+                is Message.NameChanged -> copy(name = msg.name, valid = msg.valid)
+                is Message.PasswordChanged -> copy(password = msg.password)
+                is Message.PasswordVisibleChanged -> copy(passwordVisible = msg.passwordVisible)
                 Message.Loading -> copy(loading = true)
-                is Message.SignedIn -> copy(currentUser = msg.user, loading = false)
-                is Message.SignedUp -> copy(currentUser = msg.user, loading = false)
-                is Message.SignedOut -> copy(currentUser = null, loading = false)
+                is Message.SignedIn -> copy(loading = false)
+                is Message.SignedUp -> copy(loading = false)
                 Message.Error -> copy(loading = false)
             }
     }

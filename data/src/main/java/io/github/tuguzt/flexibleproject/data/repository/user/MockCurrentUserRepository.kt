@@ -1,6 +1,9 @@
 package io.github.tuguzt.flexibleproject.data.repository.user
 
+import io.github.tuguzt.flexibleproject.domain.model.user.Role
 import io.github.tuguzt.flexibleproject.domain.model.user.User
+import io.github.tuguzt.flexibleproject.domain.model.user.UserData
+import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,5 +17,17 @@ class MockCurrentUserRepository : CurrentUserRepository {
         _currentUserFlow.value = user
     }
 
-    private val _currentUserFlow: MutableStateFlow<User?> = MutableStateFlow(null)
+    // TODO make null when auth flow will be implemented
+    private val _currentUserFlow: MutableStateFlow<User?> = MutableStateFlow(
+        User(
+            id = UserId("timur"),
+            data = UserData(
+                name = "tuguzT",
+                displayName = "Timur Tugushev",
+                role = Role.Administrator,
+                email = "timurka.tugushev@gmail.com",
+                avatar = "https://avatars.githubusercontent.com/u/56771526",
+            ),
+        ),
+    )
 }

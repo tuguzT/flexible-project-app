@@ -6,28 +6,21 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
-import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore
+import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val authViewModel: AuthViewModel by viewModels()
+    private val viewModel: CurrentUserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().setKeepOnScreenCondition {
-            val state = authViewModel.stateFlow.value
+            val state = viewModel.stateFlow.value
             state.loading
         }
 
         super.onCreate(savedInstanceState)
         setContent {
-            MainActivityContent(authViewModel)
+            MainActivityContent(viewModel)
         }
-
-        // TODO remove when auth flow will be implemented
-        val credentials = UserCredentials(name = "tuguzT", password = "")
-        val intent = AuthStore.Intent.SignIn(credentials)
-        authViewModel.accept(intent)
     }
 }
