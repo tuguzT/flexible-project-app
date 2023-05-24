@@ -52,9 +52,9 @@ fun BasicScreen(
     val coroutineScope = rememberCoroutineScope()
 
     val currentUserState by currentUserViewModel.stateFlow.collectAsStateWithLifecycle()
-    val basicState by basicViewModel.stateFlow.collectAsStateWithLifecycle()
+    val currentUser = currentUserState.currentUser
 
-    val currentUser = currentUserState.currentUser ?: return // TODO navigate to the auth flow
+    val basicState by basicViewModel.stateFlow.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         val intent = BasicStore.Intent.Load
         basicViewModel.accept(intent)
@@ -89,7 +89,7 @@ fun BasicScreen(
         drawerContent = drawerContent,
         drawerState = drawerState,
         onUserClick = click@{
-            val id = currentUser.id
+            val id = currentUser?.id ?: return@click
             val direction = UserScreenDestination(id.toString())
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }

@@ -1,35 +1,43 @@
 package io.github.tuguzt.flexibleproject.view.screens.auth
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +45,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,8 +70,13 @@ fun AuthContent(
     changeAuthTypeClickableText: String,
     onChangeAuthType: () -> Unit,
     focusManager: FocusManager = LocalFocusManager.current,
+    snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
-    Scaffold { padding ->
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        },
+    ) { padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
@@ -182,6 +196,7 @@ private fun AuthFields(
             text = submitText,
             onSubmit = onSubmit,
             enabled = submitEnabled && !loading,
+            loading = loading,
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -251,6 +266,7 @@ private fun SubmitButton(
     text: String,
     onSubmit: () -> Unit,
     enabled: Boolean,
+    loading: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Button(
@@ -258,10 +274,21 @@ private fun SubmitButton(
         modifier = modifier,
         enabled = enabled,
     ) {
+        AnimatedVisibility(visible = loading) {
+            Row {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    strokeWidth = 3.dp,
+                    strokeCap = StrokeCap.Round,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+            }
+        }
         OneLineTitle(text = text)
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 private fun ChangeAuthTypeText(
     changeAuthTypeText: String,
@@ -274,29 +301,33 @@ private fun ChangeAuthTypeText(
         modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
-        val annotatedText = buildAnnotatedString {
-            append(changeAuthTypeText)
-            append(' ')
+        val tag = "clickable"
+        val colorScheme = MaterialTheme.colorScheme
 
-            pushStringAnnotation(tag = "Clickable", annotation = "Clickable")
-            val styleColor = if (loading) {
-                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-            } else {
-                MaterialTheme.colorScheme.primary
+        val annotatedText = buildAnnotatedString {
+            withStyle(style = SpanStyle(color = colorScheme.onSurface)) {
+                append(changeAuthTypeText)
             }
-            val style = SpanStyle(
-                color = styleColor,
-                fontWeight = FontWeight.Bold,
-                textDecoration = TextDecoration.Underline,
-            )
-            withStyle(style) {
-                append(changeAuthTypeClickableText)
+            append(' ')
+            withAnnotation(tag = tag, annotation = tag) {
+                val styleColor = if (loading) {
+                    colorScheme.onSurface.copy(alpha = 0.38f)
+                } else {
+                    colorScheme.primary
+                }
+                val style = SpanStyle(
+                    color = styleColor,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline,
+                )
+                withStyle(style) {
+                    append(changeAuthTypeClickableText)
+                }
             }
-            pop()
         }
         ClickableText(text = annotatedText) { offset ->
             annotatedText
-                .getStringAnnotations(tag = "Clickable", start = offset, end = offset)
+                .getStringAnnotations(tag = tag, start = offset, end = offset)
                 .firstOrNull()
                 ?.let { onChangeAuthType() }
         }

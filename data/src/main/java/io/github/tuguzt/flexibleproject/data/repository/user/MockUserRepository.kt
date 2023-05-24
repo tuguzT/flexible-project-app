@@ -12,10 +12,14 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.repository.RepositoryResult
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
+import kotlinx.coroutines.delay
 import java.util.UUID
+import kotlin.time.Duration.Companion.seconds
 
 class MockUserRepository : UserRepository {
     override suspend fun signIn(credentials: UserCredentials): RepositoryResult<User> {
+        delay(2.seconds)
+
         val name = credentials.name
         val user = users.asSequence().find { (_, data) -> data.name == name }
         if (user == null) {
@@ -28,6 +32,8 @@ class MockUserRepository : UserRepository {
     }
 
     override suspend fun signUp(credentials: UserCredentials): RepositoryResult<User> {
+        delay(2.seconds)
+
         val name = credentials.name
         val data = users.values.find { data -> data.name == name }
         if (data != null) {
@@ -48,6 +54,8 @@ class MockUserRepository : UserRepository {
     }
 
     override suspend fun signOut(id: UserId): RepositoryResult<User> {
+        delay(2.seconds)
+
         val data = users[id]
         if (data == null) {
             val cause = IllegalStateException("""No user found with identifier "$id"""")

@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
@@ -20,9 +21,9 @@ inline fun <reified T> Flow<T>.collectInLaunchedEffect(
 ) {
     LaunchedEffect(this, context) {
         if (context == EmptyCoroutineContext) {
-            this@collectInLaunchedEffect.collect(action)
+            this@collectInLaunchedEffect.collectLatest(action)
         } else withContext(context) {
-            this@collectInLaunchedEffect.collect(action)
+            this@collectInLaunchedEffect.collectLatest(action)
         }
     }
 }
@@ -39,9 +40,9 @@ inline fun <reified T> Flow<T>.collectInLaunchedEffectWithLifecycle(
     LaunchedEffect(this, lifecycle, minActiveState, context) {
         lifecycle.repeatOnLifecycle(minActiveState) {
             if (context == EmptyCoroutineContext) {
-                this@collectInLaunchedEffectWithLifecycle.collect(action)
+                this@collectInLaunchedEffectWithLifecycle.collectLatest(action)
             } else withContext(context) {
-                this@collectInLaunchedEffectWithLifecycle.collect(action)
+                this@collectInLaunchedEffectWithLifecycle.collectLatest(action)
             }
         }
     }
