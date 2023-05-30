@@ -1,4 +1,7 @@
 [versions]
+# Application
+app-version-code = "1"
+app-version-name = "0.1.0"
 # Plugins
 android-gradle-plugin = "8.0.2"
 kotlin = "1.8.21"
