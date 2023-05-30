@@ -11,6 +11,7 @@ interface SignUpStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data class ChangeName(val name: String) : Intent
         data class ChangePassword(val password: String) : Intent
+        data class ChangeRepeatPassword(val repeatPassword: String) : Intent
         data class ChangePasswordVisible(val passwordVisible: Boolean) : Intent
         data class SignUp(val credentials: UserCredentials) : Intent
     }
@@ -18,6 +19,7 @@ interface SignUpStore : Store<Intent, State, Label> {
     data class State(
         val name: String,
         val password: String,
+        val repeatPassword: String,
         val passwordVisible: Boolean,
         val valid: Boolean,
         val loading: Boolean,

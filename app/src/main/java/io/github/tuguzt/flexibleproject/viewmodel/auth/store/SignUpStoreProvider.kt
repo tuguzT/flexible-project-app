@@ -28,6 +28,7 @@ class SignUpStoreProvider(
                 initialState = State(
                     name = "",
                     password = "",
+                    repeatPassword = "",
                     passwordVisible = false,
                     valid = false,
                     loading = false,
@@ -39,6 +40,7 @@ class SignUpStoreProvider(
     private sealed interface Message {
         data class NameChanged(val name: String, val valid: Boolean) : Message
         data class PasswordChanged(val password: String, val valid: Boolean) : Message
+        data class RepeatPasswordChanged(val repeatPassword: String, val valid: Boolean) : Message
         data class PasswordVisibleChanged(val passwordVisible: Boolean) : Message
         object Loading : Message
         object SignedUp : Message
@@ -52,18 +54,31 @@ class SignUpStoreProvider(
             when (intent) {
                 is Intent.ChangeName -> changeName(intent.name, state = getState())
                 is Intent.ChangePassword -> changePassword(intent.password, state = getState())
+                is Intent.ChangeRepeatPassword -> changeRepeatPassword(
+                    intent.repeatPassword,
+                    state = getState(),
+                )
+
                 is Intent.ChangePasswordVisible -> changePasswordVisible(intent.passwordVisible)
                 is Intent.SignUp -> signUp(intent.credentials)
             }
 
         private fun changeName(name: String, state: State) {
-            val valid = name.isNotBlank() && state.password.isNotBlank()
+            val valid = name.isNotBlank() && state.password.isNotBlank() &&
+                state.password.trim() == state.repeatPassword.trim()
             dispatch(Message.NameChanged(name, valid))
         }
 
         private fun changePassword(password: String, state: State) {
-            val valid = password.isNotBlank() && state.name.isNotBlank()
+            val valid = password.isNotBlank() && state.name.isNotBlank() &&
+                password.trim() == state.repeatPassword.trim()
             dispatch(Message.PasswordChanged(password, valid))
+        }
+
+        private fun changeRepeatPassword(repeatPassword: String, state: State) {
+            val valid = repeatPassword.isNotBlank() && state.name.isNotBlank() &&
+                state.password.trim() == repeatPassword.trim()
+            dispatch(Message.RepeatPasswordChanged(repeatPassword, valid))
         }
 
         private fun changePasswordVisible(passwordVisible: Boolean) {
@@ -98,12 +113,16 @@ class SignUpStoreProvider(
     private object ReducerImpl : Reducer<State, Message> {
         override fun State.reduce(msg: Message): State =
             when (msg) {
-                is Message.NameChanged -> copy(name = msg.name, valid = msg.valid)
-                is Message.PasswordChanged -> copy(password = msg.password, valid = msg.valid)
-                is Message.PasswordVisibleChanged -> copy(passwordVisible = msg.passwordVisible)
                 Message.Loading -> copy(loading = true)
                 Message.SignedUp -> copy(loading = false)
                 Message.Error -> copy(loading = false)
+                is Message.NameChanged -> copy(name = msg.name, valid = msg.valid)
+                is Message.PasswordChanged -> copy(password = msg.password, valid = msg.valid)
+                is Message.PasswordVisibleChanged -> copy(passwordVisible = msg.passwordVisible)
+                is Message.RepeatPasswordChanged -> copy(
+                    repeatPassword = msg.repeatPassword,
+                    valid = msg.valid,
+                )
             }
     }
 }

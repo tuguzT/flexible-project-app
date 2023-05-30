@@ -7,6 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,16 +16,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Visibility
-import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -41,9 +35,6 @@ import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
@@ -56,12 +47,6 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 @Composable
 fun AuthContent(
     title: String,
-    name: String,
-    onNameChange: (String) -> Unit,
-    password: String,
-    onPasswordChange: (String) -> Unit,
-    passwordVisible: Boolean,
-    onPasswordVisibleChange: (Boolean) -> Unit,
     submitText: String,
     onSubmit: () -> Unit,
     submitEnabled: Boolean,
@@ -71,6 +56,7 @@ fun AuthContent(
     onChangeAuthType: () -> Unit,
     focusManager: FocusManager = LocalFocusManager.current,
     snackBarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    fields: @Composable ColumnScope.() -> Unit,
 ) {
     Scaffold(
         snackbarHost = {
@@ -96,17 +82,12 @@ fun AuthContent(
             )
 
             AuthFields(
-                modifier = Modifier.weight(1f).padding(vertical = 32.dp),
-                name = name,
-                onNameChange = onNameChange,
-                password = password,
-                onPasswordChange = onPasswordChange,
-                passwordVisible = passwordVisible,
-                onPasswordVisibleChange = onPasswordVisibleChange,
+                fields = fields,
                 submitText = submitText,
                 onSubmit = onSubmit,
                 submitEnabled = submitEnabled,
                 loading = loading,
+                modifier = Modifier.weight(1f).padding(vertical = 32.dp),
             )
 
             ChangeAuthTypeText(
@@ -160,12 +141,7 @@ private fun AuthTitle(
 
 @Composable
 private fun AuthFields(
-    name: String,
-    onNameChange: (String) -> Unit,
-    password: String,
-    onPasswordChange: (String) -> Unit,
-    passwordVisible: Boolean,
-    onPasswordVisibleChange: (Boolean) -> Unit,
+    fields: @Composable ColumnScope.() -> Unit,
     submitText: String,
     onSubmit: () -> Unit,
     submitEnabled: Boolean,
@@ -176,21 +152,7 @@ private fun AuthFields(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        NameTextField(
-            name = name,
-            onNameChange = onNameChange,
-            enabled = !loading,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        PasswordTextField(
-            password = password,
-            onPasswordChange = onPasswordChange,
-            passwordVisible = passwordVisible,
-            onPasswordVisibleChange = onPasswordVisibleChange,
-            enabled = !loading,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        fields()
         Spacer(modifier = Modifier.height(32.dp))
         SubmitButton(
             text = submitText,
@@ -200,65 +162,6 @@ private fun AuthFields(
             modifier = Modifier.fillMaxWidth(),
         )
     }
-}
-
-@Composable
-private fun NameTextField(
-    name: String,
-    onNameChange: (String) -> Unit,
-    enabled: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    OutlinedTextField(
-        value = name,
-        onValueChange = onNameChange,
-        modifier = modifier,
-        enabled = enabled,
-        label = { OneLineTitle(text = stringResource(R.string.name)) },
-        singleLine = true,
-    )
-}
-
-@Composable
-private fun PasswordTextField(
-    password: String,
-    onPasswordChange: (String) -> Unit,
-    passwordVisible: Boolean,
-    onPasswordVisibleChange: (Boolean) -> Unit,
-    enabled: Boolean,
-    modifier: Modifier = Modifier,
-) {
-    val visualTransformation = if (passwordVisible) {
-        VisualTransformation.None
-    } else {
-        PasswordVisualTransformation()
-    }
-
-    OutlinedTextField(
-        value = password,
-        onValueChange = onPasswordChange,
-        modifier = modifier,
-        enabled = enabled,
-        label = { OneLineTitle(text = stringResource(R.string.password)) },
-        singleLine = true,
-        visualTransformation = visualTransformation,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        trailingIcon = {
-            val imageVector = if (passwordVisible) {
-                Icons.Rounded.Visibility
-            } else {
-                Icons.Rounded.VisibilityOff
-            }
-            val contentDescription = if (passwordVisible) {
-                stringResource(R.string.hide_password)
-            } else {
-                stringResource(R.string.show_password)
-            }
-            IconButton(onClick = { onPasswordVisibleChange(!passwordVisible) }) {
-                Icon(imageVector, contentDescription)
-            }
-        },
-    )
 }
 
 @Composable
@@ -340,12 +243,7 @@ private fun AuthContent() {
     AppTheme {
         AuthContent(
             title = stringResource(R.string.welcome_back),
-            name = "tuguzT",
-            onNameChange = {},
-            password = "Hello World",
-            onPasswordChange = {},
-            passwordVisible = false,
-            onPasswordVisibleChange = {},
+            fields = {},
             submitText = stringResource(R.string.sign_in),
             onSubmit = {},
             submitEnabled = false,

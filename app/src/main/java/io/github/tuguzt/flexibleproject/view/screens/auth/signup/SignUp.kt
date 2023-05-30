@@ -1,11 +1,16 @@
 package io.github.tuguzt.flexibleproject.view.screens.auth.signup
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -15,6 +20,8 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.screens.auth.AuthContent
 import io.github.tuguzt.flexibleproject.view.screens.auth.AuthNavGraph
+import io.github.tuguzt.flexibleproject.view.screens.auth.NameTextField
+import io.github.tuguzt.flexibleproject.view.screens.auth.PasswordTextField
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SignInScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.auth.SignUpViewModel
@@ -50,21 +57,6 @@ fun SignUpScreen(
 
     AuthContent(
         title = stringResource(R.string.create_new_account),
-        name = state.name,
-        onNameChange = { name ->
-            val intent = Intent.ChangeName(name)
-            viewModel.accept(intent)
-        },
-        password = state.password,
-        onPasswordChange = { password ->
-            val intent = Intent.ChangePassword(password)
-            viewModel.accept(intent)
-        },
-        passwordVisible = state.passwordVisible,
-        onPasswordVisibleChange = { passwordVisible ->
-            val intent = Intent.ChangePasswordVisible(passwordVisible)
-            viewModel.accept(intent)
-        },
         submitText = stringResource(R.string.sign_up),
         onSubmit = {
             val credentials = UserCredentials(state.name, state.password)
@@ -82,5 +74,47 @@ fun SignUpScreen(
             }
         },
         snackBarHostState = snackBarHostState,
-    )
+    ) {
+        NameTextField(
+            name = state.name,
+            onNameChange = { name ->
+                val intent = Intent.ChangeName(name)
+                viewModel.accept(intent)
+            },
+            enabled = !state.loading,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        PasswordTextField(
+            password = state.password,
+            onPasswordChange = { password ->
+                val intent = Intent.ChangePassword(password)
+                viewModel.accept(intent)
+            },
+            passwordVisible = state.passwordVisible,
+            onPasswordVisibleChange = { passwordVisible ->
+                val intent = Intent.ChangePasswordVisible(passwordVisible)
+                viewModel.accept(intent)
+            },
+            enabled = !state.loading,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        PasswordTextField(
+            password = state.repeatPassword,
+            onPasswordChange = { repeatPassword ->
+                val intent = Intent.ChangeRepeatPassword(repeatPassword)
+                viewModel.accept(intent)
+            },
+            label = stringResource(R.string.repeat_password),
+            passwordVisible = state.passwordVisible,
+            onPasswordVisibleChange = { passwordVisible ->
+                val intent = Intent.ChangePasswordVisible(passwordVisible)
+                viewModel.accept(intent)
+            },
+            trailingIconVisible = false,
+            enabled = !state.loading,
+            modifier = Modifier.fillMaxWidth(),
+        )
+    }
 }
