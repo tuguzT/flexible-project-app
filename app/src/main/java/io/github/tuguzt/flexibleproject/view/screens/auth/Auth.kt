@@ -14,7 +14,8 @@ import com.ramcosta.composedestinations.navigation.popUpTo
 import com.ramcosta.composedestinations.rememberNavHostEngine
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.screens.destinations.BasicScreenDestination
-import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.auth.SignInViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.auth.SignUpViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 
 @RootNavGraph
@@ -23,7 +24,8 @@ import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 fun AuthScreen(
     navigator: DestinationsNavigator,
     viewModel: CurrentUserViewModel,
-    authViewModel: AuthViewModel = hiltViewModel(),
+    signInViewModel: SignInViewModel = hiltViewModel(),
+    signUpViewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val engine = rememberNavHostEngine()
     val navController = engine.rememberNavController()
@@ -45,7 +47,8 @@ fun AuthScreen(
         navController = navController,
         navGraph = NavGraphs.auth,
         dependenciesContainerBuilder = {
-            dependency(authViewModel)
+            dependency(signInViewModel)
+            dependency(signUpViewModel)
         },
     )
 }

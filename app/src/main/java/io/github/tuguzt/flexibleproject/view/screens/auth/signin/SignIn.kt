@@ -17,16 +17,16 @@ import io.github.tuguzt.flexibleproject.view.screens.auth.AuthContent
 import io.github.tuguzt.flexibleproject.view.screens.auth.AuthNavGraph
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SignUpScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
-import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Intent
-import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Label
+import io.github.tuguzt.flexibleproject.viewmodel.auth.SignInViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.auth.store.SignInStore.Intent
+import io.github.tuguzt.flexibleproject.viewmodel.auth.store.SignInStore.Label
 
 @AuthNavGraph(start = true)
 @Destination
 @Composable
 fun SignInScreen(
     navigator: DestinationsNavigator,
-    viewModel: AuthViewModel,
+    viewModel: SignInViewModel,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -34,11 +34,10 @@ fun SignInScreen(
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     viewModel.labels.collectInLaunchedEffectWithLifecycle block@{ label ->
         val message = when (label) {
-            is Label.NameAlreadyTaken -> return@block
             Label.LocalStoreError -> context.getString(R.string.local_store_error)
             Label.NetworkAccessError -> context.getString(R.string.network_access_error)
             Label.UnknownError -> context.getString(R.string.unknown_error)
-            is Label.NotFoundByName -> context.getString(R.string.no_user_with_name, label.name)
+            is Label.NoUserWithName -> context.getString(R.string.no_user_with_name, label.name)
         }
         snackBarHostState.showSnackbar(
             message = message,

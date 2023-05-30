@@ -17,16 +17,16 @@ import io.github.tuguzt.flexibleproject.view.screens.auth.AuthContent
 import io.github.tuguzt.flexibleproject.view.screens.auth.AuthNavGraph
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SignInScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
-import io.github.tuguzt.flexibleproject.viewmodel.auth.AuthViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Intent
-import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Label
+import io.github.tuguzt.flexibleproject.viewmodel.auth.SignUpViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.auth.store.SignUpStore.Intent
+import io.github.tuguzt.flexibleproject.viewmodel.auth.store.SignUpStore.Label
 
 @AuthNavGraph
 @Destination
 @Composable
 fun SignUpScreen(
     navigator: DestinationsNavigator,
-    viewModel: AuthViewModel,
+    viewModel: SignUpViewModel,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -34,7 +34,6 @@ fun SignUpScreen(
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     viewModel.labels.collectInLaunchedEffectWithLifecycle block@{ label ->
         val message = when (label) {
-            is Label.NotFoundByName -> return@block
             Label.LocalStoreError -> context.getString(R.string.local_store_error)
             Label.NetworkAccessError -> context.getString(R.string.network_access_error)
             Label.UnknownError -> context.getString(R.string.unknown_error)
