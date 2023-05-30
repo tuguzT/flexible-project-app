@@ -6,7 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.tuguzt.flexibleproject.domain.usecase.user.GetCurrentUser
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignOut
 import io.github.tuguzt.flexibleproject.viewmodel.StoreViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.State
@@ -19,11 +18,10 @@ class CurrentUserViewModel @Inject constructor(
     signOut: SignOut,
     storeFactory: StoreFactory,
 ) : StoreViewModel<Intent, State, Label>() {
-    private val provider = CurrentUserStoreProvider(
+    override val provider = CurrentUserStoreProvider(
         currentUser = currentUser,
         signOut = signOut,
         storeFactory = storeFactory,
         coroutineContext = viewModelScope.coroutineContext,
     )
-    override val store: CurrentUserStore = provider.provide()
 }

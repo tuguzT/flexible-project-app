@@ -6,7 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignIn
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignUp
 import io.github.tuguzt.flexibleproject.viewmodel.StoreViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.State
@@ -19,11 +18,10 @@ class AuthViewModel @Inject constructor(
     signUp: SignUp,
     storeFactory: StoreFactory,
 ) : StoreViewModel<Intent, State, Label>() {
-    private val provider = AuthStoreProvider(
+    override val provider = AuthStoreProvider(
         signIn = signIn,
         signUp = signUp,
         storeFactory = storeFactory,
         coroutineContext = viewModelScope.coroutineContext,
     )
-    override val store: AuthStore = provider.provide()
 }

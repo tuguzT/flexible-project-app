@@ -9,6 +9,7 @@ import io.github.tuguzt.flexibleproject.domain.model.Result
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.usecase.user.FindUserById
+import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.State
@@ -19,8 +20,8 @@ class UserStoreProvider(
     private val findById: FindUserById,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
-) {
-    fun provide(): UserStore =
+) : StoreProvider<Intent, State, Label> {
+    override fun provide(): UserStore =
         object :
             UserStore,
             Store<Intent, State, Label> by storeFactory.create(

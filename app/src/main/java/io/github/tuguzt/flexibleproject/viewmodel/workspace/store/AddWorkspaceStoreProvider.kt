@@ -8,6 +8,7 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.CreateWorkspace
+import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.State
@@ -20,8 +21,8 @@ class AddWorkspaceStoreProvider(
     private val create: CreateWorkspace,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
-) {
-    fun provide(): AddWorkspaceStore =
+) : StoreProvider<Intent, State, Label> {
+    override fun provide(): AddWorkspaceStore =
         object :
             AddWorkspaceStore,
             Store<Intent, State, Label> by storeFactory.create(

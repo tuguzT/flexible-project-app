@@ -8,6 +8,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.ReadAllWorkspaces
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.WorkspacesFlow
+import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.State
@@ -19,8 +20,8 @@ class BasicStoreProvider(
     private val readAll: ReadAllWorkspaces,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
-) {
-    fun provide(): BasicStore =
+) : StoreProvider<Intent, State, Label> {
+    override fun provide(): BasicStore =
         object :
             BasicStore,
             Store<Intent, State, Label> by storeFactory.create(

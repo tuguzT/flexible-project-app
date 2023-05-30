@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
+import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.State
@@ -17,8 +18,8 @@ class WorkspaceStoreProvider(
     private val findById: FindWorkspaceById,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
-) {
-    fun provide(): WorkspaceStore =
+) : StoreProvider<Intent, State, Label> {
+    override fun provide(): WorkspaceStore =
         object :
             WorkspaceStore,
             Store<Intent, State, Label> by storeFactory.create(

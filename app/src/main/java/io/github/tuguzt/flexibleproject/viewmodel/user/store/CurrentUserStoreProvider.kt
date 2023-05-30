@@ -10,6 +10,7 @@ import io.github.tuguzt.flexibleproject.domain.model.Result
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.usecase.user.GetCurrentUser
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignOut
+import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.State
@@ -21,8 +22,8 @@ class CurrentUserStoreProvider(
     private val signOut: SignOut,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
-) {
-    fun provide(): CurrentUserStore =
+) : StoreProvider<Intent, State, Label> {
+    override fun provide(): CurrentUserStore =
         object :
             CurrentUserStore,
             Store<Intent, State, Label> by storeFactory.create(

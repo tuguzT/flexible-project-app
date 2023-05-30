@@ -10,6 +10,7 @@ import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignIn
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignUp
+import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.AuthStore.State
@@ -21,8 +22,8 @@ class AuthStoreProvider(
     private val signUp: SignUp,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
-) {
-    fun provide(): AuthStore =
+) : StoreProvider<Intent, State, Label> {
+    override fun provide(): AuthStore =
         object :
             AuthStore,
             Store<Intent, State, Label> by storeFactory.create(

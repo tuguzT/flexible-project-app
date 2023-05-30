@@ -6,7 +6,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.ReadAllWorkspaces
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.WorkspacesFlow
 import io.github.tuguzt.flexibleproject.viewmodel.StoreViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.State
@@ -19,11 +18,10 @@ class BasicViewModel @Inject constructor(
     readAll: ReadAllWorkspaces,
     storeFactory: StoreFactory,
 ) : StoreViewModel<Intent, State, Label>() {
-    private val provider = BasicStoreProvider(
+    override val provider = BasicStoreProvider(
         allFlow = allFlow,
         readAll = readAll,
         storeFactory = storeFactory,
         coroutineContext = viewModelScope.coroutineContext,
     )
-    override val store: BasicStore = provider.provide()
 }

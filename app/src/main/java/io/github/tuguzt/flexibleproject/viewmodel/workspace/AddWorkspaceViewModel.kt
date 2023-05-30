@@ -5,7 +5,6 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.CreateWorkspace
 import io.github.tuguzt.flexibleproject.viewmodel.StoreViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.State
@@ -17,10 +16,9 @@ class AddWorkspaceViewModel @Inject constructor(
     create: CreateWorkspace,
     storeFactory: StoreFactory,
 ) : StoreViewModel<Intent, State, Label>() {
-    private val provider = AddWorkspaceStoreProvider(
+    override val provider = AddWorkspaceStoreProvider(
         create = create,
         storeFactory = storeFactory,
         coroutineContext = viewModelScope.coroutineContext,
     )
-    override val store: AddWorkspaceStore = provider.provide()
 }
