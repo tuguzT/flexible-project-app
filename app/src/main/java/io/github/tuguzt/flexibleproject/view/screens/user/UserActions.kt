@@ -30,18 +30,23 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 @Suppress("UnusedReceiverParameter")
 @Composable
 fun RowScope.UserActions(
+    loading: Boolean,
     onShareClick: () -> Unit,
     menuExpanded: Boolean,
     onMenuExpandedChange: (Boolean) -> Unit,
     onEditClick: (() -> Unit)?,
     onSignOutClick: (() -> Unit)?,
 ) {
-    ShareAction(onClick = onShareClick)
+    ShareAction(
+        onClick = onShareClick,
+        enabled = !loading,
+    )
     MenuActions(
         expanded = menuExpanded,
         onExpandedChange = onMenuExpandedChange,
         onEditClick = onEditClick,
         onSignOutClick = onSignOutClick,
+        enabled = !loading,
     )
 }
 
@@ -49,10 +54,12 @@ fun RowScope.UserActions(
 private fun ShareAction(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     IconButton(
         onClick = onClick,
         modifier = modifier,
+        enabled = enabled,
     ) {
         Icon(
             imageVector = Icons.Rounded.Share,
@@ -68,10 +75,12 @@ private fun MenuActions(
     onEditClick: (() -> Unit)?,
     onSignOutClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     IconButton(
         onClick = { onExpandedChange(!expanded) },
         modifier = modifier,
+        enabled = enabled,
     ) {
         Icon(
             imageVector = Icons.Rounded.MoreVert,
@@ -138,6 +147,7 @@ private fun UserActions() {
             title = { OneLineTitle(text = "Preview") },
             actions = {
                 UserActions(
+                    loading = false,
                     onShareClick = {},
                     menuExpanded = expanded,
                     onMenuExpandedChange = { expanded = it },

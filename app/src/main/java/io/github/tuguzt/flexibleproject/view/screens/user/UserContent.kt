@@ -1,5 +1,7 @@
 package io.github.tuguzt.flexibleproject.view.screens.user
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -48,6 +50,7 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 @Composable
 fun UserScreenContent(
     user: User?,
+    loading: Boolean,
     onNavigationClick: () -> Unit,
     onWorkspacesClick: () -> Unit,
     onProjectsClick: () -> Unit,
@@ -60,6 +63,7 @@ fun UserScreenContent(
         topBar = {
             UserTopBar(
                 user = user,
+                loading = loading,
                 onNavigationClick = onNavigationClick,
                 actions = topBarActions,
                 scrollBehavior = scrollBehavior,
@@ -79,6 +83,7 @@ fun UserScreenContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
             UserActions(
+                loading = loading,
                 onWorkspacesClick = onWorkspacesClick,
                 onProjectsClick = onProjectsClick,
                 onTasksClick = onTasksClick,
@@ -91,6 +96,7 @@ fun UserScreenContent(
 
 @Composable
 private fun UserActions(
+    loading: Boolean,
     onWorkspacesClick: () -> Unit,
     onProjectsClick: () -> Unit,
     onTasksClick: () -> Unit,
@@ -103,18 +109,22 @@ private fun UserActions(
     ) {
         Column {
             WorkspacesAction(
+                loading = loading,
                 onClick = onWorkspacesClick,
                 modifier = Modifier.fillMaxWidth(),
             )
             ProjectsAction(
+                loading = loading,
                 onClick = onProjectsClick,
                 modifier = Modifier.fillMaxWidth(),
             )
             TasksAction(
+                loading = loading,
                 onClick = onTasksClick,
                 modifier = Modifier.fillMaxWidth(),
             )
             MethodologiesAction(
+                loading = loading,
                 onClick = onMethodologiesClick,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -124,12 +134,12 @@ private fun UserActions(
 
 @Composable
 private fun WorkspacesAction(
+    loading: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier,
+    Box(
+        modifier = modifier.takeIf { loading } ?: modifier.clickable(onClick = onClick),
     ) {
         UserItemRow(
             data = stringResource(R.string.workspaces),
@@ -141,12 +151,12 @@ private fun WorkspacesAction(
 
 @Composable
 private fun ProjectsAction(
+    loading: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier,
+    Box(
+        modifier = modifier.takeIf { loading } ?: modifier.clickable(onClick = onClick),
     ) {
         UserItemRow(
             data = stringResource(R.string.projects),
@@ -158,12 +168,12 @@ private fun ProjectsAction(
 
 @Composable
 private fun TasksAction(
+    loading: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier,
+    Box(
+        modifier = modifier.takeIf { loading } ?: modifier.clickable(onClick = onClick),
     ) {
         UserItemRow(
             data = stringResource(R.string.tasks),
@@ -175,12 +185,12 @@ private fun TasksAction(
 
 @Composable
 private fun MethodologiesAction(
+    loading: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier,
+    Box(
+        modifier = modifier.takeIf { loading } ?: modifier.clickable(onClick = onClick),
     ) {
         UserItemRow(
             data = stringResource(R.string.methodologies),
@@ -295,6 +305,7 @@ private fun UserScreenContentWithUser() {
     AppTheme {
         UserScreenContent(
             user = user,
+            loading = false,
             onWorkspacesClick = {},
             onProjectsClick = {},
             onTasksClick = {},
@@ -311,6 +322,7 @@ private fun UserScreenContentWithoutUser() {
     AppTheme {
         UserScreenContent(
             user = null,
+            loading = false,
             onWorkspacesClick = {},
             onProjectsClick = {},
             onTasksClick = {},

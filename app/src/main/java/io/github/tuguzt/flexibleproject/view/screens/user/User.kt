@@ -61,13 +61,13 @@ fun UserScreen(
             expanded = false
             val intent = CurrentUserStore.Intent.SignOut
             currentUserViewModel.accept(intent)
-            // TODO show that we are signing out
         }
         currentUserState.currentUser?.let { onClick }
     }
 
     UserScreenContent(
         user = state.user,
+        loading = state.loading || currentUserState.loading,
         onWorkspacesClick = { /* TODO */ },
         onProjectsClick = { /* TODO */ },
         onTasksClick = { /* TODO */ },
@@ -75,6 +75,7 @@ fun UserScreen(
         onNavigationClick = navigator::navigateUp,
         topBarActions = {
             UserActions(
+                loading = state.loading || currentUserState.loading,
                 onShareClick = { /* TODO */ },
                 menuExpanded = expanded,
                 onMenuExpandedChange = { expanded = it },

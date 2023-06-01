@@ -13,9 +13,10 @@ import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 @Composable
 fun NavigateUpIconButton(
     onClick: () -> Unit,
+    enabled: Boolean = true,
     contentDescription: String? = stringResource(R.string.navigate_up),
 ) {
-    IconButton(onClick = onClick) {
+    IconButton(onClick = onClick, enabled = enabled) {
         Icon(
             imageVector = Icons.Rounded.ArrowBack,
             contentDescription = contentDescription,

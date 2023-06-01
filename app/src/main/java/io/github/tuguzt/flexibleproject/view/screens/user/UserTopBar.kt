@@ -1,10 +1,12 @@
 package io.github.tuguzt.flexibleproject.view.screens.user
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,6 +18,7 @@ import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -33,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -50,6 +54,7 @@ import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 @Composable
 fun UserTopBar(
     user: User?,
+    loading: Boolean,
     onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier,
     actions: @Composable RowScope.() -> Unit = {},
@@ -94,7 +99,12 @@ fun UserTopBar(
         LargeTopAppBar(
             modifier = modifier,
             title = { UserTitle(user, collapsed) },
-            navigationIcon = { NavigateUpIconButton(onClick = onNavigationClick) },
+            navigationIcon = {
+                NavigateUpIconButton(
+                    onClick = onNavigationClick,
+                    enabled = !loading,
+                )
+            },
             scrollBehavior = scrollBehavior,
             colors = TopAppBarDefaults.largeTopAppBarColors(
                 containerColor = containerColor,
@@ -104,6 +114,15 @@ fun UserTopBar(
             ),
             actions = actions,
         )
+        AnimatedVisibility(
+            visible = loading,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        ) {
+            LinearProgressIndicator(
+                modifier = Modifier.fillMaxWidth(),
+                strokeCap = StrokeCap.Round,
+            )
+        }
     }
 }
 
@@ -153,6 +172,7 @@ private fun UserTopBarWithUser() {
             topBar = {
                 UserTopBar(
                     user = user,
+                    loading = false,
                     onNavigationClick = {},
                     scrollBehavior = scrollBehavior,
                 )
@@ -179,7 +199,11 @@ private fun UserTopBarWithoutUser() {
     AppTheme {
         Scaffold(
             topBar = {
-                UserTopBar(user = null, onNavigationClick = {})
+                UserTopBar(
+                    user = null,
+                    loading = true,
+                    onNavigationClick = {},
+                )
             },
         ) { padding ->
             Box(modifier = Modifier.padding(padding))
