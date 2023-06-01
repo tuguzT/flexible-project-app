@@ -41,6 +41,10 @@ fun UserScreen(
 
     UserScreenContent(
         user = state.user,
+        onWorkspacesClick = { /* TODO */ },
+        onProjectsClick = { /* TODO */ },
+        onTasksClick = { /* TODO */ },
+        onMethodologiesClick = { /* TODO */ },
         onNavigationClick = navigator::navigateUp,
     )
 }

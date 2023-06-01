@@ -2,6 +2,7 @@ package io.github.tuguzt.flexibleproject.view.screens.user
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -51,6 +52,7 @@ fun UserTopBar(
     user: User?,
     onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
     val collapsedFraction by remember {
@@ -100,6 +102,7 @@ fun UserTopBar(
                 titleContentColor = contentColor,
                 actionIconContentColor = actionContentColor,
             ),
+            actions = actions,
         )
     }
 }

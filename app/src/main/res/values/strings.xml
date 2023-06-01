@@ -34,4 +34,7 @@
     <string name="network_access_error">No Internet connection</string>
     <string name="user_with_name_already_exists">User with name \"%1$s\" already exists</string>
     <string name="developed_by">Developed by</string>
+    <string name="projects">Projects</string>
+    <string name="tasks">Tasks</string>
+    <string name="methodologies">Methodologies</string>
 </resources>
