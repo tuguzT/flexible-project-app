@@ -39,7 +39,7 @@ class CurrentUserStoreProvider(
 
     private sealed interface Message {
         object Loading : Message
-        data class CurrentUserUpdated(val currentUser: User?) : Message
+        data class SignedInUp(val currentUser: User) : Message
         object SignedOut : Message
         object Error : Message
     }
@@ -50,7 +50,9 @@ class CurrentUserStoreProvider(
         override fun executeAction(action: Unit, getState: () -> State) {
             scope.launch {
                 currentUser.currentUser().collect { currentUser ->
-                    dispatch(Message.CurrentUserUpdated(currentUser))
+                    currentUser ?: return@collect
+                    dispatch(Message.SignedInUp(currentUser))
+                    publish(Label.SignedInUp(currentUser))
                 }
             }
         }
@@ -89,8 +91,8 @@ class CurrentUserStoreProvider(
         override fun State.reduce(msg: Message): State =
             when (msg) {
                 Message.Loading -> copy(loading = true)
-                is Message.CurrentUserUpdated -> copy(currentUser = msg.currentUser)
-                Message.SignedOut -> copy(loading = false)
+                is Message.SignedInUp -> copy(currentUser = msg.currentUser, loading = false)
+                Message.SignedOut -> copy(currentUser = null, loading = false)
                 Message.Error -> copy(loading = false)
             }
     }

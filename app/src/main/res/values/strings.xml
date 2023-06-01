@@ -12,6 +12,7 @@
     <string name="workspace_image">Workspace image</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
+    <string name="sign_out">Sign out</string>
     <string name="add_new_workspace">Add new workspace</string>
     <string name="add">Add</string>
     <string name="close">Close</string>
@@ -37,4 +38,7 @@
     <string name="projects">Projects</string>
     <string name="tasks">Tasks</string>
     <string name="methodologies">Methodologies</string>
+    <string name="share_user">Share user</string>
+    <string name="more_actions">More actions…</string>
+    <string name="edit">Edit</string>
 </resources>

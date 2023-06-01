@@ -4,6 +4,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
@@ -11,7 +14,9 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
+import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 
@@ -22,13 +27,15 @@ import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 fun UserScreen(
     id: String,
     navigator: DestinationsNavigator,
+    currentUserViewModel: CurrentUserViewModel,
     viewModel: UserViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     LaunchedEffect(id) {
         val intent = Intent.Load(id = UserId(id))
         viewModel.accept(intent)
     }
+
+    val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     viewModel.labels.collectInLaunchedEffectWithLifecycle { label ->
         // TODO show error to user before navigate up
         when (label) {
@@ -39,6 +46,26 @@ fun UserScreen(
         }
     }
 
+    val currentUserState by currentUserViewModel.stateFlow.collectAsStateWithLifecycle()
+
+    var expanded by remember { mutableStateOf(false) }
+    val onEditClick = run {
+        val onClick = {
+            expanded = false
+            // TODO
+        }
+        currentUserState.currentUser?.let { onClick }
+    }
+    val onSignOutClick = run {
+        val onClick = {
+            expanded = false
+            val intent = CurrentUserStore.Intent.SignOut
+            currentUserViewModel.accept(intent)
+            // TODO show that we are signing out
+        }
+        currentUserState.currentUser?.let { onClick }
+    }
+
     UserScreenContent(
         user = state.user,
         onWorkspacesClick = { /* TODO */ },
@@ -46,5 +73,14 @@ fun UserScreen(
         onTasksClick = { /* TODO */ },
         onMethodologiesClick = { /* TODO */ },
         onNavigationClick = navigator::navigateUp,
+        topBarActions = {
+            UserActions(
+                onShareClick = { /* TODO */ },
+                menuExpanded = expanded,
+                onMenuExpandedChange = { expanded = it },
+                onEditClick = onEditClick,
+                onSignOutClick = onSignOutClick,
+            )
+        },
     )
 }

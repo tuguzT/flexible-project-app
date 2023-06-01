@@ -17,6 +17,7 @@ interface CurrentUserStore : Store<Intent, State, Label> {
     )
 
     sealed interface Label {
+        data class SignedInUp(val currentUser: User) : Label
         object SignedOut : Label
         object NotSignedIn : Label
         object LocalStoreError : Label
