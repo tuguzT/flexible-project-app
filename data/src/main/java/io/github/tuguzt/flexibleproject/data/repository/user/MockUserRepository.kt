@@ -73,6 +73,8 @@ class MockUserRepository : UserRepository {
     }
 
     override suspend fun update(id: UserId, update: UpdateUser): RepositoryResult<User> {
+        delay(2.seconds)
+
         val data = users[id]
         if (data == null) {
             val cause = IllegalStateException("""No user found with identifier "$id"""")
@@ -90,6 +92,8 @@ class MockUserRepository : UserRepository {
     }
 
     override suspend fun delete(id: UserId): RepositoryResult<User> {
+        delay(2.seconds)
+
         val data = users.remove(id)
         if (data == null) {
             val cause = IllegalStateException("""No user found with identifier "$id"""")

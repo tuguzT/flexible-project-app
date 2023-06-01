@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.workspace
+package io.github.tuguzt.flexibleproject.view.screens.user
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
@@ -18,24 +18,24 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddWorkspaceTopBar(
+fun EditUserTopBar(
     loading: Boolean,
-    workspaceValid: Boolean,
-    onAddWorkspaceClick: () -> Unit,
+    valid: Boolean,
+    onUpdateUserClick: () -> Unit,
     onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box {
         TopAppBar(
             modifier = modifier,
-            title = { OneLineTitle(text = stringResource(R.string.add_new_workspace)) },
+            title = { OneLineTitle(text = stringResource(R.string.edit_user_data)) },
             navigationIcon = { CloseIconButton(onClick = onNavigationClick, enabled = !loading) },
             actions = {
                 TextButton(
-                    onClick = onAddWorkspaceClick,
-                    enabled = workspaceValid && !loading,
+                    onClick = onUpdateUserClick,
+                    enabled = valid && !loading,
                 ) {
-                    OneLineTitle(text = stringResource(R.string.add))
+                    OneLineTitle(text = stringResource(R.string.submit))
                 }
             },
         )

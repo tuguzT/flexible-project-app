@@ -48,7 +48,7 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserScreenContent(
+fun UserContent(
     user: User?,
     loading: Boolean,
     onNavigationClick: () -> Unit,
@@ -290,7 +290,7 @@ private fun UserRole(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun UserScreenContentWithUser() {
+private fun UserContentWithUser() {
     val user = User(
         id = Id("1"),
         data = UserData(
@@ -303,7 +303,7 @@ private fun UserScreenContentWithUser() {
     )
 
     AppTheme {
-        UserScreenContent(
+        UserContent(
             user = user,
             loading = false,
             onWorkspacesClick = {},
@@ -318,9 +318,9 @@ private fun UserScreenContentWithUser() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun UserScreenContentWithoutUser() {
+private fun UserContentWithoutUser() {
     AppTheme {
-        UserScreenContent(
+        UserContent(
             user = null,
             loading = false,
             onWorkspacesClick = {},

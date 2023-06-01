@@ -13,9 +13,10 @@ import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 @Composable
 fun CloseIconButton(
     onClick: () -> Unit,
+    enabled: Boolean = true,
     contentDescription: String? = stringResource(R.string.close),
 ) {
-    IconButton(onClick = onClick) {
+    IconButton(onClick = onClick, enabled = enabled) {
         Icon(
             imageVector = Icons.Rounded.Close,
             contentDescription = contentDescription,

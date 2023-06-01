@@ -34,6 +34,7 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="network_access_error">No Internet connection</string>
     <string name="user_with_name_already_exists">User with name \"%1$s\" already exists</string>
+    <string name="user_with_email_already_exists">User with email \"%1$s\" already exists</string>
     <string name="developed_by">Developed by</string>
     <string name="projects">Projects</string>
     <string name="tasks">Tasks</string>
@@ -42,4 +43,9 @@
     <string name="more_actions">More actions…</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="submit">Submit</string>
+    <string name="edit_user_data">Edit user data</string>
+    <string name="update_name">Update name</string>
+    <string name="update_display_name">Update display name</string>
+    <string name="update_email">Update email</string>
 </resources>

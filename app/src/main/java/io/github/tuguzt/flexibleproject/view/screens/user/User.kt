@@ -13,6 +13,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
+import io.github.tuguzt.flexibleproject.view.screens.destinations.EditUserScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
@@ -52,7 +53,8 @@ fun UserScreen(
     val onEditClick = run {
         val onClick = {
             expanded = false
-            // TODO
+            val direction = EditUserScreenDestination()
+            navigator.navigate(direction)
         }
         currentUserState.currentUser?.let { onClick }
     }
@@ -73,7 +75,7 @@ fun UserScreen(
         currentUserState.currentUser?.let { onClick }
     }
 
-    UserScreenContent(
+    UserContent(
         user = state.user,
         loading = state.loading || currentUserState.loading,
         onWorkspacesClick = { /* TODO */ },

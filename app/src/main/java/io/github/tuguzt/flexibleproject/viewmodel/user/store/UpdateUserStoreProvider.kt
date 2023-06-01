@@ -33,14 +33,17 @@ class UpdateUserStoreProvider(
             UpdateUserStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = UpdateUserStore::class.simpleName,
-                initialState = State(
-                    name = "",
-                    displayName = "",
-                    email = null,
-                    avatar = null,
-                    valid = false,
-                    loading = false,
-                ),
+                initialState = run {
+                    val user = currentUser.currentUser().value?.data
+                    State(
+                        name = user?.name ?: "",
+                        displayName = user?.displayName ?: "",
+                        email = user?.email,
+                        avatar = user?.avatar,
+                        valid = false,
+                        loading = false,
+                    )
+                },
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}
@@ -115,11 +118,12 @@ class UpdateUserStoreProvider(
                 avatar?.let { Patterns.WEB_URL.matcher(it).matches() } == true
 
         private fun updateUser(state: State) {
+            val user = currentUser.currentUser().value?.data
             val update = UpdateUser(
-                name = state.name,
-                displayName = state.displayName,
-                email = state.email,
-                avatar = state.avatar,
+                name = state.name.takeIf { it != user?.name },
+                displayName = state.displayName.takeIf { it != user?.displayName },
+                email = state.email.takeIf { it != user?.email },
+                avatar = state.avatar.takeIf { it != user?.avatar },
             )
             dispatch(Message.Loading)
             scope.launch {
