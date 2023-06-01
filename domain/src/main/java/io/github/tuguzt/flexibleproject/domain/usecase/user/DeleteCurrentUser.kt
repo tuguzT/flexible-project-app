@@ -7,22 +7,25 @@ import io.github.tuguzt.flexibleproject.domain.model.filter.Equal
 import io.github.tuguzt.flexibleproject.domain.model.success
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
-import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.model.user.UserIdFilters
 import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 
-class DeleteUser(
+class DeleteCurrentUser(
     private val userRepository: UserRepository,
     private val currentUserRepository: CurrentUserRepository,
 ) {
-    suspend fun delete(id: UserId): Result<User, Exception> {
+    suspend fun delete(): Result<User, Exception> {
+        val currentUser = currentUserRepository.currentUserFlow.value
+            ?: return error(Exception.NoCurrentUser)
+        val id = currentUser.id
+
         val filters = UserFilters(id = UserIdFilters(eq = Equal(id)))
         val user = when (val result = userRepository.read(filters)) {
             is Result.Error -> return error(Exception.Repository(result.error))
             is Result.Success -> result.data.firstOrNull()
         }
-        user ?: return error(Exception.NoUser(id))
+        user ?: return error(Exception.NoCurrentUser)
 
         return when (val result = userRepository.delete(id)) {
             is Result.Error -> error(Exception.Repository(result.error))
@@ -38,8 +41,8 @@ class DeleteUser(
     }
 
     sealed class Exception(message: String?, cause: Throwable?) : kotlin.Exception(message, cause) {
-        data class NoUser(val id: UserId) : Exception(
-            message = """No user was found by identifier "$id"""",
+        object NoCurrentUser : Exception(
+            message = "Current user was not present",
             cause = null,
         )
 

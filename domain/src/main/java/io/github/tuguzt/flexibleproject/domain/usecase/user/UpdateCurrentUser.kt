@@ -13,22 +13,25 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UpdateUser
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserDataFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
-import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.model.user.UserIdFilters
 import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 
-class UpdateUser(
+class UpdateCurrentUser(
     private val userRepository: UserRepository,
     private val currentUserRepository: CurrentUserRepository,
 ) {
-    suspend fun update(id: UserId, update: UpdateUser): Result<User, Error> {
+    suspend fun update(update: UpdateUser): Result<User, Exception> {
+        val currentUser = currentUserRepository.currentUserFlow.value
+            ?: return error(Exception.NoCurrentUser)
+        val id = currentUser.id
+
         val filters = UserFilters(id = UserIdFilters(eq = Equal(id)))
         val user = when (val result = userRepository.read(filters)) {
-            is Result.Error -> return error(Error.Repository(result.error))
+            is Result.Error -> return error(Exception.Repository(result.error))
             is Result.Success -> result.data.firstOrNull()
         }
-        user ?: return error(Error.NoUser(id))
+        user ?: return error(Exception.NoCurrentUser)
 
         @Suppress("NAME_SHADOWING")
         if (update.name != null) {
@@ -36,11 +39,11 @@ class UpdateUser(
             val dataFilters = UserDataFilters(name = NameFilters(eq = Equal(name)))
             val filters = UserFilters(data = dataFilters)
             val user = when (val result = userRepository.read(filters)) {
-                is Result.Error -> return error(Error.Repository(result.error))
+                is Result.Error -> return error(Exception.Repository(result.error))
                 is Result.Success -> result.data.firstOrNull()
             }
             if (user != null) {
-                return error(Error.NameAlreadyTaken(name))
+                return error(Exception.NameAlreadyTaken(name))
             }
         }
 
@@ -50,43 +53,41 @@ class UpdateUser(
             val dataFilters = UserDataFilters(email = EmailFilters(eq = Equal(email)))
             val filters = UserFilters(data = dataFilters)
             val user = when (val result = userRepository.read(filters)) {
-                is Result.Error -> return error(Error.Repository(result.error))
+                is Result.Error -> return error(Exception.Repository(result.error))
                 is Result.Success -> result.data.firstOrNull()
             }
             if (user != null) {
-                return error(Error.EmailAlreadyTaken(email))
+                return error(Exception.EmailAlreadyTaken(email))
             }
         }
 
         return when (val result = userRepository.update(id, update)) {
-            is Result.Error -> error(Error.Repository(result.error))
+            is Result.Error -> error(Exception.Repository(result.error))
             is Result.Success -> {
                 @Suppress("NAME_SHADOWING")
                 val user = result.data
-                if (currentUserRepository.currentUserFlow.value == user) {
-                    currentUserRepository.setCurrentUser(user)
-                }
+                currentUserRepository.setCurrentUser(user)
                 success(user)
             }
         }
     }
 
-    sealed class Error(message: String?, cause: Throwable?) : kotlin.Error(message, cause) {
-        data class NoUser(val id: UserId) : Error(
-            message = """No user was found by identifier "$id"""",
+    sealed class Exception(message: String?, cause: Throwable?) : kotlin.Exception(message, cause) {
+        object NoCurrentUser : Exception(
+            message = "Current user was not present",
             cause = null,
         )
 
-        data class NameAlreadyTaken(val name: Name) : Error(
+        data class NameAlreadyTaken(val name: Name) : Exception(
             message = """User with name "$name" already exists """,
             cause = null,
         )
 
-        data class EmailAlreadyTaken(val email: Email) : Error(
+        data class EmailAlreadyTaken(val email: Email) : Exception(
             message = """User with email "$email" already exists """,
             cause = null,
         )
 
-        data class Repository(val error: BaseException) : Error(error.message, error.cause)
+        data class Repository(val error: BaseException) : Exception(error.message, error.cause)
     }
 }
