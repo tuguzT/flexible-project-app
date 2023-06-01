@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Logout
 import androidx.compose.material.icons.rounded.MoreVert
@@ -36,6 +37,7 @@ fun RowScope.UserActions(
     onMenuExpandedChange: (Boolean) -> Unit,
     onEditClick: (() -> Unit)?,
     onSignOutClick: (() -> Unit)?,
+    onDeleteClick: (() -> Unit)?,
 ) {
     ShareAction(
         onClick = onShareClick,
@@ -46,6 +48,7 @@ fun RowScope.UserActions(
         onExpandedChange = onMenuExpandedChange,
         onEditClick = onEditClick,
         onSignOutClick = onSignOutClick,
+        onDeleteClick = onDeleteClick,
         enabled = !loading,
     )
 }
@@ -74,6 +77,7 @@ private fun MenuActions(
     onExpandedChange: (Boolean) -> Unit,
     onEditClick: (() -> Unit)?,
     onSignOutClick: (() -> Unit)?,
+    onDeleteClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
@@ -93,16 +97,19 @@ private fun MenuActions(
         onDismissRequest = { onExpandedChange(false) },
     ) {
         onEditClick?.let {
-            EditDropdownMenuItem(onClick = it)
+            EditUserDropdownMenuItem(onClick = it)
         }
         onSignOutClick?.let {
             SignOutDropdownMenuItem(onClick = it)
+        }
+        onDeleteClick?.let {
+            DeleteUserDropdownMenuItem(onClick = it)
         }
     }
 }
 
 @Composable
-private fun EditDropdownMenuItem(
+private fun EditUserDropdownMenuItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -113,6 +120,24 @@ private fun EditDropdownMenuItem(
         leadingIcon = {
             Icon(
                 imageVector = Icons.Rounded.Edit,
+                contentDescription = null,
+            )
+        },
+    )
+}
+
+@Composable
+private fun DeleteUserDropdownMenuItem(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    DropdownMenuItem(
+        text = { OneLineTitle(text = stringResource(R.string.delete)) },
+        onClick = onClick,
+        modifier = modifier,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Rounded.Delete,
                 contentDescription = null,
             )
         },
@@ -153,6 +178,7 @@ private fun UserActions() {
                     onMenuExpandedChange = { expanded = it },
                     onEditClick = {},
                     onSignOutClick = {},
+                    onDeleteClick = {},
                 )
             },
         )

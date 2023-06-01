@@ -9,6 +9,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.St
 interface CurrentUserStore : Store<Intent, State, Label> {
     sealed interface Intent {
         object SignOut : Intent
+        object Delete : Intent
     }
 
     data class State(
@@ -19,7 +20,6 @@ interface CurrentUserStore : Store<Intent, State, Label> {
     sealed interface Label {
         data class SignedInUp(val currentUser: User) : Label
         object SignedOut : Label
-        object NotSignedIn : Label
         object LocalStoreError : Label
         object NetworkAccessError : Label
         object UnknownError : Label

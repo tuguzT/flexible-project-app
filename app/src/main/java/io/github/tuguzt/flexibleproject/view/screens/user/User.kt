@@ -64,6 +64,14 @@ fun UserScreen(
         }
         currentUserState.currentUser?.let { onClick }
     }
+    val onDeleteClick = run {
+        val onClick = {
+            expanded = false
+            val intent = CurrentUserStore.Intent.Delete
+            currentUserViewModel.accept(intent)
+        }
+        currentUserState.currentUser?.let { onClick }
+    }
 
     UserScreenContent(
         user = state.user,
@@ -81,6 +89,7 @@ fun UserScreen(
                 onMenuExpandedChange = { expanded = it },
                 onEditClick = onEditClick,
                 onSignOutClick = onSignOutClick,
+                onDeleteClick = onDeleteClick,
             )
         },
     )
