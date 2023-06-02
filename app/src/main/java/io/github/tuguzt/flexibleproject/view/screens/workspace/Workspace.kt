@@ -55,9 +55,10 @@ fun WorkspaceScreen(
                 onShareClick = { /* TODO */ },
                 menuExpanded = expanded,
                 onMenuExpandedChange = { expanded = it },
-                onEditClick = {
+                onEditClick = block@{
                     expanded = false
-                    val direction = EditWorkspaceScreenDestination()
+                    val workspace = state.workspace ?: return@block
+                    val direction = EditWorkspaceScreenDestination(workspace.id.toString())
                     navigator.navigate(direction)
                 },
                 onDeleteClick = {

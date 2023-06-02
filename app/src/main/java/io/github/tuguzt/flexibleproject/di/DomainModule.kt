@@ -18,6 +18,7 @@ import io.github.tuguzt.flexibleproject.domain.usecase.workspace.CreateWorkspace
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.DeleteWorkspace
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FilterWorkspaces
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
+import io.github.tuguzt.flexibleproject.domain.usecase.workspace.UpdateWorkspace
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.WorkspacesFlow
 
 @Module
@@ -67,6 +68,9 @@ object DomainModule {
 
     @Provides
     fun provideCreateWorkspace(repository: WorkspaceRepository) = CreateWorkspace(repository)
+
+    @Provides
+    fun provideUpdateWorkspace(repository: WorkspaceRepository) = UpdateWorkspace(repository)
 
     @Provides
     fun provideWorkspacesFlow(repository: WorkspaceRepository) = WorkspacesFlow(repository)

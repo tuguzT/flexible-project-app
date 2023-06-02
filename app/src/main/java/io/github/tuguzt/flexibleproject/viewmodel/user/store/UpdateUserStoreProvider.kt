@@ -114,8 +114,8 @@ class UpdateUserStoreProvider(
         ): Boolean =
             name.isNotBlank() &&
                 displayName.isNotBlank() &&
-                email?.let { Patterns.EMAIL_ADDRESS.matcher(it).matches() } == true &&
-                avatar?.let { Patterns.WEB_URL.matcher(it).matches() } == true
+                email?.trim()?.let { Patterns.EMAIL_ADDRESS.matcher(it).matches() } ?: true &&
+                avatar?.trim()?.let { Patterns.WEB_URL.matcher(it).matches() } ?: true
 
         private fun updateUser(state: State) {
             val user = currentUser.currentUser().value?.data
