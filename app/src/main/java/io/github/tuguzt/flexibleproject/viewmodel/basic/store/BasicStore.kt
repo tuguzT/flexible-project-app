@@ -18,5 +18,9 @@ interface BasicStore : Store<Intent, State, Label> {
         val loading: Boolean,
     )
 
-    sealed interface Label
+    sealed interface Label {
+        object LocalStoreError : Label
+        object NetworkAccessError : Label
+        object UnknownError : Label
+    }
 }

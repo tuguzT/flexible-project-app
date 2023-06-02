@@ -2,7 +2,7 @@ package io.github.tuguzt.flexibleproject.viewmodel.workspace.store
 
 import com.arkivanov.mvikotlin.core.store.Store
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
-import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.State
@@ -24,6 +24,9 @@ interface AddWorkspaceStore : Store<Intent, State, Label> {
     )
 
     sealed interface Label {
-        data class WorkspaceCreated(val id: WorkspaceId) : Label
+        data class WorkspaceCreated(val workspace: Workspace) : Label
+        object LocalStoreError : Label
+        object NetworkAccessError : Label
+        object UnknownError : Label
     }
 }

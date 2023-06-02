@@ -52,7 +52,7 @@ private fun WorkspaceTopBarWithWorkspace() {
             name = "First workspace",
             description = "",
             visibility = Visibility.Public,
-            imageUrl = null,
+            image = null,
         ),
     )
 

@@ -33,7 +33,7 @@ fun WorkspaceImage(
     error: @Composable (() -> Unit)? = null,
 ) {
     val model = ImageRequest.Builder(LocalContext.current)
-        .data(workspace?.data?.imageUrl)
+        .data(workspace?.data?.image)
         .crossfade(crossfade)
         .build()
     var isLoading by remember { mutableStateOf(true) }
@@ -60,7 +60,7 @@ private fun WorkspaceImageWithWorkspace() {
             name = "Workspace",
             description = "Sample workspace",
             visibility = Visibility.Public,
-            imageUrl = null,
+            image = null,
         ),
     )
 

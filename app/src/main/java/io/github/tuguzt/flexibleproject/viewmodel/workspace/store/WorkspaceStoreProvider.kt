@@ -4,6 +4,8 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import io.github.tuguzt.flexibleproject.domain.model.BaseException
+import io.github.tuguzt.flexibleproject.domain.model.Result
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
@@ -33,6 +35,7 @@ class WorkspaceStoreProvider(
         object Loading : Message
         data class Loaded(val workspace: Workspace) : Message
         data class NotFound(val id: WorkspaceId) : Message
+        object Error : Message
     }
 
     private inner class ExecutorImpl :
@@ -45,13 +48,24 @@ class WorkspaceStoreProvider(
         private fun load(id: WorkspaceId) {
             dispatch(Message.Loading)
             scope.launch {
-                val workspace = findById.findById(id)
-                if (workspace == null) {
-                    dispatch(Message.NotFound(id))
-                    publish(Label.NotFound(id))
-                    return@launch
+                when (val result = findById.findById(id)) {
+                    is Result.Success -> dispatch(Message.Loaded(result.data))
+                    is Result.Error -> {
+                        dispatch(Message.Error)
+                        when (val error = result.error) {
+                            is FindWorkspaceById.Exception.NoWorkspace -> {
+                                dispatch(Message.NotFound(id))
+                                publish(Label.NotFound(id))
+                            }
+
+                            is FindWorkspaceById.Exception.Repository -> when (error.error) {
+                                is BaseException.LocalStore -> publish(Label.LocalStoreError)
+                                is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
+                                is BaseException.Unknown -> publish(Label.UnknownError)
+                            }
+                        }
+                    }
                 }
-                dispatch(Message.Loaded(workspace))
             }
         }
     }
@@ -62,6 +76,7 @@ class WorkspaceStoreProvider(
                 Message.Loading -> copy(loading = true)
                 is Message.Loaded -> copy(workspace = msg.workspace, loading = false)
                 is Message.NotFound -> copy(workspace = null, loading = false)
+                Message.Error -> copy(loading = false)
             }
     }
 }

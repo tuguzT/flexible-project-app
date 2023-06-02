@@ -262,7 +262,7 @@ private fun BasicDrawer() {
                     name = "First workspace",
                     description = "",
                     visibility = Visibility.Public,
-                    imageUrl = null,
+                    image = null,
                 ),
             ),
             Workspace(
@@ -271,7 +271,7 @@ private fun BasicDrawer() {
                     name = "Second workspace",
                     description = "",
                     visibility = Visibility.Public,
-                    imageUrl = null,
+                    image = null,
                 ),
             ),
         ),

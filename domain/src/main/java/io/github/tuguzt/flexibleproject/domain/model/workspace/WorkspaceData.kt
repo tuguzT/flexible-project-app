@@ -1,8 +1,8 @@
 package io.github.tuguzt.flexibleproject.domain.model.workspace
 
 data class WorkspaceData(
-    val name: String,
-    val description: String,
+    val name: Name,
+    val description: Description,
     val visibility: Visibility,
-    val imageUrl: String?,
+    val image: Image?,
 )

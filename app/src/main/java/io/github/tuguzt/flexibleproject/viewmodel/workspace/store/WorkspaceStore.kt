@@ -19,5 +19,8 @@ interface WorkspaceStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data class NotFound(val id: WorkspaceId) : Label
+        object LocalStoreError : Label
+        object NetworkAccessError : Label
+        object UnknownError : Label
     }
 }

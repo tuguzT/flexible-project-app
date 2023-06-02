@@ -30,6 +30,7 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDest
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
+import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.basic.BasicViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
@@ -49,6 +50,13 @@ fun BasicScreen(
     val currentUserState by currentUserViewModel.stateFlow.collectAsStateWithLifecycle()
     val currentUser = currentUserState.currentUser
 
+    basicViewModel.labels.collectInLaunchedEffectWithLifecycle { label ->
+        when (label) {
+            BasicStore.Label.LocalStoreError -> TODO("show error to user")
+            BasicStore.Label.NetworkAccessError -> TODO("show error to user")
+            BasicStore.Label.UnknownError -> TODO("show error to user")
+        }
+    }
     val basicState by basicViewModel.stateFlow.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         val intent = BasicStore.Intent.Load

@@ -42,7 +42,7 @@ private fun WorkspaceContentWithWorkspace() {
             name = "Some workspace",
             description = "",
             visibility = Visibility.Public,
-            imageUrl = null,
+            image = null,
         ),
     )
     AppTheme {

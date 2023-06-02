@@ -4,18 +4,18 @@ import com.arkivanov.mvikotlin.core.store.Reducer
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import io.github.tuguzt.flexibleproject.domain.model.BaseException
+import io.github.tuguzt.flexibleproject.domain.model.Result
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
-import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.CreateWorkspace
 import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.AddWorkspaceStore.State
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
-import kotlin.time.Duration.Companion.seconds
 
 class AddWorkspaceStoreProvider(
     private val create: CreateWorkspace,
@@ -43,7 +43,8 @@ class AddWorkspaceStoreProvider(
         data class DescriptionChanged(val description: String) : Message
         data class VisibilityChanged(val visibility: Visibility) : Message
         object Loading : Message
-        data class WorkspaceCreated(val id: WorkspaceId) : Message
+        data class WorkspaceCreated(val workspace: Workspace) : Message
+        object Error : Message
     }
 
     private inner class ExecutorImpl :
@@ -72,16 +73,27 @@ class AddWorkspaceStoreProvider(
         private fun createWorkspace(state: State) {
             dispatch(Message.Loading)
             scope.launch {
-                delay(2.seconds)
                 val data = WorkspaceData(
                     name = state.name.trim(),
                     description = state.description,
                     visibility = state.visibility,
-                    imageUrl = null,
+                    image = null,
                 )
-                val id = create.create(data)
-                dispatch(Message.WorkspaceCreated(id))
-                publish(Label.WorkspaceCreated(id))
+                when (val result = create.create(data)) {
+                    is Result.Success -> {
+                        val workspace = result.data
+                        dispatch(Message.WorkspaceCreated(workspace))
+                        publish(Label.WorkspaceCreated(workspace))
+                    }
+
+                    is Result.Error -> when (val error = result.error) {
+                        is CreateWorkspace.Exception.Repository -> when (error.error) {
+                            is BaseException.LocalStore -> publish(Label.LocalStoreError)
+                            is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
+                            is BaseException.Unknown -> publish(Label.UnknownError)
+                        }
+                    }
+                }
             }
         }
     }
@@ -94,6 +106,7 @@ class AddWorkspaceStoreProvider(
                 is Message.VisibilityChanged -> copy(visibility = msg.visibility)
                 Message.Loading -> copy(loading = true)
                 is Message.WorkspaceCreated -> copy(loading = false)
+                Message.Error -> copy(loading = false)
             }
     }
 }
