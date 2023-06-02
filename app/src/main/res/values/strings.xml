@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Flexible Project</string>
+    <string name="app_name" translatable="false">Flexible Project</string>
     <string name="app_short_description">Flexible Project is a very flexible and extensible project management software</string>
     <string name="app_version_is">Application version is %1$s</string>
     <string name="home">Home</string>
