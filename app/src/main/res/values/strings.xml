@@ -51,4 +51,6 @@
     <string name="workspace">Workspace</string>
     <string name="project">Project</string>
     <string name="methodology">Methodology</string>
+    <string name="edit_workspace_data">Edit workspace data</string>
+    <string name="share_workspace">Share workspace</string>
 </resources>

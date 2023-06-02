@@ -1,6 +1,7 @@
 package io.github.tuguzt.flexibleproject.view.screens.workspace
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -23,11 +24,13 @@ fun WorkspaceTopBar(
     workspace: Workspace?,
     onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
         modifier = modifier,
         title = { WorkspaceTitle(workspace = workspace) },
         navigationIcon = { NavigateUpIconButton(onClick = onNavigationClick) },
+        actions = actions,
     )
     // TODO workspace image, scroll behaviour
 }

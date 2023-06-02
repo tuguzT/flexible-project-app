@@ -85,7 +85,7 @@ fun UserScreen(
         onNavigationClick = navigator::navigateUp,
         topBarActions = {
             UserActions(
-                loading = state.loading || currentUserState.loading,
+                enabled = !state.loading && !currentUserState.loading,
                 onShareClick = { /* TODO */ },
                 menuExpanded = expanded,
                 onMenuExpandedChange = { expanded = it },

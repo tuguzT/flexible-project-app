@@ -43,7 +43,7 @@ fun AddWorkspaceScreen(
             viewModel.accept(intent)
         },
         loading = state.loading,
-        workspaceValid = state.valid,
+        valid = state.valid,
         onAddWorkspaceClick = {
             val intent = Intent.CreateWorkspace
             viewModel.accept(intent)

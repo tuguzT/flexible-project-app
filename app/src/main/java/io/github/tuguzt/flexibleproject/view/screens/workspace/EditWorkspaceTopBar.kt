@@ -20,24 +20,24 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddWorkspaceTopBar(
+fun EditWorkspaceTopBar(
     loading: Boolean,
     valid: Boolean,
-    onAddWorkspaceClick: () -> Unit,
+    onSubmit: () -> Unit,
     onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box {
         TopAppBar(
             modifier = modifier,
-            title = { OneLineTitle(text = stringResource(R.string.add_new_workspace)) },
+            title = { OneLineTitle(text = stringResource(R.string.edit_workspace_data)) },
             navigationIcon = { CloseIconButton(onClick = onNavigationClick, enabled = !loading) },
             actions = {
                 TextButton(
-                    onClick = onAddWorkspaceClick,
+                    onClick = onSubmit,
                     enabled = valid && !loading,
                 ) {
-                    OneLineTitle(text = stringResource(R.string.add))
+                    OneLineTitle(text = stringResource(R.string.submit))
                 }
             },
         )
@@ -55,12 +55,12 @@ fun AddWorkspaceTopBar(
 
 @Preview
 @Composable
-private fun AddWorkspaceTopBar() {
+private fun EditWorkspaceTopBar() {
     AppTheme {
-        AddWorkspaceTopBar(
+        EditWorkspaceTopBar(
             loading = false,
             valid = true,
-            onAddWorkspaceClick = {},
+            onSubmit = {},
             onNavigationClick = {},
         )
     }

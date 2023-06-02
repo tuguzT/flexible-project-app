@@ -37,7 +37,7 @@ fun AddWorkspaceContent(
     visibility: Visibility,
     onVisibilityChange: (Visibility) -> Unit,
     loading: Boolean,
-    workspaceValid: Boolean,
+    valid: Boolean,
     onAddWorkspaceClick: () -> Unit,
     onNavigationClick: () -> Unit,
     focusManager: FocusManager = LocalFocusManager.current,
@@ -46,7 +46,7 @@ fun AddWorkspaceContent(
         topBar = {
             AddWorkspaceTopBar(
                 loading = loading,
-                workspaceValid = workspaceValid,
+                valid = valid,
                 onAddWorkspaceClick = onAddWorkspaceClick,
                 onNavigationClick = onNavigationClick,
             )
