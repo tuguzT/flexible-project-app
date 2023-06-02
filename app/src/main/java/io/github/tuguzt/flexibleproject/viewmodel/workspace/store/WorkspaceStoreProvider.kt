@@ -6,10 +6,13 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.github.tuguzt.flexibleproject.domain.model.BaseException
 import io.github.tuguzt.flexibleproject.domain.model.Result
+import io.github.tuguzt.flexibleproject.domain.model.filter.Equal
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceFilters
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceIdFilters
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.DeleteWorkspace
-import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
+import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FilterWorkspaces
 import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Label
@@ -18,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class WorkspaceStoreProvider(
-    private val findById: FindWorkspaceById,
+    private val workspaces: FilterWorkspaces,
     private val delete: DeleteWorkspace,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
@@ -52,23 +55,29 @@ class WorkspaceStoreProvider(
         private fun load(id: WorkspaceId) {
             dispatch(Message.Loading)
             scope.launch {
-                when (val result = findById.findById(id)) {
-                    is Result.Success -> dispatch(Message.Loaded(result.data))
+                val filters = WorkspaceFilters(id = WorkspaceIdFilters(eq = Equal(id)))
+                val workspaceFlow = when (val result = workspaces.workspaces(filters)) {
+                    is Result.Success -> result.data
                     is Result.Error -> {
                         dispatch(Message.Error)
                         when (val error = result.error) {
-                            is FindWorkspaceById.Exception.NoWorkspace -> {
-                                dispatch(Message.NotFound(id))
-                                publish(Label.NotFound(id))
-                            }
-
-                            is FindWorkspaceById.Exception.Repository -> when (error.error) {
+                            is FilterWorkspaces.Exception.Repository -> when (error.error) {
                                 is BaseException.LocalStore -> publish(Label.LocalStoreError)
                                 is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
                                 is BaseException.Unknown -> publish(Label.UnknownError)
                             }
                         }
+                        return@launch
                     }
+                }
+                workspaceFlow.collect { workspaces ->
+                    val workspace = workspaces.firstOrNull()
+                    if (workspace == null) {
+                        dispatch(Message.NotFound(id))
+                        publish(Label.NotFound(id))
+                        return@collect
+                    }
+                    dispatch(Message.Loaded(workspace))
                 }
             }
         }

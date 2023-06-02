@@ -125,7 +125,6 @@ private fun UpdateDescriptionTextField(
         modifier = modifier,
         enabled = enabled,
         label = { OneLineTitle(text = stringResource(R.string.update_description)) },
-        singleLine = true,
     )
 }
 

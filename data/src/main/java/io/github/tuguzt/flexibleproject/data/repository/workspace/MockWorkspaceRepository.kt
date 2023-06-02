@@ -19,13 +19,6 @@ import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 
 class MockWorkspaceRepository : WorkspaceRepository {
-    override suspend fun allFlow(): RepositoryResult<Flow<List<Workspace>>> {
-        val flow = workspacesStateFlow.map { workspaces ->
-            workspaces.map { (id, data) -> Workspace(id, data) }
-        }
-        return success(flow)
-    }
-
     override suspend fun create(data: WorkspaceData): RepositoryResult<Workspace> {
         delay(2.seconds)
 
@@ -35,11 +28,11 @@ class MockWorkspaceRepository : WorkspaceRepository {
         return success(Workspace(id, data))
     }
 
-    override suspend fun read(filters: WorkspaceFilters): RepositoryResult<List<Workspace>> {
-        val workspaces = workspaces.asSequence()
-            .map { (id, data) -> Workspace(id, data) }
-            .filter { workspace -> filters satisfies workspace }
-            .toList()
+    override suspend fun read(filters: WorkspaceFilters): RepositoryResult<Flow<List<Workspace>>> {
+        val workspaces = workspacesStateFlow.map { workspaces ->
+            workspaces.map { (id, data) -> Workspace(id, data) }
+                .filter { workspace -> filters satisfies workspace }
+        }
         return success(workspaces)
     }
 

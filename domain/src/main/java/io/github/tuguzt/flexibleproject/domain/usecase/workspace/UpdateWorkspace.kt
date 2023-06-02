@@ -11,13 +11,14 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceFilters
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceIdFilters
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
+import kotlinx.coroutines.flow.firstOrNull
 
 class UpdateWorkspace(private val repository: WorkspaceRepository) {
     suspend fun update(id: WorkspaceId, update: UpdateWorkspace): Result<Workspace, Exception> {
         val filters = WorkspaceFilters(id = WorkspaceIdFilters(eq = Equal(id)))
         val workspace = when (val result = repository.read(filters)) {
             is Result.Error -> return error(Exception.Repository(result.error))
-            is Result.Success -> result.data.firstOrNull()
+            is Result.Success -> result.data.firstOrNull()?.firstOrNull()
         }
         workspace ?: return error(Exception.NoWorkspace(id))
 

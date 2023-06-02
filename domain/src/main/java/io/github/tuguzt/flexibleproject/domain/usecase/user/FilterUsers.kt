@@ -7,9 +7,10 @@ import io.github.tuguzt.flexibleproject.domain.model.success
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
+import kotlinx.coroutines.flow.Flow
 
 class FilterUsers(private val repository: UserRepository) {
-    suspend fun users(filters: UserFilters): Result<List<User>, Exception> {
+    suspend fun users(filters: UserFilters): Result<Flow<List<User>>, Exception> {
         return when (val result = repository.read(filters)) {
             is Result.Error -> error(Exception.Repository(result.error))
             is Result.Success -> success(result.data)

@@ -10,7 +10,6 @@ import io.github.tuguzt.flexibleproject.domain.model.Result
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceFilters
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FilterWorkspaces
-import io.github.tuguzt.flexibleproject.domain.usecase.workspace.WorkspacesFlow
 import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore.Label
@@ -19,7 +18,6 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class BasicStoreProvider(
-    private val allFlow: WorkspacesFlow,
     private val workspaces: FilterWorkspaces,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
@@ -49,25 +47,7 @@ class BasicStoreProvider(
     private inner class ExecutorImpl :
         CoroutineExecutor<Intent, Unit, State, Message, Label>(mainContext = coroutineContext) {
         override fun executeAction(action: Unit, getState: () -> State) {
-            scope.launch {
-                val workspacesFlow = when (val result = allFlow.workspacesFlow()) {
-                    is Result.Success -> result.data
-                    is Result.Error -> {
-                        dispatch(Message.Error)
-                        when (val error = result.error) {
-                            is WorkspacesFlow.Exception.Repository -> when (error.error) {
-                                is BaseException.LocalStore -> publish(Label.LocalStoreError)
-                                is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
-                                is BaseException.Unknown -> publish(Label.UnknownError)
-                            }
-                        }
-                        return@launch
-                    }
-                }
-                workspacesFlow.collect { workspaces ->
-                    dispatch(Message.Loaded(workspaces))
-                }
-            }
+            load()
         }
 
         override fun executeIntent(intent: Intent, getState: () -> State) =
@@ -79,8 +59,9 @@ class BasicStoreProvider(
         private fun load() {
             dispatch(Message.Loading)
             scope.launch {
-                when (val result = workspaces.workspaces(WorkspaceFilters())) {
-                    is Result.Success -> dispatch(Message.Loaded(result.data))
+                val filters = WorkspaceFilters()
+                val workspacesFlow = when (val result = workspaces.workspaces(filters)) {
+                    is Result.Success -> result.data
                     is Result.Error -> {
                         dispatch(Message.Error)
                         when (val error = result.error) {
@@ -90,7 +71,11 @@ class BasicStoreProvider(
                                 is BaseException.Unknown -> publish(Label.UnknownError)
                             }
                         }
+                        return@launch
                     }
+                }
+                workspacesFlow.collect { workspaces ->
+                    dispatch(Message.Loaded(workspaces))
                 }
             }
         }

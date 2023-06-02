@@ -10,6 +10,7 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserIdFilters
 import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
+import kotlinx.coroutines.flow.firstOrNull
 
 class DeleteCurrentUser(
     private val userRepository: UserRepository,
@@ -23,7 +24,7 @@ class DeleteCurrentUser(
         val filters = UserFilters(id = UserIdFilters(eq = Equal(id)))
         val user = when (val result = userRepository.read(filters)) {
             is Result.Error -> return error(Exception.Repository(result.error))
-            is Result.Success -> result.data.firstOrNull()
+            is Result.Success -> result.data.firstOrNull()?.firstOrNull()
         }
         user ?: return error(Exception.NoCurrentUser)
 

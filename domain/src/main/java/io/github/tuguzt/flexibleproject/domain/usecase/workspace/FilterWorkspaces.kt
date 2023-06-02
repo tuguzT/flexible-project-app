@@ -7,9 +7,10 @@ import io.github.tuguzt.flexibleproject.domain.model.success
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceFilters
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
+import kotlinx.coroutines.flow.Flow
 
 class FilterWorkspaces(private val repository: WorkspaceRepository) {
-    suspend fun workspaces(filters: WorkspaceFilters): Result<List<Workspace>, Exception> {
+    suspend fun workspaces(filters: WorkspaceFilters): Result<Flow<List<Workspace>>, Exception> {
         return when (val result = repository.read(filters)) {
             is Result.Error -> error(Exception.Repository(result.error))
             is Result.Success -> success(result.data)

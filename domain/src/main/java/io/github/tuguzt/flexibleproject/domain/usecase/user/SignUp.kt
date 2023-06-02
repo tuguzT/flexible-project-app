@@ -13,6 +13,7 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserDataFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
+import kotlinx.coroutines.flow.firstOrNull
 
 class SignUp(
     private val userRepository: UserRepository,
@@ -29,7 +30,7 @@ class SignUp(
         val filters = UserFilters(data = dataFilters)
         val user = when (val result = userRepository.read(filters)) {
             is Result.Error -> return error(Exception.Repository(result.error))
-            is Result.Success -> result.data.firstOrNull()
+            is Result.Success -> result.data.firstOrNull()?.firstOrNull()
         }
         if (user != null) {
             return error(Exception.NameAlreadyTaken(name))

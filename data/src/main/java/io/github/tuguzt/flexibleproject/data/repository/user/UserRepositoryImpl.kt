@@ -11,6 +11,7 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserFilters
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.repository.RepositoryResult
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
+import kotlinx.coroutines.flow.Flow
 
 class UserRepositoryImpl(local: LocalClient, remote: RemoteClient) : UserRepository {
     private val local = LocalUserDataSource(local)
@@ -28,7 +29,7 @@ class UserRepositoryImpl(local: LocalClient, remote: RemoteClient) : UserReposit
         TODO("Not yet implemented")
     }
 
-    override suspend fun read(filters: UserFilters): RepositoryResult<List<User>> {
+    override suspend fun read(filters: UserFilters): RepositoryResult<Flow<List<User>>> {
         TODO("Not yet implemented")
     }
 

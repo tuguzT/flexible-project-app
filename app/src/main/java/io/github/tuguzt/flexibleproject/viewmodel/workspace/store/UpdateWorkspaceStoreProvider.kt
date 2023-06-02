@@ -7,13 +7,16 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.github.tuguzt.flexibleproject.domain.model.BaseException
 import io.github.tuguzt.flexibleproject.domain.model.Result
+import io.github.tuguzt.flexibleproject.domain.model.filter.Equal
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Description
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Image
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Name
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceFilters
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
-import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceIdFilters
+import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FilterWorkspaces
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.UpdateWorkspace
 import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.UpdateWorkspaceStore.Intent
@@ -24,7 +27,7 @@ import kotlin.coroutines.CoroutineContext
 import io.github.tuguzt.flexibleproject.domain.model.workspace.UpdateWorkspace as UpdateWorkspaceInput
 
 class UpdateWorkspaceStoreProvider(
-    private val findById: FindWorkspaceById,
+    private val workspaces: FilterWorkspaces,
     private val update: UpdateWorkspace,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
@@ -76,24 +79,30 @@ class UpdateWorkspaceStoreProvider(
         private fun load(id: WorkspaceId) {
             dispatch(Message.Loading)
             scope.launch {
-                when (val result = findById.findById(id)) {
-                    is Result.Success -> {
-                        loadedWorkspace = result.data
-                        dispatch(Message.Loaded(result.data))
-                    }
-
-                    is Result.Error -> when (val error = result.error) {
-                        is FindWorkspaceById.Exception.NoWorkspace -> {
-                            dispatch(Message.NotFound(id))
-                            publish(Label.NotFound(id))
+                val filters = WorkspaceFilters(id = WorkspaceIdFilters(eq = Equal(id)))
+                val workspaceFlow = when (val result = workspaces.workspaces(filters)) {
+                    is Result.Success -> result.data
+                    is Result.Error -> {
+                        dispatch(Message.Error)
+                        when (val error = result.error) {
+                            is FilterWorkspaces.Exception.Repository -> when (error.error) {
+                                is BaseException.LocalStore -> publish(Label.LocalStoreError)
+                                is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
+                                is BaseException.Unknown -> publish(Label.UnknownError)
+                            }
                         }
-
-                        is FindWorkspaceById.Exception.Repository -> when (error.error) {
-                            is BaseException.LocalStore -> publish(Label.LocalStoreError)
-                            is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
-                            is BaseException.Unknown -> publish(Label.UnknownError)
-                        }
+                        return@launch
                     }
+                }
+                workspaceFlow.collect { workspaces ->
+                    val workspace = workspaces.firstOrNull()
+                    if (workspace == null) {
+                        dispatch(Message.NotFound(id))
+                        publish(Label.NotFound(id))
+                        return@collect
+                    }
+                    loadedWorkspace = workspace
+                    dispatch(Message.Loaded(workspace))
                 }
             }
         }

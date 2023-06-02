@@ -13,6 +13,9 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.domain.repository.RepositoryResult
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import java.util.UUID
 import kotlin.time.Duration.Companion.seconds
 
@@ -50,6 +53,7 @@ class MockUserRepository : UserRepository {
             avatar = null,
         )
         users[id] = new
+        usersStateFlow.emit(users)
         return success(User(id, new))
     }
 
@@ -64,11 +68,11 @@ class MockUserRepository : UserRepository {
         return success(User(id, data))
     }
 
-    override suspend fun read(filters: UserFilters): RepositoryResult<List<User>> {
-        val users = users.asSequence()
-            .map { (id, data) -> User(id, data) }
-            .filter { user -> filters satisfies user }
-            .toList()
+    override suspend fun read(filters: UserFilters): RepositoryResult<Flow<List<User>>> {
+        val users = usersStateFlow.map { users ->
+            users.map { (id, data) -> User(id, data) }
+                .filter { user -> filters satisfies user }
+        }
         return success(users)
     }
 
@@ -88,6 +92,7 @@ class MockUserRepository : UserRepository {
             avatar = update.avatar ?: data.avatar,
         )
         users[id] = updated
+        usersStateFlow.emit(users)
         return success(User(id, updated))
     }
 
@@ -99,6 +104,7 @@ class MockUserRepository : UserRepository {
             val cause = IllegalStateException("""No user found with identifier "$id"""")
             return error(BaseException.Unknown(cause))
         }
+        usersStateFlow.emit(users)
         return success(User(id, data))
     }
 
@@ -111,4 +117,5 @@ class MockUserRepository : UserRepository {
             avatar = "https://avatars.githubusercontent.com/u/56771526",
         ),
     )
+    private val usersStateFlow = MutableStateFlow(users)
 }

@@ -9,11 +9,9 @@ import io.github.tuguzt.flexibleproject.domain.repository.RepositoryResult
 import kotlinx.coroutines.flow.Flow
 
 interface WorkspaceRepository {
-    suspend fun allFlow(): RepositoryResult<Flow<List<Workspace>>>
-
     suspend fun create(data: WorkspaceData): RepositoryResult<Workspace>
 
-    suspend fun read(filters: WorkspaceFilters): RepositoryResult<List<Workspace>>
+    suspend fun read(filters: WorkspaceFilters): RepositoryResult<Flow<List<Workspace>>>
 
     suspend fun update(id: WorkspaceId, update: UpdateWorkspace): RepositoryResult<Workspace>
 
