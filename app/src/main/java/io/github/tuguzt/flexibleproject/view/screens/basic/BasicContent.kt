@@ -1,6 +1,5 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -14,11 +13,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.tuguzt.flexibleproject.R
+import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+
+data class BasicContent(
+    val user: UserContent,
+    val workspaces: WorkspacesContent,
+) {
+    data class UserContent(
+        val user: User?,
+        val avatar: @Composable () -> Unit,
+    )
+
+    data class WorkspacesContent(
+        val workspaces: List<Workspace>,
+        val icon: @Composable (Workspace) -> Unit,
+    )
+}
 
 @Composable
 fun BasicContent(
-    drawerContent: BasicDrawerContent,
+    content: BasicContent,
     onMenuClick: () -> Unit,
     onDrawerUserClick: () -> Unit,
     onDrawerSettingsClick: () -> Unit,
@@ -36,7 +51,7 @@ fun BasicContent(
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
 ) {
     BasicDrawer(
-        drawerContent = drawerContent,
+        drawerContent = content,
         drawerState = drawerState,
         onUserClick = onDrawerUserClick,
         onSettingsClick = onDrawerSettingsClick,
@@ -50,18 +65,20 @@ fun BasicContent(
             topBar = { BasicTopBar(onMenuClick = onMenuClick) },
             floatingActionButton = { BasicAddFAB(onClick = onAddClick) },
         ) { padding ->
-            // TODO provide some content
-            Box(modifier = Modifier.padding(padding))
+            BasicWorkspaces(
+                content = content.workspaces,
+                onWorkspaceClick = onWorkspaceClick,
+                modifier = Modifier.padding(padding),
+            )
         }
+        BasicBottomSheet(
+            expanded = sheetExpanded,
+            onExpandedChange = onSheetExpandedChange,
+            onAddWorkspaceClick = onAddWorkspaceClick,
+            onAddProjectClick = onAddProjectClick,
+            onAddMethodologyClick = onAddMethodologyClick,
+        )
     }
-
-    BasicBottomSheet(
-        expanded = sheetExpanded,
-        onExpandedChange = onSheetExpandedChange,
-        onAddWorkspaceClick = onAddWorkspaceClick,
-        onAddProjectClick = onAddProjectClick,
-        onAddMethodologyClick = onAddMethodologyClick,
-    )
 }
 
 @Composable

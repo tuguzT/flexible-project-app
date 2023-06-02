@@ -50,24 +50,9 @@ import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
 import io.github.tuguzt.flexibleproject.view.utils.clickableWithoutRipple
 
-data class BasicDrawerContent(
-    val user: UserContent,
-    val workspaces: WorkspacesContent,
-) {
-    data class UserContent(
-        val user: User?,
-        val avatar: @Composable () -> Unit,
-    )
-
-    data class WorkspacesContent(
-        val workspaces: List<Workspace>,
-        val icon: @Composable (Workspace) -> Unit,
-    )
-}
-
 @Composable
 fun BasicDrawer(
-    drawerContent: BasicDrawerContent,
+    drawerContent: BasicContent,
     onUserClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -111,7 +96,7 @@ fun BasicDrawer(
 
 @Composable
 private fun UserContent(
-    content: BasicDrawerContent.UserContent,
+    content: BasicContent.UserContent,
     onClick: () -> Unit,
 ) {
     val (user, avatar) = content
@@ -168,7 +153,7 @@ private fun AboutDrawerItem(onClick: () -> Unit) {
 
 @Composable
 private fun WorkspacesContent(
-    content: BasicDrawerContent.WorkspacesContent,
+    content: BasicContent.WorkspacesContent,
     workspacesExpanded: Boolean,
     onWorkspacesExpandedChange: (Boolean) -> Unit,
     onWorkspaceClick: (Workspace) -> Unit,
@@ -260,7 +245,7 @@ private fun BasicDrawer() {
             avatar = "https://avatars.githubusercontent.com/u/56771526",
         ),
     )
-    val userContent = BasicDrawerContent.UserContent(
+    val userContent = BasicContent.UserContent(
         user = user,
         avatar = {
             UserAvatar(
@@ -269,7 +254,7 @@ private fun BasicDrawer() {
             )
         },
     )
-    val workspacesContent = BasicDrawerContent.WorkspacesContent(
+    val workspacesContent = BasicContent.WorkspacesContent(
         workspaces = listOf(
             Workspace(
                 id = Id("1"),
@@ -297,7 +282,7 @@ private fun BasicDrawer() {
             )
         },
     )
-    val drawerContent = BasicDrawerContent(
+    val drawerContent = BasicContent(
         user = userContent,
         workspaces = workspacesContent,
     )

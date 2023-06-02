@@ -55,7 +55,7 @@ fun BasicScreen(
         basicViewModel.accept(intent)
     }
 
-    val userContent = BasicDrawerContent.UserContent(
+    val userContent = BasicContent.UserContent(
         user = currentUser,
         avatar = {
             UserAvatar(
@@ -67,7 +67,7 @@ fun BasicScreen(
             )
         },
     )
-    val workspacesContent = BasicDrawerContent.WorkspacesContent(
+    val workspacesContent = BasicContent.WorkspacesContent(
         workspaces = basicState.workspaces,
         icon = { workspace ->
             WorkspaceImage(
@@ -77,7 +77,7 @@ fun BasicScreen(
             )
         },
     )
-    val drawerContent = BasicDrawerContent(
+    val content = BasicContent(
         user = userContent,
         workspaces = workspacesContent,
     )
@@ -85,7 +85,7 @@ fun BasicScreen(
     var sheetExpanded by remember { mutableStateOf(false) }
 
     BasicContent(
-        drawerContent = drawerContent,
+        content = content,
         drawerState = drawerState,
         onDrawerUserClick = click@{
             val id = currentUser?.id ?: return@click
