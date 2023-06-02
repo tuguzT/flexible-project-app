@@ -10,6 +10,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore
 interface WorkspaceStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data class Load(val id: WorkspaceId) : Intent
+        object Delete : Intent
     }
 
     data class State(
@@ -19,6 +20,7 @@ interface WorkspaceStore : Store<Intent, State, Label> {
 
     sealed interface Label {
         data class NotFound(val id: WorkspaceId) : Label
+        data class WorkspaceDeleted(val workspace: Workspace) : Label
         object LocalStoreError : Label
         object NetworkAccessError : Label
         object UnknownError : Label

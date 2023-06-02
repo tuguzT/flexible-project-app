@@ -16,6 +16,7 @@ import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 @Composable
 fun WorkspaceContent(
     workspace: Workspace?,
+    loading: Boolean,
     onNavigationClick: () -> Unit,
     topBarActions: @Composable RowScope.() -> Unit = {},
 ) {
@@ -23,6 +24,7 @@ fun WorkspaceContent(
         topBar = {
             WorkspaceTopBar(
                 workspace = workspace,
+                loading = loading,
                 onNavigationClick = onNavigationClick,
                 actions = topBarActions,
             )
@@ -48,6 +50,7 @@ private fun WorkspaceContentWithWorkspace() {
     AppTheme {
         WorkspaceContent(
             workspace = workspace,
+            loading = false,
             onNavigationClick = {},
         )
     }
@@ -59,6 +62,7 @@ private fun WorkspaceContentWithoutWorkspace() {
     AppTheme {
         WorkspaceContent(
             workspace = null,
+            loading = false,
             onNavigationClick = {},
         )
     }

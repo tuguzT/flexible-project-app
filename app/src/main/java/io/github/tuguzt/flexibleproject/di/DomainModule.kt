@@ -15,6 +15,7 @@ import io.github.tuguzt.flexibleproject.domain.usecase.user.SignOut
 import io.github.tuguzt.flexibleproject.domain.usecase.user.SignUp
 import io.github.tuguzt.flexibleproject.domain.usecase.user.UpdateCurrentUser
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.CreateWorkspace
+import io.github.tuguzt.flexibleproject.domain.usecase.workspace.DeleteWorkspace
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FilterWorkspaces
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FindWorkspaceById
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.WorkspacesFlow
@@ -69,4 +70,7 @@ object DomainModule {
 
     @Provides
     fun provideWorkspacesFlow(repository: WorkspaceRepository) = WorkspacesFlow(repository)
+
+    @Provides
+    fun provideDeleteWorkspace(repository: WorkspaceRepository) = DeleteWorkspace(repository)
 }

@@ -35,6 +35,7 @@ fun RowScope.WorkspaceActions(
         onExpandedChange = onMenuExpandedChange,
         onEditClick = onEditClick,
         onDeleteClick = onDeleteClick,
+        enabled = enabled,
     )
 }
 

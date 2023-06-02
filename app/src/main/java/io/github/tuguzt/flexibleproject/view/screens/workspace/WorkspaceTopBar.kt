@@ -1,13 +1,18 @@
 package io.github.tuguzt.flexibleproject.view.screens.workspace
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.placeholder.material.placeholder
 import io.github.tuguzt.flexibleproject.domain.model.Id
@@ -22,16 +27,33 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 @Composable
 fun WorkspaceTopBar(
     workspace: Workspace?,
+    loading: Boolean,
     onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
-    TopAppBar(
-        modifier = modifier,
-        title = { WorkspaceTitle(workspace = workspace) },
-        navigationIcon = { NavigateUpIconButton(onClick = onNavigationClick) },
-        actions = actions,
-    )
+    Box {
+        TopAppBar(
+            modifier = modifier,
+            title = { WorkspaceTitle(workspace = workspace) },
+            navigationIcon = {
+                NavigateUpIconButton(
+                    onClick = onNavigationClick,
+                    enabled = !loading,
+                )
+            },
+            actions = actions,
+        )
+        AnimatedVisibility(
+            visible = loading,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        ) {
+            LinearProgressIndicator(
+                modifier = Modifier.fillMaxWidth(),
+                strokeCap = StrokeCap.Round,
+            )
+        }
+    }
     // TODO workspace image, scroll behaviour
 }
 
@@ -59,7 +81,11 @@ private fun WorkspaceTopBarWithWorkspace() {
     AppTheme {
         Scaffold(
             topBar = {
-                WorkspaceTopBar(workspace = workspace, onNavigationClick = {})
+                WorkspaceTopBar(
+                    workspace = workspace,
+                    loading = false,
+                    onNavigationClick = {},
+                )
             },
         ) { padding ->
             Box(modifier = Modifier.padding(padding))
@@ -73,7 +99,11 @@ private fun WorkspaceTopBarWithoutWorkspace() {
     AppTheme {
         Scaffold(
             topBar = {
-                WorkspaceTopBar(workspace = null, onNavigationClick = {})
+                WorkspaceTopBar(
+                    workspace = null,
+                    loading = false,
+                    onNavigationClick = {},
+                )
             },
         ) { padding ->
             Box(modifier = Modifier.padding(padding))
