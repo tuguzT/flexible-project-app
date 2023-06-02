@@ -1,7 +1,5 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -9,12 +7,14 @@ import androidx.compose.material.icons.rounded.Groups3
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -23,7 +23,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import io.github.tuguzt.flexibleproject.view.screens.basic.home.HomeScreen
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AboutScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AddWorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
@@ -61,7 +60,9 @@ fun BasicScreen(
         avatar = {
             UserAvatar(
                 user = currentUser,
-                modifier = Modifier.size(72.dp).clip(CircleShape),
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(CircleShape),
                 error = { Icon(Icons.Rounded.Person, contentDescription = null) },
             )
         },
@@ -81,27 +82,29 @@ fun BasicScreen(
         workspaces = workspacesContent,
     )
 
-    BasicDrawer(
+    var sheetExpanded by remember { mutableStateOf(false) }
+
+    BasicContent(
         drawerContent = drawerContent,
         drawerState = drawerState,
-        onUserClick = click@{
+        onDrawerUserClick = click@{
             val id = currentUser?.id ?: return@click
             val direction = UserScreenDestination(id.toString())
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
-        onSettingsClick = {
+        onDrawerSettingsClick = {
             val direction = SettingsScreenDestination()
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
-        onAboutClick = {
+        onDrawerAboutClick = {
             val direction = AboutScreenDestination()
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
-        workspacesExpanded = basicState.workspacesExpanded,
-        onWorkspacesExpandedChange = {
+        drawerWorkspacesExpanded = basicState.workspacesExpanded,
+        onDrawerWorkspacesExpandedChange = {
             val intent = BasicStore.Intent.WorkspacesExpand(it)
             basicViewModel.accept(intent)
         },
@@ -111,23 +114,29 @@ fun BasicScreen(
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
-        onAddNewWorkspaceClick = {
+        onDrawerAddNewWorkspaceClick = {
             val direction = AddWorkspaceScreenDestination()
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
-    ) {
-        Scaffold(
-            topBar = {
-                val onMenuClick: () -> Unit = {
-                    coroutineScope.launch { drawerState.open() }
-                }
-                BasicTopBar(onMenuClick = onMenuClick)
-            },
-        ) { padding ->
-            Box(modifier = Modifier.padding(padding)) {
-                HomeScreen(navigator = navigator)
-            }
-        }
-    }
+        onMenuClick = {
+            coroutineScope.launch { drawerState.open() }
+        },
+        onAddClick = { sheetExpanded = true },
+        sheetExpanded = sheetExpanded,
+        onSheetExpandedChange = { sheetExpanded = it },
+        onAddWorkspaceClick = {
+            sheetExpanded = false
+            val direction = AddWorkspaceScreenDestination()
+            navigator.navigate(direction)
+        },
+        onAddProjectClick = {
+            sheetExpanded = false
+            // TODO
+        },
+        onAddMethodologyClick = {
+            sheetExpanded = false
+            // TODO
+        },
+    )
 }

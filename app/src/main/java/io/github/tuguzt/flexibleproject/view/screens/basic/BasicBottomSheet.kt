@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.basic.home
+package io.github.tuguzt.flexibleproject.view.screens.basic
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,7 +38,7 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeBottomSheet(
+fun BasicBottomSheet(
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     onAddWorkspaceClick: () -> Unit,
@@ -47,7 +47,7 @@ fun HomeBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     var trulyExpanded by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(expanded) {
         if (expanded) {
@@ -66,7 +66,7 @@ fun HomeBottomSheet(
         sheetState = sheetState,
         dragHandle = null,
     ) {
-        HomeBottomSheetContent(
+        BasicBottomSheetContent(
             onAddWorkspaceClick = onAddWorkspaceClick,
             onAddProjectClick = onAddProjectClick,
             onAddMethodologyClick = onAddMethodologyClick,
@@ -76,7 +76,7 @@ fun HomeBottomSheet(
 }
 
 @Composable
-private fun HomeBottomSheetContent(
+private fun BasicBottomSheetContent(
     onAddWorkspaceClick: () -> Unit,
     onAddProjectClick: () -> Unit,
     onAddMethodologyClick: () -> Unit,
@@ -98,7 +98,7 @@ private fun AddWorkspaceButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    HomeBottomSheetButton(
+    BasicBottomSheetButton(
         text = stringResource(R.string.workspace),
         icon = Icons.Rounded.Groups3,
         onClick = onClick,
@@ -111,7 +111,7 @@ private fun AddProjectButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    HomeBottomSheetButton(
+    BasicBottomSheetButton(
         text = stringResource(R.string.project),
         icon = Icons.Rounded.Dashboard,
         onClick = onClick,
@@ -124,7 +124,7 @@ private fun AddMethodologyButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    HomeBottomSheetButton(
+    BasicBottomSheetButton(
         text = stringResource(R.string.methodology),
         icon = Icons.Rounded.Article,
         onClick = onClick,
@@ -133,7 +133,7 @@ private fun AddMethodologyButton(
 }
 
 @Composable
-private fun HomeBottomSheetButton(
+private fun BasicBottomSheetButton(
     text: String,
     icon: ImageVector,
     modifier: Modifier = Modifier,
@@ -166,9 +166,9 @@ private fun HomeBottomSheetButton(
 
 @Preview
 @Composable
-private fun HomeBottomSheet() {
+private fun BasicBottomSheet() {
     AppTheme {
-        HomeBottomSheet(
+        BasicBottomSheet(
             expanded = true,
             onExpandedChange = {},
             onAddWorkspaceClick = {},
@@ -180,10 +180,10 @@ private fun HomeBottomSheet() {
 
 @Preview
 @Composable
-private fun HomeBottomSheetContent() {
+private fun BasicBottomSheetContent() {
     AppTheme {
         Surface(tonalElevation = 1.dp) {
-            HomeBottomSheetContent(
+            BasicBottomSheetContent(
                 onAddWorkspaceClick = {},
                 onAddProjectClick = {},
                 onAddMethodologyClick = {},
