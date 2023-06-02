@@ -17,11 +17,25 @@ import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 @Composable
 fun HomeContent(
     onAddClick: () -> Unit,
+    sheetExpanded: Boolean,
+    onSheetExpandedChange: (Boolean) -> Unit,
+    onAddWorkspaceClick: () -> Unit,
+    onAddProjectClick: () -> Unit,
+    onAddMethodologyClick: () -> Unit,
 ) {
     Scaffold(
         floatingActionButton = { HomeAddFAB(onClick = onAddClick) },
     ) { padding ->
+        // TODO provide some content
         Box(modifier = Modifier.padding(padding))
+
+        HomeBottomSheet(
+            expanded = sheetExpanded,
+            onExpandedChange = onSheetExpandedChange,
+            onAddWorkspaceClick = onAddWorkspaceClick,
+            onAddProjectClick = onAddProjectClick,
+            onAddMethodologyClick = onAddMethodologyClick,
+        )
     }
 }
 
@@ -42,6 +56,13 @@ private fun HomeAddFAB(
 @Composable
 private fun HomeContent() {
     AppTheme {
-        HomeContent(onAddClick = {})
+        HomeContent(
+            onAddClick = {},
+            sheetExpanded = true,
+            onSheetExpandedChange = {},
+            onAddWorkspaceClick = {},
+            onAddProjectClick = {},
+            onAddMethodologyClick = {},
+        )
     }
 }

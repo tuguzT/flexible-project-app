@@ -1,5 +1,6 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -19,12 +20,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.rememberNavHostEngine
-import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
+import io.github.tuguzt.flexibleproject.view.screens.basic.home.HomeScreen
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AboutScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AddWorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
@@ -45,9 +44,6 @@ fun BasicScreen(
     currentUserViewModel: CurrentUserViewModel,
     basicViewModel: BasicViewModel = hiltViewModel(),
 ) {
-    val engine = rememberNavHostEngine()
-    val navController = engine.rememberNavController()
-
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
 
@@ -129,12 +125,9 @@ fun BasicScreen(
                 BasicTopBar(onMenuClick = onMenuClick)
             },
         ) { padding ->
-            DestinationsNavHost(
-                engine = engine,
-                navController = navController,
-                navGraph = NavGraphs.basic,
-                modifier = Modifier.padding(padding),
-            )
+            Box(modifier = Modifier.padding(padding)) {
+                HomeScreen(navigator = navigator)
+            }
         }
     }
 }
