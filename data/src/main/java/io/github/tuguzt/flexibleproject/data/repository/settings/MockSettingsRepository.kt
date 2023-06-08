@@ -25,6 +25,6 @@ class MockSettingsRepository : SettingsRepository {
     }
 
     private val settingsStateFlow = MutableStateFlow(
-        value = Settings(theme = Theme.System, language = Language.English),
+        value = Settings(theme = Theme.System, language = Language.Russian),
     )
 }

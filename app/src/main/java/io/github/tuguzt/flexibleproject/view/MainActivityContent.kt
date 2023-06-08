@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -20,6 +21,7 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.AuthScreenDest
 import io.github.tuguzt.flexibleproject.view.screens.destinations.BasicScreenDestination
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
+import io.github.tuguzt.flexibleproject.view.utils.setLocale
 import io.github.tuguzt.flexibleproject.viewmodel.settings.SettingsViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore
@@ -45,9 +47,10 @@ fun MainActivityContent(
         }
     }
 
+    val context = LocalContext.current
     val settingsState by settingsViewModel.stateFlow.collectAsStateWithLifecycle()
     LaunchedEffect(settingsState.language) {
-        // TODO change application language
+        context.setLocale(settingsState.language)
     }
     val darkTheme = when (settingsState.theme) {
         Theme.System -> isSystemInDarkTheme()
