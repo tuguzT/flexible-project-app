@@ -20,7 +20,7 @@ class SignUp(
     private val currentUserRepository: CurrentUserRepository,
 ) {
     suspend fun signUp(credentials: UserCredentials): Result<User, Exception> {
-        val currentUser = currentUserRepository.currentUserFlow.value
+        val currentUser = currentUserRepository.read().firstOrNull()
         if (currentUser != null) {
             return error(Exception.AlreadySignedIn(currentUser))
         }
@@ -36,14 +36,13 @@ class SignUp(
             return error(Exception.NameAlreadyTaken(name))
         }
 
-        return when (val result = userRepository.signUp(credentials)) {
+        val signedUp = when (val result = userRepository.signUp(credentials)) {
+            is Result.Error -> return error(Exception.Repository(result.error))
+            is Result.Success -> result.data
+        }
+        return when (val result = currentUserRepository.set(signedUp)) {
             is Result.Error -> error(Exception.Repository(result.error))
-            is Result.Success -> {
-                @Suppress("NAME_SHADOWING")
-                val user = result.data
-                currentUserRepository.setCurrentUser(user)
-                success(user)
-            }
+            is Result.Success -> success(signedUp)
         }
     }
 

@@ -7,21 +7,23 @@ import io.github.tuguzt.flexibleproject.domain.model.success
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
+import kotlinx.coroutines.flow.firstOrNull
 
 class SignOut(
     private val userRepository: UserRepository,
     private val currentUserRepository: CurrentUserRepository,
 ) {
     suspend fun signOut(): Result<User, Exception> {
-        val currentUser = currentUserRepository.currentUserFlow.value
+        val currentUser = currentUserRepository.read().firstOrNull()
             ?: return error(Exception.NotSignedIn)
 
-        return when (val result = userRepository.signOut(currentUser.id)) {
+        val signedOut = when (val result = userRepository.signOut(currentUser.id)) {
+            is Result.Error -> return error(Exception.Repository(result.error))
+            is Result.Success -> result.data
+        }
+        return when (val result = currentUserRepository.set(null)) {
             is Result.Error -> error(Exception.Repository(result.error))
-            is Result.Success -> {
-                currentUserRepository.setCurrentUser(null)
-                success(result.data)
-            }
+            is Result.Success -> success(signedOut)
         }
     }
 

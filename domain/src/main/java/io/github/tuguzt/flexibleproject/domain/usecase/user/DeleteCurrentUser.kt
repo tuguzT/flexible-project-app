@@ -17,7 +17,7 @@ class DeleteCurrentUser(
     private val currentUserRepository: CurrentUserRepository,
 ) {
     suspend fun delete(): Result<User, Exception> {
-        val currentUser = currentUserRepository.currentUserFlow.value
+        val currentUser = currentUserRepository.read().firstOrNull()
             ?: return error(Exception.NoCurrentUser)
         val id = currentUser.id
 
@@ -28,16 +28,13 @@ class DeleteCurrentUser(
         }
         user ?: return error(Exception.NoCurrentUser)
 
-        return when (val result = userRepository.delete(id)) {
+        val deleted = when (val result = userRepository.delete(id)) {
+            is Result.Error -> return error(Exception.Repository(result.error))
+            is Result.Success -> result.data
+        }
+        return when (val result = currentUserRepository.set(null)) {
             is Result.Error -> error(Exception.Repository(result.error))
-            is Result.Success -> {
-                @Suppress("NAME_SHADOWING")
-                val user = result.data
-                if (currentUserRepository.currentUserFlow.value == user) {
-                    currentUserRepository.setCurrentUser(null)
-                }
-                success(user)
-            }
+            is Result.Success -> success(deleted)
         }
     }
 

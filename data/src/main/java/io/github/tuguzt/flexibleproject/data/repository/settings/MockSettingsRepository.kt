@@ -9,9 +9,10 @@ import io.github.tuguzt.flexibleproject.domain.repository.RepositoryResult
 import io.github.tuguzt.flexibleproject.domain.repository.settings.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MockSettingsRepository : SettingsRepository {
-    override suspend fun read(): Flow<Settings> = settingsStateFlow
+    override fun read(): Flow<Settings> = settingsStateFlow.asStateFlow()
 
     override suspend fun update(update: UpdateSettings): RepositoryResult<Settings> {
         val settings = settingsStateFlow.value

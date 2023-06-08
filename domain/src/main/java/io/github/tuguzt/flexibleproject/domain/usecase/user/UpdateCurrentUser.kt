@@ -23,7 +23,7 @@ class UpdateCurrentUser(
     private val currentUserRepository: CurrentUserRepository,
 ) {
     suspend fun update(update: UpdateUser): Result<User, Exception> {
-        val currentUser = currentUserRepository.currentUserFlow.value
+        val currentUser = currentUserRepository.read().firstOrNull()
             ?: return error(Exception.NoCurrentUser)
         val id = currentUser.id
 
@@ -62,14 +62,13 @@ class UpdateCurrentUser(
             }
         }
 
-        return when (val result = userRepository.update(id, update)) {
+        val updated = when (val result = userRepository.update(id, update)) {
+            is Result.Error -> return error(Exception.Repository(result.error))
+            is Result.Success -> result.data
+        }
+        return when (val result = currentUserRepository.set(updated)) {
             is Result.Error -> error(Exception.Repository(result.error))
-            is Result.Success -> {
-                @Suppress("NAME_SHADOWING")
-                val user = result.data
-                currentUserRepository.setCurrentUser(user)
-                success(user)
-            }
+            is Result.Success -> success(updated)
         }
     }
 

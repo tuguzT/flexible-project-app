@@ -31,7 +31,7 @@ class CurrentUserStoreProvider(
             Store<Intent, State, Label> by storeFactory.create(
                 name = CurrentUserStore::class.simpleName,
                 initialState = State(
-                    currentUser = currentUser.currentUser().value,
+                    currentUser = null,
                     loading = false,
                 ),
                 bootstrapper = SimpleBootstrapper(Unit),

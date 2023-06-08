@@ -2,6 +2,7 @@ package io.github.tuguzt.flexibleproject.viewmodel.user.store
 
 import android.util.Patterns
 import com.arkivanov.mvikotlin.core.store.Reducer
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
@@ -12,6 +13,7 @@ import io.github.tuguzt.flexibleproject.domain.model.user.DisplayName
 import io.github.tuguzt.flexibleproject.domain.model.user.Email
 import io.github.tuguzt.flexibleproject.domain.model.user.Name
 import io.github.tuguzt.flexibleproject.domain.model.user.UpdateUser
+import io.github.tuguzt.flexibleproject.domain.model.user.UserData
 import io.github.tuguzt.flexibleproject.domain.usecase.user.GetCurrentUser
 import io.github.tuguzt.flexibleproject.domain.usecase.user.UpdateCurrentUser
 import io.github.tuguzt.flexibleproject.domain.usecase.user.UpdateCurrentUser.Exception
@@ -19,6 +21,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UpdateUserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UpdateUserStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UpdateUserStore.State
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
@@ -33,17 +36,15 @@ class UpdateUserStoreProvider(
             UpdateUserStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = UpdateUserStore::class.simpleName,
-                initialState = run {
-                    val user = currentUser.currentUser().value?.data
-                    State(
-                        name = user?.name ?: "",
-                        displayName = user?.displayName ?: "",
-                        email = user?.email,
-                        avatar = user?.avatar,
-                        valid = false,
-                        loading = false,
-                    )
-                },
+                initialState = State(
+                    name = "",
+                    displayName = "",
+                    email = null,
+                    avatar = null,
+                    valid = false,
+                    loading = false,
+                ),
+                bootstrapper = SimpleBootstrapper(Unit),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl,
             ) {}
@@ -61,6 +62,21 @@ class UpdateUserStoreProvider(
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Message, Label>(
         mainContext = coroutineContext,
     ) {
+        private var currentUserData: UserData? = null
+
+        override fun executeAction(action: Unit, getState: () -> State) {
+            dispatch(Message.Loading)
+            scope.launch {
+                val data = currentUser.currentUser().firstOrNull()?.data ?: TODO()
+                currentUserData = data
+                dispatch(Message.UserUpdated)
+                dispatch(Message.NameChanged(name = data.name, valid = false))
+                dispatch(Message.DisplayNameChanged(displayName = data.displayName, valid = false))
+                dispatch(Message.EmailChanged(email = data.email, valid = false))
+                dispatch(Message.AvatarChanged(avatar = data.avatar, valid = false))
+            }
+        }
+
         override fun executeIntent(intent: Intent, getState: () -> State) =
             when (intent) {
                 is Intent.ChangeAvatar -> changeAvatar(intent.avatar, getState())
@@ -72,7 +88,7 @@ class UpdateUserStoreProvider(
 
         private fun changeName(name: Name, state: State) {
             val valid = run {
-                val user = currentUser.currentUser().value?.data ?: return@run false
+                val user = currentUserData ?: return@run false
                 checkIfValid(name, state.displayName, state.email, state.avatar) &&
                     name.trim() != user.name
             }
@@ -81,7 +97,7 @@ class UpdateUserStoreProvider(
 
         private fun changeDisplayName(displayName: DisplayName, state: State) {
             val valid = run {
-                val user = currentUser.currentUser().value?.data ?: return@run false
+                val user = currentUserData ?: return@run false
                 checkIfValid(state.name, displayName, state.email, state.avatar) &&
                     displayName.trim() != user.displayName
             }
@@ -90,7 +106,7 @@ class UpdateUserStoreProvider(
 
         private fun changeEmail(email: Email?, state: State) {
             val valid = run {
-                val user = currentUser.currentUser().value?.data ?: return@run false
+                val user = currentUserData ?: return@run false
                 checkIfValid(state.name, state.displayName, email, state.avatar) &&
                     email?.trim() != user.email
             }
@@ -99,7 +115,7 @@ class UpdateUserStoreProvider(
 
         private fun changeAvatar(avatar: Avatar?, state: State) {
             val valid = run {
-                val user = currentUser.currentUser().value?.data ?: return@run false
+                val user = currentUserData ?: return@run false
                 checkIfValid(state.name, state.displayName, state.email, avatar) &&
                     avatar?.trim() != user.avatar
             }
@@ -118,7 +134,7 @@ class UpdateUserStoreProvider(
                 avatar?.trim()?.let { Patterns.WEB_URL.matcher(it).matches() } ?: true
 
         private fun updateUser(state: State) {
-            val user = currentUser.currentUser().value?.data
+            val user = currentUserData
             val update = UpdateUser(
                 name = state.name.takeIf { it != user?.name },
                 displayName = state.displayName.takeIf { it != user?.displayName },

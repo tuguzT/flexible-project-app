@@ -5,5 +5,5 @@ import io.github.tuguzt.flexibleproject.domain.repository.settings.SettingsRepos
 import kotlinx.coroutines.flow.Flow
 
 class GetSettings(private val repository: SettingsRepository) {
-    suspend fun settings(): Flow<Settings> = repository.read()
+    fun settings(): Flow<Settings> = repository.read()
 }

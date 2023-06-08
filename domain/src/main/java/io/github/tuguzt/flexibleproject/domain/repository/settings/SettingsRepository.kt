@@ -6,7 +6,7 @@ import io.github.tuguzt.flexibleproject.domain.repository.RepositoryResult
 import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {
-    suspend fun read(): Flow<Settings>
+    fun read(): Flow<Settings>
 
     suspend fun update(update: UpdateSettings): RepositoryResult<Settings>
 }
