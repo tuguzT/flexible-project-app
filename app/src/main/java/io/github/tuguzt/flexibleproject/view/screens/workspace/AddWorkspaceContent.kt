@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
+import io.github.tuguzt.flexibleproject.view.utils.toTranslatedString
 
 @Composable
 fun AddWorkspaceContent(
@@ -135,7 +136,7 @@ private fun VisibilityExposedDropdownMenu(
         onExpandedChange = { expanded = it },
     ) {
         OutlinedTextField(
-            value = visibility.toString(),
+            value = visibility.toTranslatedString(),
             onValueChange = {},
             modifier = modifier.menuAnchor(),
             readOnly = true,
@@ -151,7 +152,7 @@ private fun VisibilityExposedDropdownMenu(
             val visibilities = Visibility.values()
             visibilities.forEach { visibility ->
                 DropdownMenuItem(
-                    text = { OneLineTitle(text = visibility.toString()) },
+                    text = { OneLineTitle(text = visibility.toTranslatedString()) },
                     onClick = {
                         onVisibilityChange(visibility)
                         expanded = false

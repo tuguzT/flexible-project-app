@@ -27,6 +27,7 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
+import io.github.tuguzt.flexibleproject.view.utils.toTranslatedString
 
 @Composable
 fun WorkspaceContent(
@@ -98,9 +99,10 @@ private fun WorkspaceVisibility(
     modifier: Modifier = Modifier,
 ) {
     WorkspaceItemRow(
-        data = visibility?.toString(),
+        data = visibility?.toTranslatedString(),
         icon = Icons.Rounded.Visibility,
         modifier = modifier,
+        placeholder = Visibility.Public.toTranslatedString(),
     )
 }
 

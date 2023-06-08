@@ -57,4 +57,13 @@
     <string name="update_visibility">Обновить видимость</string>
     <string name="theme">Тема</string>
     <string name="language">Язык</string>
+    <string name="moderator">Модератор</string>
+    <string name="administrator">Администратор</string>
+    <string name="visibility_public">Публичная</string>
+    <string name="visibility_private">Приватная</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Темная</string>
+    <string name="language_english">Английский</string>
+    <string name="language_russian">Русский</string>
 </resources>

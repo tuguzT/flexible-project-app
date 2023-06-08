@@ -35,6 +35,7 @@ import io.github.tuguzt.flexibleproject.domain.model.settings.Language
 import io.github.tuguzt.flexibleproject.domain.model.settings.Theme
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
+import io.github.tuguzt.flexibleproject.view.utils.toTranslatedString
 
 @Composable
 fun SettingsContent(
@@ -126,7 +127,7 @@ private fun ThemeSettings(
         LazyColumn {
             items(Theme.values(), key = Theme::ordinal) {
                 SelectableItem(
-                    title = it.toString(),
+                    title = it.toTranslatedString(),
                     selected = it == theme,
                     onClick = { onThemeChange(it) },
                 )
@@ -149,7 +150,7 @@ private fun LanguageSettings(
         LazyColumn {
             items(Language.values(), key = Language::ordinal) {
                 SelectableItem(
-                    title = it.toString(),
+                    title = it.toTranslatedString(),
                     selected = it == language,
                     onClick = { onLanguageChange(it) },
                 )

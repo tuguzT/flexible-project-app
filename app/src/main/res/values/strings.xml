@@ -8,6 +8,8 @@
     <string name="user_avatar">User avatar</string>
     <string name="about">About</string>
     <string name="user">User</string>
+    <string name="moderator">Moderator</string>
+    <string name="administrator">Administrator</string>
     <string name="navigate_up">Navigate up</string>
     <string name="workspace_image">Workspace image</string>
     <string name="sign_in">Sign In</string>
@@ -57,4 +59,11 @@
     <string name="update_visibility">Update visibility</string>
     <string name="theme">Theme</string>
     <string name="language">Language</string>
+    <string name="visibility_public">Public</string>
+    <string name="visibility_private">Private</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="language_english">English</string>
+    <string name="language_russian">Russian</string>
 </resources>

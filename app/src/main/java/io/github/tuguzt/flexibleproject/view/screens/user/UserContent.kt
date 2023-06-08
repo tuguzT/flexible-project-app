@@ -45,6 +45,7 @@ import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
+import io.github.tuguzt.flexibleproject.view.utils.toTranslatedString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -280,10 +281,10 @@ private fun UserRole(
     modifier: Modifier = Modifier,
 ) {
     UserItemRow(
-        data = role.toString(),
+        data = role.toTranslatedString(),
         icon = Icons.Rounded.Shield,
         modifier = modifier,
-        placeholder = Role.Moderator.toString(),
+        placeholder = Role.Moderator.toTranslatedString(),
     )
 }
 
