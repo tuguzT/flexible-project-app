@@ -55,4 +55,6 @@
     <string name="share_workspace">Поделиться группой</string>
     <string name="update_description">Обновить описание</string>
     <string name="update_visibility">Обновить видимость</string>
+    <string name="theme">Тема</string>
+    <string name="language">Язык</string>
 </resources>
