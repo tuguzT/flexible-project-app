@@ -51,6 +51,7 @@ class SettingsStoreProvider(
         mainContext = coroutineContext,
     ) {
         override fun executeAction(action: Unit, getState: () -> State) {
+            dispatch(Message.Loading)
             scope.launch {
                 settings.settings().collect { settings ->
                     dispatch(Message.ThemeChanged(settings.theme))
