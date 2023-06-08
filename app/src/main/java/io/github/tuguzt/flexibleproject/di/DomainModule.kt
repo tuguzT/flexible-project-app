@@ -4,9 +4,12 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.tuguzt.flexibleproject.domain.repository.settings.SettingsRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
+import io.github.tuguzt.flexibleproject.domain.usecase.settings.GetSettings
+import io.github.tuguzt.flexibleproject.domain.usecase.settings.UpdateSettings
 import io.github.tuguzt.flexibleproject.domain.usecase.user.DeleteCurrentUser
 import io.github.tuguzt.flexibleproject.domain.usecase.user.FilterUsers
 import io.github.tuguzt.flexibleproject.domain.usecase.user.GetCurrentUser
@@ -69,4 +72,10 @@ object DomainModule {
 
     @Provides
     fun provideDeleteWorkspace(repository: WorkspaceRepository) = DeleteWorkspace(repository)
+
+    @Provides
+    fun provideGetSettings(repository: SettingsRepository) = GetSettings(repository)
+
+    @Provides
+    fun provideUpdateSettings(repository: SettingsRepository) = UpdateSettings(repository)
 }
