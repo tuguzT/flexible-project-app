@@ -9,7 +9,6 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,10 +57,6 @@ fun BasicScreen(
         }
     }
     val basicState by basicViewModel.stateFlow.collectAsStateWithLifecycle()
-    LaunchedEffect(Unit) {
-        val intent = BasicStore.Intent.Load
-        basicViewModel.accept(intent)
-    }
 
     val userContent = BasicContent.UserContent(
         user = currentUser,

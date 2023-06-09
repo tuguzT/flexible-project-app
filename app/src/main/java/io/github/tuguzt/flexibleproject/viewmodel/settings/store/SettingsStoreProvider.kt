@@ -32,7 +32,7 @@ class SettingsStoreProvider(
                 name = SettingsStore::class.simpleName,
                 initialState = State(
                     theme = Theme.System,
-                    language = Language.English,
+                    language = Language.Russian,
                     loading = true,
                 ),
                 bootstrapper = SimpleBootstrapper(Unit),

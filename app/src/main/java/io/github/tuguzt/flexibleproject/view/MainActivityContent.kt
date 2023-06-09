@@ -1,21 +1,28 @@
 package io.github.tuguzt.flexibleproject.view
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
+import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popUpTo
-import com.ramcosta.composedestinations.rememberNavHostEngine
 import io.github.tuguzt.flexibleproject.domain.model.settings.Theme
+import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AuthScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.BasicScreenDestination
@@ -26,18 +33,32 @@ import io.github.tuguzt.flexibleproject.viewmodel.settings.SettingsViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore
 
+@OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun MainActivityContent(
     currentUserViewModel: CurrentUserViewModel = hiltViewModel(),
     settingsViewModel: SettingsViewModel = hiltViewModel(),
 ) {
-    val engine = rememberNavHostEngine()
+    val engine = rememberAnimatedNavHostEngine(
+        rootDefaultAnimations = RootNavGraphDefaultAnimations.ACCOMPANIST_FADING,
+    )
     val navController = engine.rememberNavController()
 
+    var prevUserId: UserId? by remember { mutableStateOf(null) }
     currentUserViewModel.labels.collectInLaunchedEffectWithLifecycle block@{ label ->
         val direction = when (label) {
-            is CurrentUserStore.Label.SignedInUp -> BasicScreenDestination()
-            CurrentUserStore.Label.SignedOut -> AuthScreenDestination()
+            is CurrentUserStore.Label.SignedInUp -> {
+                val userId = label.currentUser.id
+                if (prevUserId == userId) return@block
+                prevUserId = userId
+                BasicScreenDestination()
+            }
+
+            CurrentUserStore.Label.SignedOut -> {
+                prevUserId = null
+                AuthScreenDestination()
+            }
+
             else -> return@block
         }
         navController.navigate(direction) {
@@ -52,10 +73,15 @@ fun MainActivityContent(
     LaunchedEffect(settingsState.language) {
         context.setLocale(settingsState.language)
     }
-    val darkTheme = when (settingsState.theme) {
-        Theme.System -> isSystemInDarkTheme()
-        Theme.Light -> false
-        Theme.Dark -> true
+    val darkTheme = run {
+        val systemInDarkTheme = isSystemInDarkTheme()
+        remember(settingsState.theme, systemInDarkTheme) {
+            when (settingsState.theme) {
+                Theme.System -> systemInDarkTheme
+                Theme.Light -> false
+                Theme.Dark -> true
+            }
+        }
     }
 
     val navGraph = NavGraphs.root

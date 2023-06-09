@@ -15,6 +15,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore.State
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
@@ -51,8 +52,7 @@ class CurrentUserStoreProvider(
     ) {
         override fun executeAction(action: Unit, getState: () -> State) {
             scope.launch {
-                currentUser.currentUser().collect { currentUser ->
-                    currentUser ?: return@collect
+                currentUser.currentUser().filterNotNull().collect { currentUser ->
                     dispatch(Message.UserUpdated(currentUser))
                     publish(Label.SignedInUp(currentUser))
                 }
