@@ -24,7 +24,7 @@ class MockUserRepository : UserRepository {
         delay(2.seconds)
 
         val name = credentials.name
-        val user = users.asSequence().find { (_, data) -> data.name == name }
+        val user = usersStateFlow.value.asSequence().find { (_, data) -> data.name == name }
         if (user == null) {
             val cause = IllegalStateException("""No user found with name "$name"""")
             return error(BaseException.Unknown(cause))
@@ -38,7 +38,7 @@ class MockUserRepository : UserRepository {
         delay(2.seconds)
 
         val name = credentials.name
-        val data = users.values.find { data -> data.name == name }
+        val data = usersStateFlow.value.values.find { data -> data.name == name }
         if (data != null) {
             val cause = IllegalStateException("""User with name "$name" already exists""")
             return error(BaseException.Unknown(cause))
@@ -52,7 +52,7 @@ class MockUserRepository : UserRepository {
             email = null,
             avatar = null,
         )
-        users[id] = new
+        val users = usersStateFlow.value + (id to new)
         usersStateFlow.emit(users)
         return success(User(id, new))
     }
@@ -60,7 +60,7 @@ class MockUserRepository : UserRepository {
     override suspend fun signOut(id: UserId): RepositoryResult<User> {
         delay(2.seconds)
 
-        val data = users[id]
+        val data = usersStateFlow.value[id]
         if (data == null) {
             val cause = IllegalStateException("""No user found with identifier "$id"""")
             return error(BaseException.Unknown(cause))
@@ -79,7 +79,7 @@ class MockUserRepository : UserRepository {
     override suspend fun update(id: UserId, update: UpdateUser): RepositoryResult<User> {
         delay(2.seconds)
 
-        val data = users[id]
+        val data = usersStateFlow.value[id]
         if (data == null) {
             val cause = IllegalStateException("""No user found with identifier "$id"""")
             return error(BaseException.Unknown(cause))
@@ -91,7 +91,7 @@ class MockUserRepository : UserRepository {
             email = update.email ?: data.email,
             avatar = update.avatar ?: data.avatar,
         )
-        users[id] = updated
+        val users = usersStateFlow.value + (id to updated)
         usersStateFlow.emit(users)
         return success(User(id, updated))
     }
@@ -99,23 +99,25 @@ class MockUserRepository : UserRepository {
     override suspend fun delete(id: UserId): RepositoryResult<User> {
         delay(2.seconds)
 
-        val data = users.remove(id)
+        val data = usersStateFlow.value[id]
         if (data == null) {
             val cause = IllegalStateException("""No user found with identifier "$id"""")
             return error(BaseException.Unknown(cause))
         }
+        val users = usersStateFlow.value - id
         usersStateFlow.emit(users)
         return success(User(id, data))
     }
 
-    private val users = mutableMapOf(
-        UserId("timur") to UserData(
-            name = "tuguzT",
-            displayName = "Timur Tugushev",
-            role = Role.Administrator,
-            email = "timurka.tugushev@gmail.com",
-            avatar = "https://avatars.githubusercontent.com/u/56771526",
+    private val usersStateFlow = MutableStateFlow(
+        value = mapOf(
+            UserId("timur") to UserData(
+                name = "tuguzT",
+                displayName = "Timur Tugushev",
+                role = Role.Administrator,
+                email = "timurka.tugushev@gmail.com",
+                avatar = "https://avatars.githubusercontent.com/u/56771526",
+            ),
         ),
     )
-    private val usersStateFlow = MutableStateFlow(users)
 }

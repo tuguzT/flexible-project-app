@@ -66,4 +66,6 @@
     <string name="theme_dark">Dark</string>
     <string name="language_english">English</string>
     <string name="language_russian">Russian</string>
+    <string name="delete_workspace_confirmation">Are you sure you want to delete workspace?</string>
+    <string name="cancel">Cancel</string>
 </resources>

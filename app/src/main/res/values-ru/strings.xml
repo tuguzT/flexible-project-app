@@ -66,4 +66,6 @@
     <string name="theme_dark">Темная</string>
     <string name="language_english">Английский</string>
     <string name="language_russian">Русский</string>
+    <string name="delete_workspace_confirmation">Вы точно хотите удалить группу?</string>
+    <string name="cancel">Отмена</string>
 </resources>

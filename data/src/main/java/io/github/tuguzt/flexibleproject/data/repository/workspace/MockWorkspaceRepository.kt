@@ -23,14 +23,15 @@ class MockWorkspaceRepository : WorkspaceRepository {
         delay(2.seconds)
 
         val id = WorkspaceId(UUID.randomUUID().toString())
-        workspaces[id] = data
+        val workspaces = workspacesStateFlow.value + (id to data)
         workspacesStateFlow.emit(workspaces)
         return success(Workspace(id, data))
     }
 
     override suspend fun read(filters: WorkspaceFilters): RepositoryResult<Flow<List<Workspace>>> {
         val workspaces = workspacesStateFlow.map { workspaces ->
-            workspaces.map { (id, data) -> Workspace(id, data) }
+            workspaces
+                .map { (id, data) -> Workspace(id, data) }
                 .filter { workspace -> filters satisfies workspace }
         }
         return success(workspaces)
@@ -42,7 +43,7 @@ class MockWorkspaceRepository : WorkspaceRepository {
     ): RepositoryResult<Workspace> {
         delay(2.seconds)
 
-        val data = workspaces[id]
+        val data = workspacesStateFlow.value[id]
         if (data == null) {
             val cause = IllegalStateException("""No workspace found with identifier "$id"""")
             return error(BaseException.Unknown(cause))
@@ -54,7 +55,7 @@ class MockWorkspaceRepository : WorkspaceRepository {
             visibility = update.visibility ?: data.visibility,
             image = update.image ?: data.image,
         )
-        workspaces[id] = updated
+        val workspaces = workspacesStateFlow.value + (id to updated)
         workspacesStateFlow.emit(workspaces)
         return success(Workspace(id, updated))
     }
@@ -62,28 +63,31 @@ class MockWorkspaceRepository : WorkspaceRepository {
     override suspend fun delete(id: WorkspaceId): RepositoryResult<Workspace> {
         delay(2.seconds)
 
-        val data = workspaces.remove(id)
+        val data = workspacesStateFlow.value[id]
         if (data == null) {
             val cause = IllegalStateException("""No workspace found with identifier "$id"""")
             return error(BaseException.Unknown(cause))
         }
+
+        val workspaces = workspacesStateFlow.value - id
         workspacesStateFlow.emit(workspaces)
         return success(Workspace(id, data))
     }
 
-    private val workspaces: MutableMap<WorkspaceId, WorkspaceData> = mutableMapOf(
-        WorkspaceId("1") to WorkspaceData(
-            name = "First workspace",
-            description = "Empty workspace",
-            visibility = Visibility.Public,
-            image = "https://avatars.githubusercontent.com/u/56771526",
-        ),
-        WorkspaceId("2") to WorkspaceData(
-            name = "Second workspace",
-            description = "Empty workspace",
-            visibility = Visibility.Public,
-            image = null,
+    private val workspacesStateFlow = MutableStateFlow(
+        value = mapOf(
+            WorkspaceId("1") to WorkspaceData(
+                name = "First workspace",
+                description = "Empty workspace",
+                visibility = Visibility.Public,
+                image = "https://avatars.githubusercontent.com/u/56771526",
+            ),
+            WorkspaceId("2") to WorkspaceData(
+                name = "Second workspace",
+                description = "Empty workspace",
+                visibility = Visibility.Public,
+                image = null,
+            ),
         ),
     )
-    private val workspacesStateFlow = MutableStateFlow(workspaces)
 }
