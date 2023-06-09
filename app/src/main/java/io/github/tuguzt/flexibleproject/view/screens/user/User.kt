@@ -12,14 +12,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
+import io.github.tuguzt.flexibleproject.view.screens.destinations.DeleteUserDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.EditUserScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RootNavGraph
@@ -28,11 +30,12 @@ import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore.Intent
 fun UserScreen(
     id: String,
     navigator: DestinationsNavigator,
+    deleteRecipient: ResultRecipient<DeleteUserDestination, Boolean>,
     currentUserViewModel: CurrentUserViewModel,
     viewModel: UserViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(id) {
-        val intent = Intent.Load(id = UserId(id))
+        val intent = UserStore.Intent.Load(id = UserId(id))
         viewModel.accept(intent)
     }
 
@@ -69,8 +72,8 @@ fun UserScreen(
     val onDeleteClick = run {
         val onClick = {
             expanded = false
-            val intent = CurrentUserStore.Intent.Delete
-            currentUserViewModel.accept(intent)
+            val direction = DeleteUserDestination()
+            navigator.navigate(direction)
         }
         currentUserState.currentUser?.let { onClick }
     }
@@ -95,4 +98,15 @@ fun UserScreen(
             )
         },
     )
+
+    deleteRecipient.onNavResult { result ->
+        when (result) {
+            NavResult.Canceled -> Unit
+            is NavResult.Value -> {
+                if (!result.value) return@onNavResult
+                val intent = CurrentUserStore.Intent.Delete
+                currentUserViewModel.accept(intent)
+            }
+        }
+    }
 }
