@@ -17,9 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
+import io.github.tuguzt.flexibleproject.view.utils.NameTextField
 
 @Composable
 fun EditUserContent(
@@ -60,25 +63,28 @@ fun EditUserContent(
                 )
                 .padding(16.dp),
         ) {
-            UpdateNameTextField(
+            NameTextField(
                 name = name,
                 onNameChange = onNameChange,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !loading,
+                label = stringResource(R.string.update_name),
             )
             Spacer(modifier = Modifier.height(16.dp))
-            UpdateDisplayNameTextField(
+            DisplayNameTextField(
                 displayName = displayName,
                 onDisplayNameChange = onDisplayNameChanged,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !loading,
+                label = stringResource(R.string.update_display_name),
             )
             Spacer(modifier = Modifier.height(16.dp))
-            UpdateEmailTextField(
+            EmailTextField(
                 email = email,
                 onEmailChange = onEmailChange,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !loading,
+                label = stringResource(R.string.update_email),
             )
         }
     }

@@ -1,13 +1,10 @@
 package io.github.tuguzt.flexibleproject.view.screens.workspace
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,6 +14,7 @@ import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
+import io.github.tuguzt.flexibleproject.view.utils.SingleLineTextField
 import io.github.tuguzt.flexibleproject.view.utils.toTranslatedString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,32 +32,29 @@ fun VisibilityExposedDropdownMenu(
         expanded = expanded,
         onExpandedChange = onExpandedChange,
     ) {
-        OutlinedTextField(
+        SingleLineTextField(
             value = visibility.toTranslatedString(),
             onValueChange = {},
+            label = label,
             modifier = modifier.menuAnchor(),
             readOnly = true,
             enabled = enabled,
-            label = { OneLineTitle(text = label) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-            singleLine = true,
         )
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { onExpandedChange(false) },
         ) {
-            LazyColumn {
-                items(Visibility.values(), key = Visibility::ordinal) { visibility ->
-                    DropdownMenuItem(
-                        text = { OneLineTitle(text = visibility.toTranslatedString()) },
-                        onClick = {
-                            onVisibilityChange(visibility)
-                            onExpandedChange(false)
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
+            Visibility.values().forEach { visibility ->
+                DropdownMenuItem(
+                    text = { OneLineTitle(text = visibility.toTranslatedString()) },
+                    onClick = {
+                        onVisibilityChange(visibility)
+                        onExpandedChange(false)
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                )
             }
         }
     }
@@ -73,7 +68,7 @@ private fun VisibilityExposedDropdownMenu() {
             VisibilityExposedDropdownMenu(
                 visibility = Visibility.Public,
                 onVisibilityChange = {},
-                expanded = false,
+                expanded = true,
                 onExpandedChange = {},
                 modifier = Modifier.fillMaxWidth(),
             )

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,6 +16,7 @@ import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.CloseIconButton
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
+import io.github.tuguzt.flexibleproject.view.utils.TextButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,11 +34,10 @@ fun AddWorkspaceTopBar(
             navigationIcon = { CloseIconButton(onClick = onNavigationClick, enabled = !loading) },
             actions = {
                 TextButton(
+                    text = stringResource(R.string.add),
                     onClick = onAddWorkspaceClick,
                     enabled = valid && !loading,
-                ) {
-                    OneLineTitle(text = stringResource(R.string.add))
-                }
+                )
             },
         )
         AnimatedVisibility(

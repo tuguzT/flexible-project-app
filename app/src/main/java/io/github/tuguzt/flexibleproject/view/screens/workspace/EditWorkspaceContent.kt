@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
+import io.github.tuguzt.flexibleproject.view.utils.NameTextField
 
 @Composable
 fun EditWorkspaceContent(

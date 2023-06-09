@@ -20,9 +20,9 @@ import io.github.tuguzt.flexibleproject.domain.model.user.UserCredentials
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
 import io.github.tuguzt.flexibleproject.view.screens.auth.AuthContent
 import io.github.tuguzt.flexibleproject.view.screens.auth.AuthNavGraph
-import io.github.tuguzt.flexibleproject.view.screens.auth.NameTextField
 import io.github.tuguzt.flexibleproject.view.screens.auth.PasswordTextField
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SignInScreenDestination
+import io.github.tuguzt.flexibleproject.view.utils.NameTextField
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.auth.SignUpViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.auth.store.SignUpStore.Intent
