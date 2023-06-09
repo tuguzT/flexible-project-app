@@ -107,7 +107,7 @@ private fun AppNameWithLogo(
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
@@ -115,7 +115,6 @@ private fun AppNameWithLogo(
             contentDescription = null,
             modifier = Modifier.size(128.dp),
         )
-        Spacer(modifier = Modifier.height(8.dp))
         OneLineTitle(
             text = stringResource(R.string.app_name),
             style = MaterialTheme.typography.headlineLarge,

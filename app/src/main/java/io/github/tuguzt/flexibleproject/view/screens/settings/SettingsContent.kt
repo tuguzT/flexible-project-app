@@ -50,13 +50,15 @@ fun SettingsContent(
             SettingsTopBar(onNavigationClick = onNavigationClick)
         },
     ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
+        Column(
+            modifier = Modifier.padding(padding),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
             ThemeSettings(
                 theme = theme,
                 onThemeChange = onThemeChange,
                 modifier = Modifier.fillMaxWidth(),
             )
-            Spacer(modifier = Modifier.height(16.dp))
             LanguageSettings(
                 language = language,
                 onLanguageChange = onLanguageChange,

@@ -1,13 +1,12 @@
 package io.github.tuguzt.flexibleproject.view.screens.workspace
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Visibility
@@ -117,9 +116,9 @@ private fun WorkspaceItemRow(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Icon(imageVector = icon, contentDescription = iconDescription)
-        Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = data ?: placeholder,
             modifier = Modifier.placeholder(visible = data == null),

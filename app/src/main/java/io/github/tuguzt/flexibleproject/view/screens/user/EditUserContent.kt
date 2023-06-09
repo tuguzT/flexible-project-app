@@ -2,11 +2,10 @@ package io.github.tuguzt.flexibleproject.view.screens.user
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -62,6 +61,7 @@ fun EditUserContent(
                     onClick = focusManager::clearFocus,
                 )
                 .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             NameTextField(
                 name = name,
@@ -70,7 +70,6 @@ fun EditUserContent(
                 enabled = !loading,
                 label = stringResource(R.string.update_name),
             )
-            Spacer(modifier = Modifier.height(16.dp))
             DisplayNameTextField(
                 displayName = displayName,
                 onDisplayNameChange = onDisplayNameChanged,
@@ -78,7 +77,6 @@ fun EditUserContent(
                 enabled = !loading,
                 label = stringResource(R.string.update_display_name),
             )
-            Spacer(modifier = Modifier.height(16.dp))
             EmailTextField(
                 email = email,
                 onEmailChange = onEmailChange,

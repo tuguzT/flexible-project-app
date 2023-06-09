@@ -2,11 +2,10 @@ package io.github.tuguzt.flexibleproject.view.screens.workspace
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -65,6 +64,7 @@ fun EditWorkspaceContent(
                     onClick = focusManager::clearFocus,
                 )
                 .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             NameTextField(
                 name = name,
@@ -73,7 +73,6 @@ fun EditWorkspaceContent(
                 enabled = !loading,
                 label = stringResource(R.string.update_name),
             )
-            Spacer(modifier = Modifier.height(16.dp))
             DescriptionTextField(
                 description = description,
                 onDescriptionChange = onDescriptionChange,
@@ -81,7 +80,6 @@ fun EditWorkspaceContent(
                 enabled = !loading,
                 label = stringResource(R.string.update_description),
             )
-            Spacer(modifier = Modifier.height(16.dp))
 
             var expanded by remember { mutableStateOf(false) }
             VisibilityExposedDropdownMenu(
