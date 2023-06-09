@@ -17,6 +17,7 @@ import com.ramcosta.composedestinations.result.ResultRecipient
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
 import io.github.tuguzt.flexibleproject.view.screens.destinations.DeleteUserDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.EditUserScreenDestination
+import io.github.tuguzt.flexibleproject.view.screens.destinations.SignOutUserDestination
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.UserViewModel
@@ -30,6 +31,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore
 fun UserScreen(
     id: String,
     navigator: DestinationsNavigator,
+    signOutRecipient: ResultRecipient<SignOutUserDestination, Boolean>,
     deleteRecipient: ResultRecipient<DeleteUserDestination, Boolean>,
     currentUserViewModel: CurrentUserViewModel,
     viewModel: UserViewModel = hiltViewModel(),
@@ -64,8 +66,8 @@ fun UserScreen(
     val onSignOutClick = run {
         val onClick = {
             expanded = false
-            val intent = CurrentUserStore.Intent.SignOut
-            currentUserViewModel.accept(intent)
+            val direction = SignOutUserDestination()
+            navigator.navigate(direction)
         }
         currentUserState.currentUser?.let { onClick }
     }
@@ -99,6 +101,16 @@ fun UserScreen(
         },
     )
 
+    signOutRecipient.onNavResult { result ->
+        when (result) {
+            NavResult.Canceled -> Unit
+            is NavResult.Value -> {
+                if (!result.value) return@onNavResult
+                val intent = CurrentUserStore.Intent.SignOut
+                currentUserViewModel.accept(intent)
+            }
+        }
+    }
     deleteRecipient.onNavResult { result ->
         when (result) {
             NavResult.Canceled -> Unit

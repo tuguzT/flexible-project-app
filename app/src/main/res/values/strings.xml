@@ -69,4 +69,5 @@
     <string name="delete_workspace_confirmation">Are you sure you want to delete workspace?</string>
     <string name="cancel">Cancel</string>
     <string name="delete_current_user_confirmation">Are you sure you want to delete current user?</string>
+    <string name="sign_out_confirmation">Are you sure you want to sign out from the application?</string>
 </resources>
