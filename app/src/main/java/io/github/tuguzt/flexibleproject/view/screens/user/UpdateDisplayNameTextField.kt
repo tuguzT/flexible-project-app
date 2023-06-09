@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.auth
+package io.github.tuguzt.flexibleproject.view.screens.user
 
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.Composable
@@ -8,16 +8,16 @@ import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
 @Composable
-fun NameTextField(
-    name: String,
-    onNameChange: (String) -> Unit,
+fun UpdateDisplayNameTextField(
+    displayName: String,
+    onDisplayNameChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    label: String = stringResource(R.string.name),
+    label: String = stringResource(R.string.update_display_name),
 ) {
     OutlinedTextField(
-        value = name,
-        onValueChange = onNameChange,
+        value = displayName,
+        onValueChange = onDisplayNameChange,
         modifier = modifier,
         enabled = enabled,
         label = { OneLineTitle(text = label) },

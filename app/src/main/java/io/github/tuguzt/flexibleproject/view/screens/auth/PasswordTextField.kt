@@ -22,8 +22,8 @@ fun PasswordTextField(
     onPasswordChange: (String) -> Unit,
     passwordVisible: Boolean,
     onPasswordVisibleChange: (Boolean) -> Unit,
-    enabled: Boolean,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     label: String = stringResource(R.string.password),
     trailingIconVisible: Boolean = true,
 ) {

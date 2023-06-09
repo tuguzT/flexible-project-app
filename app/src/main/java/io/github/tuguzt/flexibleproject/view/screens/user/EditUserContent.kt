@@ -8,19 +8,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.tuguzt.flexibleproject.R
-import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
+import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 
 @Composable
 fun EditUserContent(
@@ -85,53 +84,25 @@ fun EditUserContent(
     }
 }
 
+@Preview
 @Composable
-private fun UpdateNameTextField(
-    name: String,
-    onNameChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
-    OutlinedTextField(
-        value = name,
-        onValueChange = onNameChange,
-        modifier = modifier,
-        enabled = enabled,
-        label = { OneLineTitle(text = stringResource(R.string.update_name)) },
-        singleLine = true,
-    )
-}
-
-@Composable
-private fun UpdateDisplayNameTextField(
-    displayName: String,
-    onDisplayNameChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
-    OutlinedTextField(
-        value = displayName,
-        onValueChange = onDisplayNameChange,
-        modifier = modifier,
-        enabled = enabled,
-        label = { OneLineTitle(text = stringResource(R.string.update_display_name)) },
-        singleLine = true,
-    )
-}
-
-@Composable
-private fun UpdateEmailTextField(
-    email: String,
-    onEmailChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-) {
-    OutlinedTextField(
-        value = email,
-        onValueChange = onEmailChange,
-        modifier = modifier,
-        enabled = enabled,
-        label = { OneLineTitle(text = stringResource(R.string.update_email)) },
-        singleLine = true,
-    )
+private fun EditUserContent() {
+    AppTheme {
+        Surface {
+            EditUserContent(
+                name = "tuguzT",
+                onNameChange = {},
+                displayName = "Timur Tugushev",
+                onDisplayNameChanged = {},
+                email = "timurka.tugushev@gmail.com",
+                onEmailChange = {},
+                avatar = "",
+                onAvatarChange = {},
+                loading = false,
+                valid = false,
+                onUpdateUserClick = {},
+                onNavigationClick = {},
+            )
+        }
+    }
 }
