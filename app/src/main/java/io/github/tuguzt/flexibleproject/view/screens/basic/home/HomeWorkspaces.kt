@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.basic
+package io.github.tuguzt.flexibleproject.view.screens.basic.home
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,8 +16,8 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
 @Composable
-fun BasicWorkspaces(
-    content: BasicContent.WorkspacesContent,
+fun HomeWorkspaces(
+    content: HomeContent.WorkspacesContent,
     onWorkspaceClick: (Workspace) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -26,7 +26,7 @@ fun BasicWorkspaces(
             items = content.workspaces,
             key = { workspace -> workspace.id.toString() },
         ) { workspace ->
-            BasicWorkspaceItem(
+            WorkspaceItem(
                 workspace = workspace,
                 icon = { content.icon(workspace) },
                 onClick = { onWorkspaceClick(workspace) },
@@ -37,7 +37,7 @@ fun BasicWorkspaces(
 }
 
 @Composable
-private fun BasicWorkspaceItem(
+private fun WorkspaceItem(
     workspace: Workspace,
     icon: @Composable () -> Unit,
     onClick: () -> Unit,

@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
 import io.github.tuguzt.flexibleproject.viewmodel.settings.SettingsViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.settings.store.SettingsStore.Intent
 
-@RootNavGraph
+@BasicNavGraph
 @Destination
 @Composable
 fun SettingsScreen(

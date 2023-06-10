@@ -8,15 +8,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.tuguzt.flexibleproject.R
+import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.user.UpdateUserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UpdateUserStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UpdateUserStore.Label
 
-@RootNavGraph
+@BasicNavGraph
 @Destination
 @Composable
 fun EditUserScreen(

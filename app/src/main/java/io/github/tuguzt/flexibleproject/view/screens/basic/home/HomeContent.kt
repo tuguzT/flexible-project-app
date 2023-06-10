@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.basic
+package io.github.tuguzt.flexibleproject.view.screens.basic.home
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,7 +16,7 @@ import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 
-data class BasicContent(
+data class HomeContent(
     val user: UserContent,
     val workspaces: WorkspacesContent,
 ) {
@@ -32,8 +32,8 @@ data class BasicContent(
 }
 
 @Composable
-fun BasicContent(
-    content: BasicContent,
+fun HomeContent(
+    content: HomeContent,
     onMenuClick: () -> Unit,
     onDrawerUserClick: () -> Unit,
     onDrawerSettingsClick: () -> Unit,
@@ -45,7 +45,7 @@ fun BasicContent(
     onWorkspaceClick: (Workspace) -> Unit,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
 ) {
-    BasicDrawer(
+    HomeDrawer(
         drawerContent = content,
         drawerState = drawerState,
         onUserClick = onDrawerUserClick,
@@ -57,10 +57,10 @@ fun BasicContent(
         onAddNewWorkspaceClick = onDrawerAddNewWorkspaceClick,
     ) {
         Scaffold(
-            topBar = { BasicTopBar(onMenuClick = onMenuClick) },
-            floatingActionButton = { BasicAddFAB(onClick = onAddClick) },
+            topBar = { HomeTopBar(onMenuClick = onMenuClick) },
+            floatingActionButton = { HomeAddFAB(onClick = onAddClick) },
         ) { padding ->
-            BasicWorkspaces(
+            HomeWorkspaces(
                 content = content.workspaces,
                 onWorkspaceClick = onWorkspaceClick,
                 modifier = Modifier.padding(padding),
@@ -70,7 +70,7 @@ fun BasicContent(
 }
 
 @Composable
-private fun BasicAddFAB(
+private fun HomeAddFAB(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {

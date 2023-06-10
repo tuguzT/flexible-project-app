@@ -6,9 +6,6 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,7 +19,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.plusAssign
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
@@ -42,11 +38,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.settings.SettingsViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore
 
-@OptIn(
-    ExperimentalMaterialNavigationApi::class,
-    ExperimentalAnimationApi::class,
-    ExperimentalMaterial3Api::class,
-)
+@OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun MainActivityContent(
     currentUserViewModel: CurrentUserViewModel = hiltViewModel(),
@@ -115,25 +107,16 @@ fun MainActivityContent(
 
     AppTheme(darkTheme) {
         Surface(modifier = Modifier.fillMaxSize()) {
-            ModalBottomSheetLayout(
-                bottomSheetNavigator = bottomSheetNavigator,
-                sheetShape = BottomSheetDefaults.ExpandedShape,
-                sheetElevation = BottomSheetDefaults.Elevation,
-                sheetBackgroundColor = BottomSheetDefaults.ContainerColor,
-                sheetContentColor = MaterialTheme.colorScheme.onSurface,
-                scrimColor = BottomSheetDefaults.ScrimColor,
-            ) {
-                DestinationsNavHost(
-                    navGraph = navGraph,
-                    startRoute = startRoute,
-                    engine = engine,
-                    navController = navController,
-                    dependenciesContainerBuilder = {
-                        dependency(currentUserViewModel)
-                        dependency(settingsViewModel)
-                    },
-                )
-            }
+            DestinationsNavHost(
+                navGraph = navGraph,
+                startRoute = startRoute,
+                engine = engine,
+                navController = navController,
+                dependenciesContainerBuilder = {
+                    dependency(currentUserViewModel)
+                    dependency(settingsViewModel)
+                },
+            )
         }
     }
 }

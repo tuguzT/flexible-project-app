@@ -10,11 +10,11 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
 import io.github.tuguzt.flexibleproject.domain.model.user.UserId
+import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
 import io.github.tuguzt.flexibleproject.view.screens.destinations.DeleteUserDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.EditUserScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SignOutUserDestination
@@ -25,7 +25,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore
 import io.github.tuguzt.flexibleproject.viewmodel.user.store.UserStore
 
 @OptIn(ExperimentalMaterial3Api::class)
-@RootNavGraph
+@BasicNavGraph
 @Destination
 @Composable
 fun UserScreen(

@@ -6,8 +6,10 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
 import io.github.tuguzt.flexibleproject.R
+import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
 import io.github.tuguzt.flexibleproject.view.utils.ConfirmDialog
 
+@BasicNavGraph
 @Destination(style = DestinationStyle.Dialog::class)
 @Composable
 fun DeleteUser(

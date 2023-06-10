@@ -9,11 +9,11 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
+import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
 import io.github.tuguzt.flexibleproject.view.screens.destinations.DeleteWorkspaceDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.EditWorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
@@ -21,7 +21,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.workspace.WorkspaceViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.workspace.store.WorkspaceStore.Label
 
-@RootNavGraph
+@BasicNavGraph
 @Destination
 @Composable
 fun WorkspaceScreen(

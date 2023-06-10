@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.basic
+package io.github.tuguzt.flexibleproject.view.screens.basic.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -51,8 +51,8 @@ import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
 import io.github.tuguzt.flexibleproject.view.utils.clickableWithoutRipple
 
 @Composable
-fun BasicDrawer(
-    drawerContent: BasicContent,
+fun HomeDrawer(
+    drawerContent: HomeContent,
     onUserClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onAboutClick: () -> Unit,
@@ -96,7 +96,7 @@ fun BasicDrawer(
 
 @Composable
 private fun UserContent(
-    content: BasicContent.UserContent,
+    content: HomeContent.UserContent,
     onClick: () -> Unit,
 ) {
     val (user, avatar) = content
@@ -153,7 +153,7 @@ private fun AboutDrawerItem(onClick: () -> Unit) {
 
 @Composable
 private fun WorkspacesContent(
-    content: BasicContent.WorkspacesContent,
+    content: HomeContent.WorkspacesContent,
     workspacesExpanded: Boolean,
     onWorkspacesExpandedChange: (Boolean) -> Unit,
     onWorkspaceClick: (Workspace) -> Unit,
@@ -234,7 +234,7 @@ private fun AddNewWorkspaceDrawerItem(onClick: () -> Unit) {
 
 @Preview
 @Composable
-private fun BasicDrawer() {
+private fun HomeDrawer() {
     val user = User(
         id = Id("1"),
         data = UserData(
@@ -245,7 +245,7 @@ private fun BasicDrawer() {
             avatar = "https://avatars.githubusercontent.com/u/56771526",
         ),
     )
-    val userContent = BasicContent.UserContent(
+    val userContent = HomeContent.UserContent(
         user = user,
         avatar = {
             UserAvatar(
@@ -254,7 +254,7 @@ private fun BasicDrawer() {
             )
         },
     )
-    val workspacesContent = BasicContent.WorkspacesContent(
+    val workspacesContent = HomeContent.WorkspacesContent(
         workspaces = listOf(
             Workspace(
                 id = Id("1"),
@@ -282,13 +282,13 @@ private fun BasicDrawer() {
             )
         },
     )
-    val drawerContent = BasicContent(
+    val drawerContent = HomeContent(
         user = userContent,
         workspaces = workspacesContent,
     )
 
     AppTheme {
-        BasicDrawer(
+        HomeDrawer(
             drawerContent = drawerContent,
             drawerState = rememberDrawerState(DrawerValue.Open),
             onUserClick = {},

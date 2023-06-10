@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.basic
+package io.github.tuguzt.flexibleproject.view.screens.basic.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,7 +27,7 @@ import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
 @Composable
-fun BasicBottomSheetContent(
+fun HomeBottomSheetContent(
     onAddWorkspaceClick: () -> Unit,
     onAddProjectClick: () -> Unit,
     onAddMethodologyClick: () -> Unit,
@@ -119,10 +119,10 @@ private fun BasicBottomSheetButton(
 
 @Preview
 @Composable
-private fun BasicBottomSheetContent() {
+private fun HomeBottomSheetContent() {
     AppTheme {
         Surface(tonalElevation = 1.dp) {
-            BasicBottomSheetContent(
+            HomeBottomSheetContent(
                 onAddWorkspaceClick = {},
                 onAddProjectClick = {},
                 onAddMethodologyClick = {},

@@ -1,4 +1,4 @@
-package io.github.tuguzt.flexibleproject.view.screens.basic
+package io.github.tuguzt.flexibleproject.view.screens.basic.home
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
@@ -14,7 +14,7 @@ import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasicTopBar(
+fun HomeTopBar(
     onMenuClick: () -> Unit,
     modifier: Modifier = Modifier,
     title: String = stringResource(R.string.app_name),
