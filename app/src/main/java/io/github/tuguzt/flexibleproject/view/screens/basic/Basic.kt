@@ -10,10 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -24,6 +21,7 @@ import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AboutScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AddWorkspaceScreenDestination
+import io.github.tuguzt.flexibleproject.view.screens.destinations.BasicBottomSheetDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
@@ -85,8 +83,6 @@ fun BasicScreen(
         workspaces = workspacesContent,
     )
 
-    var sheetExpanded by remember { mutableStateOf(false) }
-
     BasicContent(
         content = content,
         drawerState = drawerState,
@@ -125,21 +121,9 @@ fun BasicScreen(
         onMenuClick = {
             coroutineScope.launch { drawerState.open() }
         },
-        onAddClick = { sheetExpanded = true },
-        sheetExpanded = sheetExpanded,
-        onSheetExpandedChange = { sheetExpanded = it },
-        onAddWorkspaceClick = {
-            sheetExpanded = false
-            val direction = AddWorkspaceScreenDestination()
+        onAddClick = {
+            val direction = BasicBottomSheetDestination()
             navigator.navigate(direction)
-        },
-        onAddProjectClick = {
-            sheetExpanded = false
-            // TODO
-        },
-        onAddMethodologyClick = {
-            sheetExpanded = false
-            // TODO
         },
     )
 }

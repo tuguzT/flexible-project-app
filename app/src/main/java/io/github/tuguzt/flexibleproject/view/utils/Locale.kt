@@ -9,10 +9,13 @@ fun Context.setLocale(language: Language) {
         Language.English -> Locale("en")
         Language.Russian -> Locale("ru")
     }
-    Locale.setDefault(locale)
-
     val resources = resources
     val configuration = resources.configuration
+
+    val localeNotFound = configuration.locales.indexOf(locale) == -1
+    if (!localeNotFound) return
+
+    Locale.setDefault(locale)
     configuration.setLocale(locale)
     resources.updateConfiguration(configuration, resources.displayMetrics)
     // TODO solve deprecation issues

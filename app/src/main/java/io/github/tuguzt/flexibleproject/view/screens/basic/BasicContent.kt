@@ -42,11 +42,6 @@ fun BasicContent(
     onDrawerWorkspacesExpandedChange: (Boolean) -> Unit,
     onDrawerAddNewWorkspaceClick: () -> Unit,
     onAddClick: () -> Unit,
-    sheetExpanded: Boolean,
-    onSheetExpandedChange: (Boolean) -> Unit,
-    onAddWorkspaceClick: () -> Unit,
-    onAddProjectClick: () -> Unit,
-    onAddMethodologyClick: () -> Unit,
     onWorkspaceClick: (Workspace) -> Unit,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
 ) {
@@ -71,13 +66,6 @@ fun BasicContent(
                 modifier = Modifier.padding(padding),
             )
         }
-        BasicBottomSheet(
-            expanded = sheetExpanded,
-            onExpandedChange = onSheetExpandedChange,
-            onAddWorkspaceClick = onAddWorkspaceClick,
-            onAddProjectClick = onAddProjectClick,
-            onAddMethodologyClick = onAddMethodologyClick,
-        )
     }
 }
 
