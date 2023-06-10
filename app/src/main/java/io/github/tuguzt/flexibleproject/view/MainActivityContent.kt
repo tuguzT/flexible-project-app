@@ -1,6 +1,9 @@
 package io.github.tuguzt.flexibleproject.view
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.BottomSheetDefaults
@@ -50,7 +53,10 @@ fun MainActivityContent(
     settingsViewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val engine = rememberAnimatedNavHostEngine(
-        rootDefaultAnimations = RootNavGraphDefaultAnimations.ACCOMPANIST_FADING,
+        rootDefaultAnimations = RootNavGraphDefaultAnimations(
+            enterTransition = { fadeIn(animationSpec = tween(durationMillis = 300)) },
+            exitTransition = { fadeOut(animationSpec = tween(durationMillis = 300)) },
+        ),
     )
     val navController = engine.rememberNavController()
 

@@ -1,6 +1,9 @@
 package io.github.tuguzt.flexibleproject.view.screens.auth
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
@@ -25,7 +28,10 @@ fun AuthScreen(
     DestinationsNavHost(
         navGraph = NavGraphs.auth,
         engine = rememberAnimatedNavHostEngine(
-            rootDefaultAnimations = RootNavGraphDefaultAnimations.ACCOMPANIST_FADING,
+            rootDefaultAnimations = RootNavGraphDefaultAnimations(
+                enterTransition = { fadeIn(animationSpec = tween(durationMillis = 300)) },
+                exitTransition = { fadeOut(animationSpec = tween(durationMillis = 300)) },
+            ),
         ),
         dependenciesContainerBuilder = {
             dependency(signInViewModel)
