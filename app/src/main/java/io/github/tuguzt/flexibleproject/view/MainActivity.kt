@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.tuguzt.flexibleproject.viewmodel.settings.SettingsViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.settings.SettingsViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.user.CurrentUserViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

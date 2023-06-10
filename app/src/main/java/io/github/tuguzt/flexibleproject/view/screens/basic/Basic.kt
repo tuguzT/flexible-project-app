@@ -19,8 +19,8 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.dependency
 import io.github.tuguzt.flexibleproject.view.screens.NavGraphs
-import io.github.tuguzt.flexibleproject.viewmodel.settings.SettingsViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.settings.SettingsViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.user.CurrentUserViewModel
 
 @OptIn(
     ExperimentalMaterialNavigationApi::class,

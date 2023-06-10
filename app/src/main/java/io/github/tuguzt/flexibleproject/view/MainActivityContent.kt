@@ -34,9 +34,9 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.BasicScreenDes
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.view.utils.setLocale
-import io.github.tuguzt.flexibleproject.viewmodel.settings.SettingsViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.user.store.CurrentUserStore
+import io.github.tuguzt.flexibleproject.viewmodel.basic.settings.SettingsViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.user.CurrentUserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.user.store.CurrentUserStore
 
 @OptIn(ExperimentalMaterialNavigationApi::class, ExperimentalAnimationApi::class)
 @Composable

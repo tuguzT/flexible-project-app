@@ -28,9 +28,9 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScree
 import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
-import io.github.tuguzt.flexibleproject.viewmodel.basic.BasicViewModel
-import io.github.tuguzt.flexibleproject.viewmodel.basic.store.BasicStore
-import io.github.tuguzt.flexibleproject.viewmodel.user.CurrentUserViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.home.HomeViewModel
+import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore
+import io.github.tuguzt.flexibleproject.viewmodel.basic.user.CurrentUserViewModel
 import kotlinx.coroutines.launch
 
 @BasicNavGraph(start = true)
@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     navigator: DestinationsNavigator,
     currentUserViewModel: CurrentUserViewModel,
-    basicViewModel: BasicViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
@@ -47,14 +47,14 @@ fun HomeScreen(
     val currentUserState by currentUserViewModel.stateFlow.collectAsStateWithLifecycle()
     val currentUser = currentUserState.currentUser
 
-    basicViewModel.labels.collectInLaunchedEffectWithLifecycle { label ->
+    homeViewModel.labels.collectInLaunchedEffectWithLifecycle { label ->
         when (label) {
-            BasicStore.Label.LocalStoreError -> TODO("show error to user")
-            BasicStore.Label.NetworkAccessError -> TODO("show error to user")
-            BasicStore.Label.UnknownError -> TODO("show error to user")
+            HomeStore.Label.LocalStoreError -> TODO("show error to user")
+            HomeStore.Label.NetworkAccessError -> TODO("show error to user")
+            HomeStore.Label.UnknownError -> TODO("show error to user")
         }
     }
-    val basicState by basicViewModel.stateFlow.collectAsStateWithLifecycle()
+    val basicState by homeViewModel.stateFlow.collectAsStateWithLifecycle()
 
     val userContent = HomeContent.UserContent(
         user = currentUser,
@@ -104,8 +104,8 @@ fun HomeScreen(
         },
         drawerWorkspacesExpanded = basicState.workspacesExpanded,
         onDrawerWorkspacesExpandedChange = {
-            val intent = BasicStore.Intent.WorkspacesExpand(it)
-            basicViewModel.accept(intent)
+            val intent = HomeStore.Intent.WorkspacesExpand(it)
+            homeViewModel.accept(intent)
         },
         onWorkspaceClick = { workspace ->
             val id = workspace.id
