@@ -12,19 +12,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MockSettingsRepository : SettingsRepository {
-    override fun read(): Flow<Settings> = settingsStateFlow.asStateFlow()
+    override fun read(): Flow<Settings> = stateFlow.asStateFlow()
 
     override suspend fun update(update: UpdateSettings): RepositoryResult<Settings> {
-        val settings = settingsStateFlow.value
+        val settings = stateFlow.value
         val updated = settings.copy(
             theme = update.theme ?: settings.theme,
             language = update.language ?: settings.language,
         )
-        settingsStateFlow.emit(updated)
+        stateFlow.value = updated
         return success(updated)
     }
 
-    private val settingsStateFlow = MutableStateFlow(
+    private val stateFlow = MutableStateFlow(
         value = Settings(theme = Theme.System, language = Language.Russian),
     )
 }

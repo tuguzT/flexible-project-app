@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MockCurrentUserRepository : CurrentUserRepository {
-    override fun read(): Flow<User?> = currentUserFlow.asStateFlow()
+    override fun read(): Flow<User?> = stateFlow.asStateFlow()
 
     override suspend fun set(user: User?): RepositoryResult<User?> {
-        currentUserFlow.value = user
+        stateFlow.value = user
         return success(user)
     }
 
-    private val currentUserFlow: MutableStateFlow<User?> = MutableStateFlow(null)
+    private val stateFlow: MutableStateFlow<User?> = MutableStateFlow(null)
 }

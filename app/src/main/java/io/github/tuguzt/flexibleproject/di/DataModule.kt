@@ -8,10 +8,12 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.tuguzt.flexibleproject.data.LocalClient
 import io.github.tuguzt.flexibleproject.data.RemoteClient
+import io.github.tuguzt.flexibleproject.data.repository.project.MockProjectRepository
 import io.github.tuguzt.flexibleproject.data.repository.settings.MockSettingsRepository
 import io.github.tuguzt.flexibleproject.data.repository.user.MockCurrentUserRepository
 import io.github.tuguzt.flexibleproject.data.repository.user.MockUserRepository
 import io.github.tuguzt.flexibleproject.data.repository.workspace.MockWorkspaceRepository
+import io.github.tuguzt.flexibleproject.domain.repository.project.ProjectRepository
 import io.github.tuguzt.flexibleproject.domain.repository.settings.SettingsRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
@@ -46,4 +48,8 @@ object DataModule {
     @Singleton
     @Provides
     fun provideWorkspaceRepository(): WorkspaceRepository = MockWorkspaceRepository()
+
+    @Singleton
+    @Provides
+    fun provideProjectRepository(): ProjectRepository = MockProjectRepository()
 }

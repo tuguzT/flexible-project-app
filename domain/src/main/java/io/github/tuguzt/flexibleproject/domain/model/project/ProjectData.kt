@@ -7,6 +7,6 @@ data class ProjectData(
     val name: Name,
     val description: Description,
     val visibility: Visibility,
-    val image: Image,
+    val image: Image?,
     // TODO methodology, current stage
 )

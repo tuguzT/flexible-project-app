@@ -8,7 +8,8 @@ import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.domain.model.settings.Language
 import io.github.tuguzt.flexibleproject.domain.model.settings.Theme
 import io.github.tuguzt.flexibleproject.domain.model.user.Role
-import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
+import io.github.tuguzt.flexibleproject.domain.model.project.Visibility as ProjectVisibility
+import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility as WorkspaceVisibility
 
 fun Role.toTranslatedString(context: Context): String =
     when (this) {
@@ -17,10 +18,16 @@ fun Role.toTranslatedString(context: Context): String =
         Role.Administrator -> context.getString(R.string.administrator)
     }
 
-fun Visibility.toTranslatedString(context: Context): String =
+fun WorkspaceVisibility.toTranslatedString(context: Context): String =
     when (this) {
-        Visibility.Public -> context.getString(R.string.visibility_public)
-        Visibility.Private -> context.getString(R.string.visibility_private)
+        WorkspaceVisibility.Public -> context.getString(R.string.visibility_public)
+        WorkspaceVisibility.Private -> context.getString(R.string.visibility_private)
+    }
+
+fun ProjectVisibility.toTranslatedString(context: Context): String =
+    when (this) {
+        ProjectVisibility.Public -> context.getString(R.string.visibility_public)
+        ProjectVisibility.Private -> context.getString(R.string.visibility_private)
     }
 
 fun Theme.toTranslatedString(context: Context): String =
@@ -42,7 +49,13 @@ fun Role.toTranslatedString(): String = toTranslatedString(context = LocalContex
 
 @Composable
 @ReadOnlyComposable
-fun Visibility.toTranslatedString(): String = toTranslatedString(context = LocalContext.current)
+fun WorkspaceVisibility.toTranslatedString(): String =
+    toTranslatedString(context = LocalContext.current)
+
+@Composable
+@ReadOnlyComposable
+fun ProjectVisibility.toTranslatedString(): String =
+    toTranslatedString(context = LocalContext.current)
 
 @Composable
 @ReadOnlyComposable
