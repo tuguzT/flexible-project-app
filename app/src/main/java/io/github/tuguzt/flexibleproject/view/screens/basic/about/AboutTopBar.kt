@@ -3,8 +3,9 @@ package io.github.tuguzt.flexibleproject.view.screens.basic.about
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,14 +21,17 @@ fun AboutTopBar(
     onNavigationClick: () -> Unit,
     modifier: Modifier = Modifier,
     title: String = stringResource(R.string.about),
+    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    TopAppBar(
+    MediumTopAppBar(
         modifier = modifier,
         title = { OneLineTitle(text = title) },
         navigationIcon = { NavigateUpIconButton(onClick = onNavigationClick) },
+        scrollBehavior = scrollBehavior,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun AboutTopBar() {

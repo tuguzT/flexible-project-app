@@ -1,5 +1,6 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic.settings
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -9,6 +10,7 @@ import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
 import io.github.tuguzt.flexibleproject.viewmodel.basic.settings.SettingsViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.basic.settings.store.SettingsStore.Intent
 
+@OptIn(ExperimentalMaterial3Api::class)
 @BasicNavGraph
 @Destination
 @Composable

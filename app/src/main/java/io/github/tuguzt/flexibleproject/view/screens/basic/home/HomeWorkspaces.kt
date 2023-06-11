@@ -99,12 +99,9 @@ private fun WorkspaceHeader(
         modifier = modifier,
         tonalElevation = 1.dp,
     ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Row(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(16.dp).weight(1f),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 icon()

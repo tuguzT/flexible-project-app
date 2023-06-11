@@ -36,7 +36,6 @@ fun OneLineTitle(
     lineHeight: TextUnit = TextUnit.Unspecified,
     overflow: TextOverflow = TextOverflow.Ellipsis,
     softWrap: Boolean = true,
-    minLines: Int = 1,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
 ) {
@@ -55,7 +54,7 @@ fun OneLineTitle(
         overflow = overflow,
         softWrap = softWrap,
         maxLines = 1,
-        minLines = minLines,
+        minLines = 1,
         onTextLayout = onTextLayout,
         style = style,
     )
@@ -76,7 +75,6 @@ fun OneLineTitle(
     lineHeight: TextUnit = TextUnit.Unspecified,
     overflow: TextOverflow = TextOverflow.Ellipsis,
     softWrap: Boolean = true,
-    minLines: Int = 1,
     inlineContent: Map<String, InlineTextContent> = mapOf(),
     onTextLayout: (TextLayoutResult) -> Unit = {},
     style: TextStyle = LocalTextStyle.current,
@@ -96,7 +94,7 @@ fun OneLineTitle(
         overflow = overflow,
         softWrap = softWrap,
         maxLines = 1,
-        minLines = minLines,
+        minLines = 1,
         inlineContent = inlineContent,
         onTextLayout = onTextLayout,
         style = style,

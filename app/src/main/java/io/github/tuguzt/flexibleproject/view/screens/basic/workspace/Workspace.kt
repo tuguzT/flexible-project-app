@@ -1,5 +1,6 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic.workspace
 
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,6 +22,7 @@ import io.github.tuguzt.flexibleproject.viewmodel.basic.workspace.WorkspaceViewM
 import io.github.tuguzt.flexibleproject.viewmodel.basic.workspace.store.WorkspaceStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.basic.workspace.store.WorkspaceStore.Label
 
+@OptIn(ExperimentalMaterial3Api::class)
 @BasicNavGraph
 @Destination
 @Composable
