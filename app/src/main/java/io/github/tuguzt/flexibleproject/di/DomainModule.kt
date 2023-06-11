@@ -4,10 +4,15 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.github.tuguzt.flexibleproject.domain.repository.project.ProjectRepository
 import io.github.tuguzt.flexibleproject.domain.repository.settings.SettingsRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.CurrentUserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
+import io.github.tuguzt.flexibleproject.domain.usecase.project.CreateProject
+import io.github.tuguzt.flexibleproject.domain.usecase.project.DeleteProject
+import io.github.tuguzt.flexibleproject.domain.usecase.project.FilterProject
+import io.github.tuguzt.flexibleproject.domain.usecase.project.UpdateProject
 import io.github.tuguzt.flexibleproject.domain.usecase.settings.GetSettings
 import io.github.tuguzt.flexibleproject.domain.usecase.settings.UpdateSettings
 import io.github.tuguzt.flexibleproject.domain.usecase.user.DeleteCurrentUser
@@ -78,4 +83,22 @@ object DomainModule {
 
     @Provides
     fun provideUpdateSettings(repository: SettingsRepository) = UpdateSettings(repository)
+
+    @Provides
+    fun provideFilterProject(repository: ProjectRepository) = FilterProject(repository)
+
+    @Provides
+    fun provideCreateProject(
+        projectRepository: ProjectRepository,
+        workspaceRepository: WorkspaceRepository,
+    ) = CreateProject(projectRepository, workspaceRepository)
+
+    @Provides
+    fun provideUpdateProject(
+        projectRepository: ProjectRepository,
+        workspaceRepository: WorkspaceRepository,
+    ) = UpdateProject(projectRepository, workspaceRepository)
+
+    @Provides
+    fun provideDeleteProject(repository: ProjectRepository) = DeleteProject(repository)
 }
