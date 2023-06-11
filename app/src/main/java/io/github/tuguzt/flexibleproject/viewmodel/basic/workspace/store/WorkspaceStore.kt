@@ -1,6 +1,7 @@
 package io.github.tuguzt.flexibleproject.viewmodel.basic.workspace.store
 
 import com.arkivanov.mvikotlin.core.store.Store
+import io.github.tuguzt.flexibleproject.domain.model.project.Project
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.viewmodel.basic.workspace.store.WorkspaceStore.Intent
@@ -14,9 +15,14 @@ interface WorkspaceStore : Store<Intent, State, Label> {
     }
 
     data class State(
-        val workspace: Workspace?,
+        val workspace: WorkspaceWithProjects?,
         val loading: Boolean,
-    )
+    ) {
+        data class WorkspaceWithProjects(
+            val workspace: Workspace,
+            val projects: List<Project>,
+        )
+    }
 
     sealed interface Label {
         data class NotFound(val id: WorkspaceId) : Label

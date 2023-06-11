@@ -1,6 +1,8 @@
 package io.github.tuguzt.flexibleproject.view.utils
 
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Error
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +54,9 @@ private fun ImageWithUrl() {
         ImageByUrl(
             url = "https://avatars.githubusercontent.com/u/56771526",
             modifier = Modifier.size(72.dp),
+            error = {
+                ImageError(imageVector = Icons.Rounded.Error, imageSize = 48.dp)
+            },
         )
     }
 }
@@ -63,6 +68,9 @@ private fun ImageWithoutUrl() {
         ImageByUrl(
             url = null,
             modifier = Modifier.size(72.dp),
+            error = {
+                ImageError(imageVector = Icons.Rounded.Error, imageSize = 48.dp)
+            },
         )
     }
 }

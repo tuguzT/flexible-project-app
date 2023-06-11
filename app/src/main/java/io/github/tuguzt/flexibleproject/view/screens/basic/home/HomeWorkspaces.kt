@@ -12,10 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.tuguzt.flexibleproject.domain.model.project.Project
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.view.screens.basic.project.ProjectCard
 import io.github.tuguzt.flexibleproject.view.utils.ExpandedIcon
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.State.WorkspaceWithProjects
@@ -135,44 +134,13 @@ private fun WorkspaceProjects(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             projects.forEach { project ->
-                ProjectItem(
+                ProjectCard(
                     project = project,
                     image = { projectImage(project) },
                     onClick = { onProjectClick(project) },
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ProjectItem(
-    project: Project,
-    image: @Composable () -> Unit,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    OutlinedCard(
-        onClick = onClick,
-        modifier = modifier,
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                OneLineTitle(
-                    text = project.data.name,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                OneLineTitle(text = project.data.description)
-            }
-            image()
         }
     }
 }

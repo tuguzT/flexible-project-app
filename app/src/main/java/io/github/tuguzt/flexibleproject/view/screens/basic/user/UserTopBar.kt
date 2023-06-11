@@ -16,7 +16,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.LocalContentColor
@@ -47,6 +46,7 @@ import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.ImageByUrl
+import io.github.tuguzt.flexibleproject.view.utils.ImageError
 import io.github.tuguzt.flexibleproject.view.utils.NavigateUpIconButton
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 
@@ -95,10 +95,18 @@ fun UserTopBar(
                     drawContent()
                     drawRect(gradient)
                 },
+            error = {
+                ImageError(imageVector = Icons.Rounded.Person, imageSize = 96.dp)
+            },
         )
         LargeTopAppBar(
             modifier = modifier,
-            title = { UserTitle(user, collapsed) },
+            title = {
+                UserTitle(
+                    user = user,
+                    avatarVisible = collapsed,
+                )
+            },
             navigationIcon = {
                 NavigateUpIconButton(
                     onClick = onNavigationClick,
@@ -129,17 +137,21 @@ fun UserTopBar(
 @Composable
 private fun UserTitle(
     user: User?,
-    collapsed: Boolean,
+    avatarVisible: Boolean,
 ) {
     Row(
         modifier = Modifier.alpha(LocalContentColor.current.alpha),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (collapsed) {
+        if (avatarVisible) {
             ImageByUrl(
                 url = user?.data?.avatar,
-                modifier = Modifier.size(42.dp).clip(CircleShape),
-                error = { Icon(Icons.Rounded.Person, contentDescription = null) },
+                modifier = Modifier
+                    .size(42.dp)
+                    .clip(CircleShape),
+                error = {
+                    ImageError(imageVector = Icons.Rounded.Person, imageSize = 32.dp)
+                },
             )
             Spacer(modifier = Modifier.width(8.dp))
         }

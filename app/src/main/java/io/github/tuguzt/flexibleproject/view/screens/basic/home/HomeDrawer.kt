@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
@@ -46,6 +47,7 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.ExpandedIcon
 import io.github.tuguzt.flexibleproject.view.utils.ImageByUrl
+import io.github.tuguzt.flexibleproject.view.utils.ImageError
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
 import io.github.tuguzt.flexibleproject.view.utils.clickableWithoutRipple
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.State.WorkspaceWithProjects
@@ -251,6 +253,9 @@ private fun HomeDrawer() {
             ImageByUrl(
                 url = user.data.avatar,
                 modifier = Modifier.size(72.dp).clip(CircleShape),
+                error = {
+                    ImageError(imageVector = Icons.Rounded.Person, imageSize = 48.dp)
+                },
             )
         },
     )

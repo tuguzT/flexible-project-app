@@ -1,7 +1,5 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic.home
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -10,13 +8,10 @@ import androidx.compose.material.icons.rounded.Groups3
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -32,6 +27,7 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreen
 import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.ImageByUrl
+import io.github.tuguzt.flexibleproject.view.utils.ImageError
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.HomeViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore
@@ -69,7 +65,9 @@ fun HomeScreen(
                 modifier = Modifier
                     .size(72.dp)
                     .clip(CircleShape),
-                error = { Icon(Icons.Rounded.Person, contentDescription = null) },
+                error = {
+                    ImageError(imageVector = Icons.Rounded.Person, imageSize = 56.dp)
+                },
             )
         },
     )
@@ -87,18 +85,7 @@ fun HomeScreen(
                 url = project.data.image,
                 modifier = Modifier.size(96.dp),
                 error = {
-                    Surface(color = MaterialTheme.colorScheme.onSurface) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Dashboard,
-                                contentDescription = null,
-                                modifier = Modifier.size(48.dp),
-                            )
-                        }
-                    }
+                    ImageError(imageVector = Icons.Rounded.Dashboard, imageSize = 48.dp)
                 },
             )
         },
