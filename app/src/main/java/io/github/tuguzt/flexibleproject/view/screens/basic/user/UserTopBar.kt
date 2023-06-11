@@ -46,9 +46,9 @@ import io.github.tuguzt.flexibleproject.domain.model.user.Role
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.user.UserData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
+import io.github.tuguzt.flexibleproject.view.utils.ImageByUrl
 import io.github.tuguzt.flexibleproject.view.utils.NavigateUpIconButton
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
-import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -87,8 +87,8 @@ fun UserTopBar(
     }
 
     Box {
-        UserAvatar(
-            user = user,
+        ImageByUrl(
+            url = user?.data?.avatar,
             modifier = Modifier
                 .matchParentSize()
                 .drawWithContent {
@@ -136,8 +136,8 @@ private fun UserTitle(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (collapsed) {
-            UserAvatar(
-                user = user,
+            ImageByUrl(
+                url = user?.data?.avatar,
                 modifier = Modifier.size(42.dp).clip(CircleShape),
                 error = { Icon(Icons.Rounded.Person, contentDescription = null) },
             )

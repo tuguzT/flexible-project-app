@@ -45,10 +45,10 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceData
 import io.github.tuguzt.flexibleproject.view.theme.AppTheme
 import io.github.tuguzt.flexibleproject.view.utils.ExpandedIcon
+import io.github.tuguzt.flexibleproject.view.utils.ImageByUrl
 import io.github.tuguzt.flexibleproject.view.utils.OneLineTitle
-import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
-import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
 import io.github.tuguzt.flexibleproject.view.utils.clickableWithoutRipple
+import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.State.WorkspaceWithProjects
 
 @Composable
 fun HomeDrawer(
@@ -173,7 +173,7 @@ private fun WorkspacesContent(
         ) {
             LazyColumn {
                 items(
-                    items = workspaces,
+                    items = workspaces.map(WorkspaceWithProjects::workspace),
                     key = { workspace -> workspace.id.toString() },
                 ) { workspace ->
                     WorkspaceDrawerItem(
@@ -248,37 +248,49 @@ private fun HomeDrawer() {
     val userContent = HomeContent.UserContent(
         user = user,
         avatar = {
-            UserAvatar(
-                user = user,
+            ImageByUrl(
+                url = user.data.avatar,
                 modifier = Modifier.size(72.dp).clip(CircleShape),
             )
         },
     )
     val workspacesContent = HomeContent.WorkspacesContent(
         workspaces = listOf(
-            Workspace(
-                id = Id("1"),
-                data = WorkspaceData(
-                    name = "First workspace",
-                    description = "",
-                    visibility = Visibility.Public,
-                    image = null,
+            WorkspaceWithProjects(
+                workspace = Workspace(
+                    id = Id("1"),
+                    data = WorkspaceData(
+                        name = "First workspace",
+                        description = "",
+                        visibility = Visibility.Public,
+                        image = null,
+                    ),
                 ),
+                projects = listOf(),
             ),
-            Workspace(
-                id = Id("2"),
-                data = WorkspaceData(
-                    name = "Second workspace",
-                    description = "",
-                    visibility = Visibility.Public,
-                    image = null,
+            WorkspaceWithProjects(
+                workspace = Workspace(
+                    id = Id("2"),
+                    data = WorkspaceData(
+                        name = "Second workspace",
+                        description = "",
+                        visibility = Visibility.Public,
+                        image = null,
+                    ),
                 ),
+                projects = listOf(),
             ),
         ),
         icon = { workspace ->
-            WorkspaceImage(
-                workspace = workspace,
+            ImageByUrl(
+                url = workspace.data.image,
                 modifier = Modifier.size(24.dp),
+            )
+        },
+        projectImage = { project ->
+            ImageByUrl(
+                url = project.data.image,
+                modifier = Modifier.size(96.dp),
             )
         },
     )

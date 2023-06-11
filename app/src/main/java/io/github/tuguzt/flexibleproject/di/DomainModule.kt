@@ -11,7 +11,7 @@ import io.github.tuguzt.flexibleproject.domain.repository.user.UserRepository
 import io.github.tuguzt.flexibleproject.domain.repository.workspace.WorkspaceRepository
 import io.github.tuguzt.flexibleproject.domain.usecase.project.CreateProject
 import io.github.tuguzt.flexibleproject.domain.usecase.project.DeleteProject
-import io.github.tuguzt.flexibleproject.domain.usecase.project.FilterProject
+import io.github.tuguzt.flexibleproject.domain.usecase.project.FilterProjects
 import io.github.tuguzt.flexibleproject.domain.usecase.project.UpdateProject
 import io.github.tuguzt.flexibleproject.domain.usecase.settings.GetSettings
 import io.github.tuguzt.flexibleproject.domain.usecase.settings.UpdateSettings
@@ -85,7 +85,7 @@ object DomainModule {
     fun provideUpdateSettings(repository: SettingsRepository) = UpdateSettings(repository)
 
     @Provides
-    fun provideFilterProject(repository: ProjectRepository) = FilterProject(repository)
+    fun provideFilterProject(repository: ProjectRepository) = FilterProjects(repository)
 
     @Provides
     fun provideCreateProject(

@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import io.github.tuguzt.flexibleproject.R
+import io.github.tuguzt.flexibleproject.domain.model.project.Project
 import io.github.tuguzt.flexibleproject.domain.model.user.User
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.State.WorkspaceWithProjects
 
 data class HomeContent(
     val user: UserContent,
@@ -26,8 +28,9 @@ data class HomeContent(
     )
 
     data class WorkspacesContent(
-        val workspaces: List<Workspace>,
+        val workspaces: List<WorkspaceWithProjects>,
         val icon: @Composable (Workspace) -> Unit,
+        val projectImage: @Composable (Project) -> Unit,
     )
 }
 
@@ -43,6 +46,7 @@ fun HomeContent(
     onDrawerAddNewWorkspaceClick: () -> Unit,
     onAddClick: () -> Unit,
     onWorkspaceClick: (Workspace) -> Unit,
+    onProjectClick: (Project) -> Unit,
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
 ) {
     HomeDrawer(
@@ -63,6 +67,7 @@ fun HomeContent(
             HomeWorkspaces(
                 content = content.workspaces,
                 onWorkspaceClick = onWorkspaceClick,
+                onProjectClick = onProjectClick,
                 modifier = Modifier.padding(padding),
             )
         }

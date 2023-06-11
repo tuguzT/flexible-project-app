@@ -1,16 +1,22 @@
 package io.github.tuguzt.flexibleproject.view.screens.basic.home
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Dashboard
 import androidx.compose.material.icons.rounded.Groups3
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -25,8 +31,7 @@ import io.github.tuguzt.flexibleproject.view.screens.destinations.HomeBottomShee
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
-import io.github.tuguzt.flexibleproject.view.utils.UserAvatar
-import io.github.tuguzt.flexibleproject.view.utils.WorkspaceImage
+import io.github.tuguzt.flexibleproject.view.utils.ImageByUrl
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.HomeViewModel
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore
@@ -59,8 +64,8 @@ fun HomeScreen(
     val userContent = HomeContent.UserContent(
         user = currentUser,
         avatar = {
-            UserAvatar(
-                user = currentUser,
+            ImageByUrl(
+                url = currentUser?.data?.avatar,
                 modifier = Modifier
                     .size(72.dp)
                     .clip(CircleShape),
@@ -71,10 +76,30 @@ fun HomeScreen(
     val workspacesContent = HomeContent.WorkspacesContent(
         workspaces = basicState.workspaces,
         icon = { workspace ->
-            WorkspaceImage(
-                workspace = workspace,
+            ImageByUrl(
+                url = workspace.data.image,
                 modifier = Modifier.size(24.dp),
                 error = { Icon(Icons.Rounded.Groups3, contentDescription = null) },
+            )
+        },
+        projectImage = { project ->
+            ImageByUrl(
+                url = project.data.image,
+                modifier = Modifier.size(96.dp),
+                error = {
+                    Surface(color = MaterialTheme.colorScheme.onSurface) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Dashboard,
+                                contentDescription = null,
+                                modifier = Modifier.size(48.dp),
+                            )
+                        }
+                    }
+                },
             )
         },
     )
@@ -112,6 +137,9 @@ fun HomeScreen(
             val direction = WorkspaceScreenDestination(id.toString())
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
+        },
+        onProjectClick = {
+            // TODO navigate to project screen
         },
         onDrawerAddNewWorkspaceClick = {
             val direction = AddWorkspaceScreenDestination()

@@ -9,7 +9,7 @@ import io.github.tuguzt.flexibleproject.domain.model.success
 import io.github.tuguzt.flexibleproject.domain.repository.project.ProjectRepository
 import kotlinx.coroutines.flow.Flow
 
-class FilterProject(private val repository: ProjectRepository) {
+class FilterProjects(private val repository: ProjectRepository) {
     suspend fun projects(filters: ProjectFilters): Result<Flow<List<Project>>, Exception> {
         return when (val result = repository.read(filters)) {
             is Result.Error -> error(Exception.Repository(result.error))

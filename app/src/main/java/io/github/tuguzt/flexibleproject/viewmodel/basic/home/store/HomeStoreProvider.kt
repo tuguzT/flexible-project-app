@@ -7,18 +7,26 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import io.github.tuguzt.flexibleproject.domain.model.BaseException
 import io.github.tuguzt.flexibleproject.domain.model.Result
-import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
+import io.github.tuguzt.flexibleproject.domain.model.filter.Equal
+import io.github.tuguzt.flexibleproject.domain.model.project.ProjectDataFilters
+import io.github.tuguzt.flexibleproject.domain.model.project.ProjectFilters
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceFilters
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceIdFilters
+import io.github.tuguzt.flexibleproject.domain.usecase.project.FilterProjects
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FilterWorkspaces
 import io.github.tuguzt.flexibleproject.viewmodel.StoreProvider
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.Intent
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.State
+import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.State.WorkspaceWithProjects
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class HomeStoreProvider(
     private val workspaces: FilterWorkspaces,
+    private val projects: FilterProjects,
     private val storeFactory: StoreFactory,
     private val coroutineContext: CoroutineContext,
 ) : StoreProvider<Intent, State, Label> {
@@ -39,7 +47,7 @@ class HomeStoreProvider(
 
     private sealed interface Message {
         object Loading : Message
-        data class Loaded(val workspaces: List<Workspace>) : Message
+        data class Loaded(val workspaces: List<WorkspaceWithProjects>) : Message
         data class WorkspacesExpand(val expanded: Boolean) : Message
         object Error : Message
     }
@@ -48,16 +56,6 @@ class HomeStoreProvider(
         mainContext = coroutineContext,
     ) {
         override fun executeAction(action: Unit, getState: () -> State) {
-            load()
-        }
-
-        override fun executeIntent(intent: Intent, getState: () -> State) =
-            when (intent) {
-                is Intent.Load -> load()
-                is Intent.WorkspacesExpand -> expandWorkspaces(intent.expanded)
-            }
-
-        private fun load() {
             dispatch(Message.Loading)
             scope.launch {
                 val filters = WorkspaceFilters()
@@ -75,11 +73,39 @@ class HomeStoreProvider(
                         return@launch
                     }
                 }
-                workspacesFlow.collect { workspaces ->
-                    dispatch(Message.Loaded(workspaces))
+                workspacesFlow.collectLatest { workspaces ->
+                    val workspacesWithProjects = workspaces.map { workspace ->
+                        val projectFilters = run {
+                            val workspaceFilters = WorkspaceIdFilters(eq = Equal(workspace.id))
+                            ProjectFilters(data = ProjectDataFilters(workspace = workspaceFilters))
+                        }
+                        val projectsFlow = when (val result = projects.projects(projectFilters)) {
+                            is Result.Success -> result.data
+                            is Result.Error -> {
+                                dispatch(Message.Error)
+                                when (val error = result.error) {
+                                    is FilterProjects.Exception.Repository -> when (error.error) {
+                                        is BaseException.LocalStore -> publish(Label.LocalStoreError)
+                                        is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
+                                        is BaseException.Unknown -> publish(Label.UnknownError)
+                                    }
+                                }
+                                return@collectLatest
+                            }
+                        }
+                        // FIXME should update on each incoming list, but idk how to pass it to UI
+                        val projects = projectsFlow.firstOrNull() ?: return@collectLatest
+                        WorkspaceWithProjects(workspace, projects)
+                    }
+                    dispatch(Message.Loaded(workspacesWithProjects))
                 }
             }
         }
+
+        override fun executeIntent(intent: Intent, getState: () -> State) =
+            when (intent) {
+                is Intent.WorkspacesExpand -> expandWorkspaces(intent.expanded)
+            }
 
         private fun expandWorkspaces(expanded: Boolean) {
             dispatch(Message.WorkspacesExpand(expanded))
