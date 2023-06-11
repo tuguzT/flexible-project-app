@@ -71,14 +71,14 @@ fun EditWorkspaceContent(
                 onNameChange = onNameChange,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !loading,
-                label = stringResource(R.string.update_name),
+                label = stringResource(R.string.edit_name),
             )
             DescriptionTextField(
                 description = description,
                 onDescriptionChange = onDescriptionChange,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !loading,
-                label = stringResource(R.string.update_description),
+                label = stringResource(R.string.edit_description),
             )
 
             var expanded by remember { mutableStateOf(false) }
@@ -89,7 +89,7 @@ fun EditWorkspaceContent(
                 onExpandedChange = { expanded = it },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !loading,
-                label = stringResource(R.string.update_visibility),
+                label = stringResource(R.string.edit_visibility),
             )
         }
     }

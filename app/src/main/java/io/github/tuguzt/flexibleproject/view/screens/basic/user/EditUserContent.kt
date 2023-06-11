@@ -68,21 +68,21 @@ fun EditUserContent(
                 onNameChange = onNameChange,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !loading,
-                label = stringResource(R.string.update_name),
+                label = stringResource(R.string.edit_name),
             )
             DisplayNameTextField(
                 displayName = displayName,
                 onDisplayNameChange = onDisplayNameChanged,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !loading,
-                label = stringResource(R.string.update_display_name),
+                label = stringResource(R.string.edit_display_name),
             )
             EmailTextField(
                 email = email,
                 onEmailChange = onEmailChange,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !loading,
-                label = stringResource(R.string.update_email),
+                label = stringResource(R.string.edit_email),
             )
         }
     }

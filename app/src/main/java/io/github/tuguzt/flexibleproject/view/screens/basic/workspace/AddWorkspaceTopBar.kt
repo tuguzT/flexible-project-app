@@ -30,7 +30,7 @@ fun AddWorkspaceTopBar(
     Box {
         TopAppBar(
             modifier = modifier,
-            title = { OneLineTitle(text = stringResource(R.string.add_new_workspace)) },
+            title = { OneLineTitle(text = stringResource(R.string.add_workspace)) },
             navigationIcon = { CloseIconButton(onClick = onNavigationClick, enabled = !loading) },
             actions = {
                 TextButton(

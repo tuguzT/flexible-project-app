@@ -30,7 +30,7 @@ fun EditUserTopBar(
     Box {
         TopAppBar(
             modifier = modifier,
-            title = { OneLineTitle(text = stringResource(R.string.edit_user_data)) },
+            title = { OneLineTitle(text = stringResource(R.string.user_data)) },
             navigationIcon = { CloseIconButton(onClick = onNavigationClick, enabled = !loading) },
             actions = {
                 TextButton(

@@ -30,7 +30,7 @@ fun EditWorkspaceTopBar(
     Box {
         TopAppBar(
             modifier = modifier,
-            title = { OneLineTitle(text = stringResource(R.string.edit_workspace_data)) },
+            title = { OneLineTitle(text = stringResource(R.string.workspace_data)) },
             navigationIcon = { CloseIconButton(onClick = onNavigationClick, enabled = !loading) },
             actions = {
                 TextButton(

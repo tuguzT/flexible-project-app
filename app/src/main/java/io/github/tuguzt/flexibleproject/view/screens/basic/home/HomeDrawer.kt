@@ -225,7 +225,7 @@ private fun WorkspaceDrawerItem(
 private fun AddNewWorkspaceDrawerItem(onClick: () -> Unit) {
     NavigationDrawerItem(
         modifier = Modifier.padding(horizontal = 12.dp),
-        label = { OneLineTitle(text = stringResource(R.string.add_new_workspace)) },
+        label = { OneLineTitle(text = stringResource(R.string.add_workspace)) },
         icon = { Icon(Icons.Rounded.Add, contentDescription = null) },
         selected = false,
         onClick = onClick,
