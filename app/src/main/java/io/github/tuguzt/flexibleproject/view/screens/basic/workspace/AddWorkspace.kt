@@ -21,8 +21,8 @@ fun AddWorkspaceScreen(
 ) {
     val state by viewModel.stateFlow.collectAsStateWithLifecycle()
     viewModel.labels.collectInLaunchedEffectWithLifecycle { label ->
+        // TODO show message for user before navigate up
         when (label) {
-            // TODO show message for user before navigate up
             is Label.WorkspaceCreated -> navigator.navigateUp()
             Label.LocalStoreError -> navigator.navigateUp()
             Label.NetworkAccessError -> navigator.navigateUp()

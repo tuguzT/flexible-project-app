@@ -26,12 +26,9 @@ fun ProjectCard(
         onClick = onClick,
         modifier = modifier,
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(16.dp).weight(1f),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 OneLineTitle(

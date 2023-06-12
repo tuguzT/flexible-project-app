@@ -87,11 +87,14 @@ class AddWorkspaceStoreProvider(
                         publish(Label.WorkspaceCreated(workspace))
                     }
 
-                    is Result.Error -> when (val error = result.error) {
-                        is CreateWorkspace.Exception.Repository -> when (error.error) {
-                            is BaseException.LocalStore -> publish(Label.LocalStoreError)
-                            is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
-                            is BaseException.Unknown -> publish(Label.UnknownError)
+                    is Result.Error -> {
+                        dispatch(Message.Error)
+                        when (val error = result.error) {
+                            is CreateWorkspace.Exception.Repository -> when (error.error) {
+                                is BaseException.LocalStore -> publish(Label.LocalStoreError)
+                                is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
+                                is BaseException.Unknown -> publish(Label.UnknownError)
+                            }
                         }
                     }
                 }
