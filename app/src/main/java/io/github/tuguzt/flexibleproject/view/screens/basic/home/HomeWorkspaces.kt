@@ -74,6 +74,7 @@ private fun WorkspaceItem(
             expanded = expanded,
             onExpandedChange = { expanded = it },
             modifier = Modifier.fillMaxWidth(),
+            expandIconVisible = workspace.projects.isNotEmpty(),
         )
         WorkspaceProjects(
             projects = workspace.projects,
@@ -92,6 +93,7 @@ private fun WorkspaceHeader(
     expanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    expandIconVisible: Boolean = true,
 ) {
     Surface(
         onClick = onClick,
@@ -110,6 +112,8 @@ private fun WorkspaceHeader(
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
+
+            if (!expandIconVisible) return@Row
             IconButton(onClick = { onExpandedChange(!expanded) }) {
                 ExpandedIcon(expanded = expanded)
             }
@@ -125,7 +129,7 @@ private fun WorkspaceProjects(
     onProjectClick: (Project) -> Unit,
 ) {
     AnimatedVisibility(
-        visible = expanded,
+        visible = expanded && projects.isNotEmpty(),
         enter = expandVertically(expandFrom = Alignment.Top),
         exit = shrinkVertically(shrinkTowards = Alignment.Top),
     ) {

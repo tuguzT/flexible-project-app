@@ -72,4 +72,6 @@
     <string name="cancel">Отмена</string>
     <string name="delete_current_user_confirmation">Вы точно хотите удалить текущего пользователя?</string>
     <string name="sign_out_confirmation">Вы точно хотите выйти из приложения?</string>
+    <string name="share_project">Поделиться проектом</string>
+    <string name="delete_project_confirmation">Вы точно хотите удалить проект?</string>
 </resources>

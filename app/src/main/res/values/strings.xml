@@ -68,8 +68,10 @@
     <string name="theme_dark">Dark</string>
     <string name="language_english">English</string>
     <string name="language_russian">Russian</string>
-    <string name="delete_workspace_confirmation">Are you sure you want to delete workspace?</string>
     <string name="cancel">Cancel</string>
+    <string name="share_project">Share project</string>
+    <string name="delete_workspace_confirmation">Are you sure you want to delete workspace?</string>
     <string name="delete_current_user_confirmation">Are you sure you want to delete current user?</string>
     <string name="sign_out_confirmation">Are you sure you want to sign out from the application?</string>
+    <string name="delete_project_confirmation">Are you sure you want to delete project?</string>
 </resources>
