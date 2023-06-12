@@ -7,6 +7,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
 import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
+import io.github.tuguzt.flexibleproject.view.screens.destinations.AddProjectDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AddWorkspaceScreenDestination
 
 @BasicNavGraph
@@ -23,7 +24,8 @@ fun HomeBottomSheet(
         },
         onAddProjectClick = {
             navigator.navigateUp()
-            // TODO
+            val direction = AddProjectDestination()
+            navigator.navigate(direction)
         },
         onAddMethodologyClick = {
             navigator.navigateUp()

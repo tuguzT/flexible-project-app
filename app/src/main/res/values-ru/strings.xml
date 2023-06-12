@@ -74,4 +74,5 @@
     <string name="sign_out_confirmation">Вы точно хотите выйти из приложения?</string>
     <string name="share_project">Поделиться проектом</string>
     <string name="delete_project_confirmation">Вы точно хотите удалить проект?</string>
+    <string name="add_project">Добавить проект</string>
 </resources>

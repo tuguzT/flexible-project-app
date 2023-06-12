@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Description
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -25,9 +27,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.placeholder.material.placeholder
+import io.github.tuguzt.flexibleproject.R
 import io.github.tuguzt.flexibleproject.domain.model.project.Project
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Visibility
 import io.github.tuguzt.flexibleproject.domain.model.workspace.Workspace
@@ -45,6 +49,7 @@ fun WorkspaceContent(
     loading: Boolean,
     onNavigationClick: () -> Unit,
     onProjectClick: (Project) -> Unit,
+    onAddProjectClick: () -> Unit,
     projectImage: @Composable (Project) -> Unit,
     topBarActions: @Composable RowScope.() -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
@@ -58,6 +63,9 @@ fun WorkspaceContent(
                 actions = topBarActions,
                 scrollBehavior = scrollBehavior,
             )
+        },
+        floatingActionButton = {
+            AddProjectFAB(onClick = onAddProjectClick)
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     ) { padding ->
@@ -86,6 +94,19 @@ fun WorkspaceContent(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun AddProjectFAB(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    FloatingActionButton(onClick = onClick, modifier = modifier) {
+        Icon(
+            imageVector = Icons.Rounded.Add,
+            contentDescription = stringResource(R.string.add),
+        )
     }
 }
 
@@ -182,6 +203,7 @@ private fun WorkspaceContentWithWorkspace() {
             loading = false,
             onNavigationClick = {},
             onProjectClick = {},
+            onAddProjectClick = {},
             projectImage = {},
         )
     }
@@ -197,6 +219,7 @@ private fun WorkspaceContentWithoutWorkspace() {
             loading = false,
             onNavigationClick = {},
             onProjectClick = {},
+            onAddProjectClick = {},
             projectImage = {},
         )
     }

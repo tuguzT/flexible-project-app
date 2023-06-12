@@ -20,6 +20,7 @@ import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
+import io.github.tuguzt.flexibleproject.view.screens.destinations.AddProjectDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.DeleteWorkspaceDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.EditWorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.ProjectScreenDestination
@@ -65,6 +66,11 @@ fun WorkspaceScreen(
         onNavigationClick = navigator::navigateUp,
         onProjectClick = { project ->
             val direction = ProjectScreenDestination(project.id.toString())
+            navigator.navigate(direction)
+        },
+        onAddProjectClick = {
+            val workspaceId = state.workspace?.workspace?.id?.toString()
+            val direction = AddProjectDestination(workspaceId)
             navigator.navigate(direction)
         },
         projectImage = { project ->
