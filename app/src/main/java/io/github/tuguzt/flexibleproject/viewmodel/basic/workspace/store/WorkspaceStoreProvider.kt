@@ -70,7 +70,7 @@ class WorkspaceStoreProvider(
             dispatch(Message.Loading)
             scope.launch {
                 val filters = WorkspaceFilters(id = WorkspaceIdFilters(eq = Equal(id)))
-                val workspaceFlow = when (val result = workspaces.workspaces(filters)) {
+                val workspacesFlow = when (val result = workspaces.workspaces(filters)) {
                     is Result.Success -> result.data
                     is Result.Error -> {
                         dispatch(Message.Error)
@@ -84,7 +84,7 @@ class WorkspaceStoreProvider(
                         return@launch
                     }
                 }
-                val flow = workspaceFlow.mapNotNull { workspaces ->
+                val flow = workspacesFlow.mapNotNull { workspaces ->
                     val flows = workspaces.map { workspace ->
                         val projectFilters = run {
                             val workspaceFilters = WorkspaceIdFilters(eq = Equal(workspace.id))
@@ -130,8 +130,11 @@ class WorkspaceStoreProvider(
 
         private fun delete(state: State) {
             dispatch(Message.Loading)
-
-            val workspace = state.workspace?.workspace ?: TODO("Workspace must be present")
+            val workspace = state.workspace?.workspace ?: run {
+                dispatch(Message.Error)
+                publish(Label.UnknownError)
+                return
+            }
             scope.launch {
                 when (val result = delete.delete(workspace.id)) {
                     is Result.Success -> {
