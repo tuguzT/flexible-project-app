@@ -22,6 +22,7 @@ import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
 import io.github.tuguzt.flexibleproject.view.screens.destinations.DeleteWorkspaceDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.EditWorkspaceScreenDestination
+import io.github.tuguzt.flexibleproject.view.screens.destinations.ProjectScreenDestination
 import io.github.tuguzt.flexibleproject.view.utils.ImageByUrl
 import io.github.tuguzt.flexibleproject.view.utils.ImageError
 import io.github.tuguzt.flexibleproject.view.utils.collectInLaunchedEffectWithLifecycle
@@ -62,8 +63,9 @@ fun WorkspaceScreen(
         workspace = state.workspace,
         loading = state.loading,
         onNavigationClick = navigator::navigateUp,
-        onProjectClick = {
-            // TODO navigate to project screen
+        onProjectClick = { project ->
+            val direction = ProjectScreenDestination(project.id.toString())
+            navigator.navigate(direction)
         },
         projectImage = { project ->
             ImageByUrl(

@@ -23,6 +23,7 @@ import io.github.tuguzt.flexibleproject.view.screens.basic.BasicNavGraph
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AboutScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.AddWorkspaceScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.HomeBottomSheetDestination
+import io.github.tuguzt.flexibleproject.view.screens.destinations.ProjectScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.SettingsScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.UserScreenDestination
 import io.github.tuguzt.flexibleproject.view.screens.destinations.WorkspaceScreenDestination
@@ -125,8 +126,9 @@ fun HomeScreen(
             navigator.navigate(direction)
             coroutineScope.launch { drawerState.close() }
         },
-        onProjectClick = {
-            // TODO navigate to project screen
+        onProjectClick = { project ->
+            val direction = ProjectScreenDestination(project.id.toString())
+            navigator.navigate(direction)
         },
         onDrawerAddNewWorkspaceClick = {
             val direction = AddWorkspaceScreenDestination()
