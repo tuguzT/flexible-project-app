@@ -21,8 +21,13 @@ import io.github.tuguzt.flexibleproject.viewmodel.basic.workspace.store.Workspac
 import io.github.tuguzt.flexibleproject.viewmodel.basic.workspace.store.WorkspaceStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.basic.workspace.store.WorkspaceStore.State
 import io.github.tuguzt.flexibleproject.viewmodel.basic.workspace.store.WorkspaceStore.State.WorkspaceWithProjects
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flattenMerge
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
@@ -60,6 +65,7 @@ class WorkspaceStoreProvider(
                 Intent.Delete -> delete(state = getState())
             }
 
+        @OptIn(ExperimentalCoroutinesApi::class)
         private fun load(id: WorkspaceId) {
             dispatch(Message.Loading)
             scope.launch {
@@ -78,34 +84,45 @@ class WorkspaceStoreProvider(
                         return@launch
                     }
                 }
-                workspaceFlow.collectLatest { workspaces ->
-                    val workspace = workspaces.firstOrNull()
-                    if (workspace == null) {
+                val flow = workspaceFlow.mapNotNull { workspaces ->
+                    val flows = workspaces.map { workspace ->
+                        val projectFilters = run {
+                            val workspaceFilters = WorkspaceIdFilters(eq = Equal(workspace.id))
+                            ProjectFilters(data = ProjectDataFilters(workspace = workspaceFilters))
+                        }
+                        val projectsFlow = when (val result = projects.projects(projectFilters)) {
+                            is Result.Success -> result.data
+                            is Result.Error -> {
+                                dispatch(Message.Error)
+                                when (val error = result.error) {
+                                    is FilterProjects.Exception.Repository -> when (error.error) {
+                                        is BaseException.LocalStore -> publish(Label.LocalStoreError)
+                                        is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
+                                        is BaseException.Unknown -> publish(Label.UnknownError)
+                                    }
+                                }
+                                return@mapNotNull null
+                            }
+                        }
+                        projectsFlow.map { WorkspaceWithProjects(workspace, it) }
+                    }
+
+                    val stateFlow = MutableStateFlow(mapOf<WorkspaceId, WorkspaceWithProjects>())
+                    launch {
+                        flows.asFlow().flattenMerge().collect { workspaceWithProjects ->
+                            val workspaceId = workspaceWithProjects.workspace.id
+                            stateFlow.value += workspaceId to workspaceWithProjects
+                        }
+                    }
+                    stateFlow.map { it.values.toList() }
+                }
+                flow.flattenMerge().collectLatest { workspacesWithProjects ->
+                    val workspaceWithProjects = workspacesWithProjects.firstOrNull()
+                    if (workspaceWithProjects == null) {
                         dispatch(Message.NotFound(id))
                         publish(Label.NotFound(id))
                         return@collectLatest
                     }
-                    val projectFilters = run {
-                        val workspaceFilters = WorkspaceIdFilters(eq = Equal(workspace.id))
-                        ProjectFilters(data = ProjectDataFilters(workspace = workspaceFilters))
-                    }
-                    val projectsFlow = when (val result = projects.projects(projectFilters)) {
-                        is Result.Success -> result.data
-                        is Result.Error -> {
-                            dispatch(Message.Error)
-                            when (val error = result.error) {
-                                is FilterProjects.Exception.Repository -> when (error.error) {
-                                    is BaseException.LocalStore -> publish(Label.LocalStoreError)
-                                    is BaseException.NetworkAccess -> publish(Label.NetworkAccessError)
-                                    is BaseException.Unknown -> publish(Label.UnknownError)
-                                }
-                            }
-                            return@collectLatest
-                        }
-                    }
-                    // FIXME should update on each incoming list, but idk how to pass it to UI
-                    val projects = projectsFlow.firstOrNull() ?: return@collectLatest
-                    val workspaceWithProjects = WorkspaceWithProjects(workspace, projects)
                     dispatch(Message.Loaded(workspaceWithProjects))
                 }
             }

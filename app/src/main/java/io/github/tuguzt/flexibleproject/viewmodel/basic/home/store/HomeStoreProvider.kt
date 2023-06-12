@@ -11,6 +11,7 @@ import io.github.tuguzt.flexibleproject.domain.model.filter.Equal
 import io.github.tuguzt.flexibleproject.domain.model.project.ProjectDataFilters
 import io.github.tuguzt.flexibleproject.domain.model.project.ProjectFilters
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceFilters
+import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceId
 import io.github.tuguzt.flexibleproject.domain.model.workspace.WorkspaceIdFilters
 import io.github.tuguzt.flexibleproject.domain.usecase.project.FilterProjects
 import io.github.tuguzt.flexibleproject.domain.usecase.workspace.FilterWorkspaces
@@ -19,8 +20,13 @@ import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.Int
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.Label
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.State
 import io.github.tuguzt.flexibleproject.viewmodel.basic.home.store.HomeStore.State.WorkspaceWithProjects
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flattenMerge
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
@@ -55,6 +61,7 @@ class HomeStoreProvider(
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Message, Label>(
         mainContext = coroutineContext,
     ) {
+        @OptIn(ExperimentalCoroutinesApi::class)
         override fun executeAction(action: Unit, getState: () -> State) {
             dispatch(Message.Loading)
             scope.launch {
@@ -73,8 +80,8 @@ class HomeStoreProvider(
                         return@launch
                     }
                 }
-                workspacesFlow.collectLatest { workspaces ->
-                    val workspacesWithProjects = workspaces.map { workspace ->
+                val flow = workspacesFlow.mapNotNull { workspaces ->
+                    val flows = workspaces.map { workspace ->
                         val projectFilters = run {
                             val workspaceFilters = WorkspaceIdFilters(eq = Equal(workspace.id))
                             ProjectFilters(data = ProjectDataFilters(workspace = workspaceFilters))
@@ -90,14 +97,23 @@ class HomeStoreProvider(
                                         is BaseException.Unknown -> publish(Label.UnknownError)
                                     }
                                 }
-                                return@collectLatest
+                                return@mapNotNull null
                             }
                         }
-                        // FIXME should update on each incoming list, but idk how to pass it to UI
-                        val projects = projectsFlow.firstOrNull() ?: return@collectLatest
-                        WorkspaceWithProjects(workspace, projects)
+                        projectsFlow.map { WorkspaceWithProjects(workspace, it) }
                     }
-                    dispatch(Message.Loaded(workspacesWithProjects))
+
+                    val stateFlow = MutableStateFlow(mapOf<WorkspaceId, WorkspaceWithProjects>())
+                    launch {
+                        flows.asFlow().flattenMerge().collect { workspaceWithProjects ->
+                            val workspaceId = workspaceWithProjects.workspace.id
+                            stateFlow.value += workspaceId to workspaceWithProjects
+                        }
+                    }
+                    stateFlow.map { it.values.toList() }
+                }
+                flow.flattenMerge().collectLatest { workspaceWithProjects ->
+                    dispatch(Message.Loaded(workspaceWithProjects))
                 }
             }
         }
